@@ -1,0 +1,29 @@
+{
+    "name": "willitscale/streetlamp",
+    "description": "A HTTP router application wrapper.",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "n3tw0rk\\Streetlamp\\": "src/",
+            "n3tw0rk\\StreetlampTest\\": "src-test/"
+        }
+    },
+    "authors": [
+        {
+            "name": "willitscale"
+        }
+    ],
+    "require-dev": {
+        "phpunit/phpunit": "^9.5"
+    },
+    "require": {
+        "psr/log": "^3.0",
+        "php-di/php-di": "^6.4"
+    },
+    "config": {
+        "platform": {
+            "php": "8.2.0"
+        }
+    }
+}
