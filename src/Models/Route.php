@@ -1,11 +1,11 @@
 <?php declare(strict_types=1);
 
-namespace n3tw0rk\Streetlamp\Models;
+namespace willitscale\Streetlamp\Models;
 
-use n3tw0rk\Streetlamp\Attributes\Parameter\Parameter;
-use n3tw0rk\Streetlamp\Enums\HttpMethod;
-use n3tw0rk\Streetlamp\Exceptions\Attributes\InvalidParameterAlreadyBoundException;
-use n3tw0rk\Streetlamp\Requests\RequestInterface;
+use willitscale\Streetlamp\Attributes\Parameter\Parameter;
+use willitscale\Streetlamp\Enums\HttpMethod;
+use willitscale\Streetlamp\Exceptions\Attributes\InvalidParameterAlreadyBoundException;
+use willitscale\Streetlamp\Requests\RequestInterface;
 
 class Route extends Context
 {

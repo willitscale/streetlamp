@@ -1,9 +1,9 @@
 <?php
 
-namespace n3tw0rk\Streetlamp\Exceptions\Attributes;
+namespace willitscale\Streetlamp\Exceptions\Attributes;
 
-use n3tw0rk\Streetlamp\Enums\HttpStatusCode;
-use n3tw0rk\Streetlamp\Exceptions\StreetLampRequestException;
+use willitscale\Streetlamp\Enums\HttpStatusCode;
+use willitscale\Streetlamp\Exceptions\StreetLampRequestException;
 
 class InvalidParameterAlreadyBoundException extends StreetLampRequestException
 {

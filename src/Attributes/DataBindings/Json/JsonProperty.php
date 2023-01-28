@@ -1,11 +1,11 @@
 <?php declare(strict_types=1);
 
-namespace n3tw0rk\Streetlamp\Attributes\DataBindings\Json;
+namespace willitscale\Streetlamp\Attributes\DataBindings\Json;
 
 use Attribute;
-use n3tw0rk\Streetlamp\Attributes\DataBindings\DataBindingObjectInterface;
-use n3tw0rk\Streetlamp\Attributes\Validators\ValidatorInterface;
-use n3tw0rk\Streetlamp\Exceptions\InvalidParameterTypeException;
+use willitscale\Streetlamp\Attributes\DataBindings\DataBindingObjectInterface;
+use willitscale\Streetlamp\Attributes\Validators\ValidatorInterface;
+use willitscale\Streetlamp\Exceptions\InvalidParameterTypeException;
 use ReflectionClass;
 use ReflectionProperty;
 

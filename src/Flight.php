@@ -1,9 +1,9 @@
 <?php declare(strict_types=1);
 
-namespace n3tw0rk\Streetlamp;
+namespace willitscale\Streetlamp;
 
-use n3tw0rk\Streetlamp\Builders\ResponseBuilder;
-use n3tw0rk\Streetlamp\Requests\RequestInterface;
+use willitscale\Streetlamp\Builders\ResponseBuilder;
+use willitscale\Streetlamp\Requests\RequestInterface;
 
 interface Flight
 {

@@ -2,9 +2,9 @@
 
 namespace Attributes;
 
-use n3tw0rk\Streetlamp\Attributes\Accepts;
-use n3tw0rk\Streetlamp\Models\Controller;
-use n3tw0rk\Streetlamp\Models\Route;
+use willitscale\Streetlamp\Attributes\Accepts;
+use willitscale\Streetlamp\Models\Controller;
+use willitscale\Streetlamp\Models\Route;
 use PHPUnit\Framework\TestCase;
 
 class AcceptsTest extends TestCase

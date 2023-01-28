@@ -2,12 +2,12 @@
 
 namespace Attributes\Parameter;
 
-use n3tw0rk\Streetlamp\Attributes\Parameter\HeaderParameter;
-use n3tw0rk\Streetlamp\Attributes\Validators\FilterVarsValidator;
-use n3tw0rk\Streetlamp\Attributes\Validators\ValidatorInterface;
-use n3tw0rk\Streetlamp\Exceptions\InvalidParameterTypeException;
-use n3tw0rk\Streetlamp\Exceptions\Parameters\MissingRequiredHeaderException;
-use n3tw0rk\Streetlamp\Exceptions\Validators\InvalidParameterFailedToPassFilterValidation;
+use willitscale\Streetlamp\Attributes\Parameter\HeaderParameter;
+use willitscale\Streetlamp\Attributes\Validators\FilterVarsValidator;
+use willitscale\Streetlamp\Attributes\Validators\ValidatorInterface;
+use willitscale\Streetlamp\Exceptions\InvalidParameterTypeException;
+use willitscale\Streetlamp\Exceptions\Parameters\MissingRequiredHeaderException;
+use willitscale\Streetlamp\Exceptions\Validators\InvalidParameterFailedToPassFilterValidation;
 use PHPUnit\Framework\TestCase;
 
 class HeaderParameterTest extends TestCase

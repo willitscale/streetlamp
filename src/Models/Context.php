@@ -1,9 +1,9 @@
 <?php
 
-namespace n3tw0rk\Streetlamp\Models;
+namespace willitscale\Streetlamp\Models;
 
-use n3tw0rk\Streetlamp\Enums\MediaType;
-use n3tw0rk\Streetlamp\Flight;
+use willitscale\Streetlamp\Enums\MediaType;
+use willitscale\Streetlamp\Flight;
 
 abstract class Context
 {

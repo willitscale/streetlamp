@@ -1,11 +1,11 @@
 <?php declare(strict_types=1);
 
-namespace n3tw0rk\Streetlamp\Attributes\Parameter;
+namespace willitscale\Streetlamp\Attributes\Parameter;
 
-use n3tw0rk\Streetlamp\Attributes\DataBindings\DataBindingObjectInterface;
-use n3tw0rk\Streetlamp\Attributes\Validators\ValidatorInterface;
-use n3tw0rk\Streetlamp\Exceptions\InvalidParameterTypeException;
-use n3tw0rk\Streetlamp\Exceptions\Validators\InvalidParameterFailedToPassFilterValidation;
+use willitscale\Streetlamp\Attributes\DataBindings\DataBindingObjectInterface;
+use willitscale\Streetlamp\Attributes\Validators\ValidatorInterface;
+use willitscale\Streetlamp\Exceptions\InvalidParameterTypeException;
+use willitscale\Streetlamp\Exceptions\Validators\InvalidParameterFailedToPassFilterValidation;
 use ReflectionClass;
 
 abstract class Parameter

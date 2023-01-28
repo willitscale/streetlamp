@@ -2,11 +2,11 @@
 
 namespace Attributes\Route;
 
-use n3tw0rk\Streetlamp\Attributes\Route\Method;
-use n3tw0rk\Streetlamp\Enums\HttpMethod;
-use n3tw0rk\Streetlamp\Exceptions\Attributes\InvalidAttributeContextException;
-use n3tw0rk\Streetlamp\Models\Controller;
-use n3tw0rk\Streetlamp\Models\Route;
+use willitscale\Streetlamp\Attributes\Route\Method;
+use willitscale\Streetlamp\Enums\HttpMethod;
+use willitscale\Streetlamp\Exceptions\Attributes\InvalidAttributeContextException;
+use willitscale\Streetlamp\Models\Controller;
+use willitscale\Streetlamp\Models\Route;
 use PHPUnit\Framework\TestCase;
 
 class MethodTest extends TestCase

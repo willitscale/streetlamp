@@ -1,9 +1,9 @@
 <?php declare(strict_types=1);
 
-namespace n3tw0rk\Streetlamp\Attributes\Parameter;
+namespace willitscale\Streetlamp\Attributes\Parameter;
 
 use Attribute;
-use n3tw0rk\Streetlamp\Exceptions\Parameters\MissingRequiredPathException;
+use willitscale\Streetlamp\Exceptions\Parameters\MissingRequiredPathException;
 
 #[Attribute(Attribute::TARGET_PARAMETER)]
 class PathParameter extends Parameter

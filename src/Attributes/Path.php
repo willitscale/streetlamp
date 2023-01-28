@@ -1,10 +1,10 @@
 <?php declare(strict_types=1);
 
-namespace n3tw0rk\Streetlamp\Attributes;
+namespace willitscale\Streetlamp\Attributes;
 
 use Attribute;
-use n3tw0rk\Streetlamp\Models\Controller;
-use n3tw0rk\Streetlamp\Models\Route;
+use willitscale\Streetlamp\Models\Controller;
+use willitscale\Streetlamp\Models\Route;
 
 #[Attribute(Attribute::TARGET_CLASS|Attribute::TARGET_METHOD)]
 readonly class Path implements AttributeContract

@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace n3tw0rk\Streetlamp\Attributes\Validators;
+namespace willitscale\Streetlamp\Attributes\Validators;
 
 use Attribute;
 

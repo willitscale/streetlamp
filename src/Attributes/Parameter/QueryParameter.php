@@ -1,9 +1,9 @@
 <?php declare(strict_types=1);
 
-namespace n3tw0rk\Streetlamp\Attributes\Parameter;
+namespace willitscale\Streetlamp\Attributes\Parameter;
 
 use Attribute;
-use n3tw0rk\Streetlamp\Exceptions\Parameters\MissingRequireQueryException;
+use willitscale\Streetlamp\Exceptions\Parameters\MissingRequireQueryException;
 
 #[Attribute(Attribute::TARGET_PARAMETER)]
 class QueryParameter extends Parameter

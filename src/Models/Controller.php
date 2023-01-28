@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace n3tw0rk\Streetlamp\Models;
+namespace willitscale\Streetlamp\Models;
 
 class Controller extends Context
 {

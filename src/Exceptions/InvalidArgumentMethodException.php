@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace n3tw0rk\Streetlamp\Exceptions;
+namespace willitscale\Streetlamp\Exceptions;
 
-use n3tw0rk\Streetlamp\Enums\HttpStatusCode;
+use willitscale\Streetlamp\Enums\HttpStatusCode;
 
 class InvalidArgumentMethodException extends StreetLampRequestException
 {

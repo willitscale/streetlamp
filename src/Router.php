@@ -1,21 +1,21 @@
 <?php declare(strict_types=1);
 
-namespace n3tw0rk\Streetlamp;
+namespace willitscale\Streetlamp;
 
 use DI\Container;
 use DI\DependencyException;
 use DI\NotFoundException;
 use Exception;
-use n3tw0rk\Streetlamp\Builders\ResponseBuilder;
-use n3tw0rk\Streetlamp\Enums\HttpStatusCode;
-use n3tw0rk\Streetlamp\Exceptions\ComposerFileDoesNotExistException;
-use n3tw0rk\Streetlamp\Exceptions\ComposerFileInvalidFormatException;
-use n3tw0rk\Streetlamp\Exceptions\InvalidContentTypeException;
-use n3tw0rk\Streetlamp\Exceptions\InvalidRouteResponseException;
-use n3tw0rk\Streetlamp\Exceptions\NoValidRouteException;
-use n3tw0rk\Streetlamp\Exceptions\StreetLampRequestException;
-use n3tw0rk\Streetlamp\Models\Route;
-use n3tw0rk\Streetlamp\Requests\RequestInterface;
+use willitscale\Streetlamp\Builders\ResponseBuilder;
+use willitscale\Streetlamp\Enums\HttpStatusCode;
+use willitscale\Streetlamp\Exceptions\ComposerFileDoesNotExistException;
+use willitscale\Streetlamp\Exceptions\ComposerFileInvalidFormatException;
+use willitscale\Streetlamp\Exceptions\InvalidContentTypeException;
+use willitscale\Streetlamp\Exceptions\InvalidRouteResponseException;
+use willitscale\Streetlamp\Exceptions\NoValidRouteException;
+use willitscale\Streetlamp\Exceptions\StreetLampRequestException;
+use willitscale\Streetlamp\Models\Route;
+use willitscale\Streetlamp\Requests\RequestInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use ReflectionException;

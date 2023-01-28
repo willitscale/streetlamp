@@ -5,8 +5,8 @@
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "n3tw0rk\\Streetlamp\\": "src/",
-            "n3tw0rk\\StreetlampTest\\": "src-test/"
+            "willitscale\\Streetlamp\\": "src/",
+            "willitscale\\StreetlampTest\\": "src-test/"
         }
     },
     "authors": [

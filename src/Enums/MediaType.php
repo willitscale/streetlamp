@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace n3tw0rk\Streetlamp\Enums;
+namespace willitscale\Streetlamp\Enums;
 
 /**
  * Partial list of most common

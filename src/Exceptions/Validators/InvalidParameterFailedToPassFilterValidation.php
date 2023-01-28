@@ -1,9 +1,9 @@
 <?php declare(strict_types=1);
 
-namespace n3tw0rk\Streetlamp\Exceptions\Validators;
+namespace willitscale\Streetlamp\Exceptions\Validators;
 
-use n3tw0rk\Streetlamp\Enums\HttpStatusCode;
-use n3tw0rk\Streetlamp\Exceptions\StreetLampRequestException;
+use willitscale\Streetlamp\Enums\HttpStatusCode;
+use willitscale\Streetlamp\Exceptions\StreetLampRequestException;
 
 class InvalidParameterFailedToPassFilterValidation extends StreetLampRequestException
 {

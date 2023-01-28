@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace n3tw0rk\Streetlamp\Attributes\DataBindings;
+namespace willitscale\Streetlamp\Attributes\DataBindings;
 
 use ReflectionClass;
 use stdClass;

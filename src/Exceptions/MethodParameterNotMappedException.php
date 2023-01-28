@@ -1,6 +1,6 @@
 <?php
 
-namespace n3tw0rk\Streetlamp\Exceptions;
+namespace willitscale\Streetlamp\Exceptions;
 
 class MethodParameterNotMappedException extends StreetLampException
 {

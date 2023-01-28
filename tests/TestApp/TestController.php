@@ -2,20 +2,20 @@
 
 namespace TestApp;
 
-use n3tw0rk\Streetlamp\Attributes\Accepts;
-use n3tw0rk\Streetlamp\Attributes\Controller\RouteController;
-use n3tw0rk\Streetlamp\Attributes\Parameter\HeaderParameter;
-use n3tw0rk\Streetlamp\Attributes\Parameter\PathParameter;
-use n3tw0rk\Streetlamp\Attributes\Parameter\PostParameter;
-use n3tw0rk\Streetlamp\Attributes\Parameter\QueryParameter;
-use n3tw0rk\Streetlamp\Attributes\Path;
-use n3tw0rk\Streetlamp\Attributes\Route\Method;
-use n3tw0rk\Streetlamp\Attributes\Validators\IntValidator;
-use n3tw0rk\Streetlamp\Builders\ResponseBuilder;
-use n3tw0rk\Streetlamp\Enums\HttpMethod;
-use n3tw0rk\Streetlamp\Enums\HttpStatusCode;
-use n3tw0rk\Streetlamp\Enums\MediaType;
-use n3tw0rk\Streetlamp\Requests\RequestInterface;
+use willitscale\Streetlamp\Attributes\Accepts;
+use willitscale\Streetlamp\Attributes\Controller\RouteController;
+use willitscale\Streetlamp\Attributes\Parameter\HeaderParameter;
+use willitscale\Streetlamp\Attributes\Parameter\PathParameter;
+use willitscale\Streetlamp\Attributes\Parameter\PostParameter;
+use willitscale\Streetlamp\Attributes\Parameter\QueryParameter;
+use willitscale\Streetlamp\Attributes\Path;
+use willitscale\Streetlamp\Attributes\Route\Method;
+use willitscale\Streetlamp\Attributes\Validators\IntValidator;
+use willitscale\Streetlamp\Builders\ResponseBuilder;
+use willitscale\Streetlamp\Enums\HttpMethod;
+use willitscale\Streetlamp\Enums\HttpStatusCode;
+use willitscale\Streetlamp\Enums\MediaType;
+use willitscale\Streetlamp\Requests\RequestInterface;
 
 #[RouteController]
 #[Path('/')]

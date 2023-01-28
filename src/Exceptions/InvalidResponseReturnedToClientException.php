@@ -1,8 +1,8 @@
 <?php
 
-namespace n3tw0rk\Streetlamp\Exceptions;
+namespace willitscale\Streetlamp\Exceptions;
 
-use n3tw0rk\Streetlamp\Enums\HttpStatusCode;
+use willitscale\Streetlamp\Enums\HttpStatusCode;
 
 class InvalidResponseReturnedToClientException extends StreetLampRequestException
 {

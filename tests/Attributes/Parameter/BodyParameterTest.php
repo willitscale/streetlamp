@@ -2,10 +2,10 @@
 
 namespace Attributes\Parameter;
 
-use n3tw0rk\Streetlamp\Attributes\Parameter\BodyParameter;
-use n3tw0rk\Streetlamp\Exceptions\InvalidParameterTypeException;
-use n3tw0rk\Streetlamp\Exceptions\Parameters\MissingRequireBodyException;
-use n3tw0rk\Streetlamp\Exceptions\Validators\InvalidParameterFailedToPassFilterValidation;
+use willitscale\Streetlamp\Attributes\Parameter\BodyParameter;
+use willitscale\Streetlamp\Exceptions\InvalidParameterTypeException;
+use willitscale\Streetlamp\Exceptions\Parameters\MissingRequireBodyException;
+use willitscale\Streetlamp\Exceptions\Validators\InvalidParameterFailedToPassFilterValidation;
 use PHPUnit\Framework\TestCase;
 
 class BodyParameterTest extends TestCase

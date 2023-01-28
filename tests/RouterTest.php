@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
-use n3tw0rk\Streetlamp\Enums\MediaType;
-use n3tw0rk\StreetlampTest\RouteTestCase;
+use willitscale\Streetlamp\Enums\MediaType;
+use willitscale\StreetlampTest\RouteTestCase;
 
 class RouterTest extends RouteTestCase
 {

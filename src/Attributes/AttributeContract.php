@@ -1,9 +1,9 @@
 <?php declare(strict_types=1);
 
-namespace n3tw0rk\Streetlamp\Attributes;
+namespace willitscale\Streetlamp\Attributes;
 
-use n3tw0rk\Streetlamp\Models\Controller;
-use n3tw0rk\Streetlamp\Models\Route;
+use willitscale\Streetlamp\Models\Controller;
+use willitscale\Streetlamp\Models\Route;
 
 interface AttributeContract
 {

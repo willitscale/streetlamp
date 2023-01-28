@@ -2,9 +2,9 @@
 
 namespace Attributes;
 
-use n3tw0rk\Streetlamp\Attributes\Path;
-use n3tw0rk\Streetlamp\Models\Controller;
-use n3tw0rk\Streetlamp\Models\Route;
+use willitscale\Streetlamp\Attributes\Path;
+use willitscale\Streetlamp\Models\Controller;
+use willitscale\Streetlamp\Models\Route;
 use PHPUnit\Framework\TestCase;
 
 class PathTest extends TestCase

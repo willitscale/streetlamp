@@ -1,13 +1,13 @@
 <?php declare(strict_types=1);
 
-namespace n3tw0rk\Streetlamp\Builders;
+namespace willitscale\Streetlamp\Builders;
 
 use JsonSerializable;
-use n3tw0rk\Streetlamp\Attributes\DataBindings\DataBindingObjectInterface;
-use n3tw0rk\Streetlamp\Attributes\DataBindings\Json\JsonObject;
-use n3tw0rk\Streetlamp\Enums\HttpStatusCode;
-use n3tw0rk\Streetlamp\Enums\MediaType;
-use n3tw0rk\Streetlamp\Exceptions\InvalidResponseReturnedToClientException;
+use willitscale\Streetlamp\Attributes\DataBindings\DataBindingObjectInterface;
+use willitscale\Streetlamp\Attributes\DataBindings\Json\JsonObject;
+use willitscale\Streetlamp\Enums\HttpStatusCode;
+use willitscale\Streetlamp\Enums\MediaType;
+use willitscale\Streetlamp\Exceptions\InvalidResponseReturnedToClientException;
 use ReflectionClass;
 use ReflectionException;
 
@@ -125,8 +125,8 @@ class ResponseBuilder implements JsonSerializable
                 $this->data = json_encode($this->data);
             }
 
-            if (!is_string($this->data)) {
-                throw new InvalidResponseReturnedToClientException("RB001", "Response to client must be a string");
+            if (!is_string($this->data) && !is_int($this->data) && !is_float($this->data) && !is_bool($this->data)) {
+                throw new InvalidResponseReturnedToClientException("RB001", "Response to client must be a primitive");
             }
 
             if ($return) {

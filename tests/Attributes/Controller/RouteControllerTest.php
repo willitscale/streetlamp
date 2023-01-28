@@ -2,10 +2,10 @@
 
 namespace Attributes\Controller;
 
-use n3tw0rk\Streetlamp\Attributes\Controller\RouteController;
-use n3tw0rk\Streetlamp\Exceptions\Attributes\InvalidAttributeContextException;
-use n3tw0rk\Streetlamp\Models\Controller;
-use n3tw0rk\Streetlamp\Models\Route;
+use willitscale\Streetlamp\Attributes\Controller\RouteController;
+use willitscale\Streetlamp\Exceptions\Attributes\InvalidAttributeContextException;
+use willitscale\Streetlamp\Models\Controller;
+use willitscale\Streetlamp\Models\Route;
 use PHPUnit\Framework\TestCase;
 
 class RouteControllerTest extends TestCase

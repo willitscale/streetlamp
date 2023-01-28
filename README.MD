@@ -37,7 +37,7 @@ Here's all the code you need to get going:
 ```php
 <?php declare(strict_types=1);
 
-use n3tw0rk\Streetlamp\Router;
+use willitscale\Streetlamp\Router;
 
 (new Router())->route();
 ```
@@ -76,12 +76,12 @@ Here's what that would look like in code:
 
 namespace Example;
 
-use n3tw0rk\Streetlamp\Attributes\Controller\RouteController;
-use n3tw0rk\Streetlamp\Attributes\Path;
-use n3tw0rk\Streetlamp\Attributes\Route\Method;
-use n3tw0rk\Streetlamp\Builders\ResponseBuilder;
-use n3tw0rk\Streetlamp\Enums\HttpMethod;
-use n3tw0rk\Streetlamp\Enums\HttpStatusCode;
+use willitscale\Streetlamp\Attributes\Controller\RouteController;
+use willitscale\Streetlamp\Attributes\Path;
+use willitscale\Streetlamp\Attributes\Route\Method;
+use willitscale\Streetlamp\Builders\ResponseBuilder;
+use willitscale\Streetlamp\Enums\HttpMethod;
+use willitscale\Streetlamp\Enums\HttpStatusCode;
 
 #[RouteController]
 class MyRouteClass

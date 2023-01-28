@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace n3tw0rk\Streetlamp\Attributes\DataBindings\Json;
+namespace willitscale\Streetlamp\Attributes\DataBindings\Json;
 
 use Attribute;
 

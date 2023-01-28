@@ -2,12 +2,12 @@
 
 namespace Attributes\Parameter;
 
-use n3tw0rk\Streetlamp\Attributes\Parameter\FileParameter;
-use n3tw0rk\Streetlamp\Attributes\Validators\FilterVarsValidator;
-use n3tw0rk\Streetlamp\Attributes\Validators\ValidatorInterface;
-use n3tw0rk\Streetlamp\Exceptions\InvalidParameterTypeException;
-use n3tw0rk\Streetlamp\Exceptions\Parameters\MissingRequiredFilesException;
-use n3tw0rk\Streetlamp\Exceptions\Validators\InvalidParameterFailedToPassFilterValidation;
+use willitscale\Streetlamp\Attributes\Parameter\FileParameter;
+use willitscale\Streetlamp\Attributes\Validators\FilterVarsValidator;
+use willitscale\Streetlamp\Attributes\Validators\ValidatorInterface;
+use willitscale\Streetlamp\Exceptions\InvalidParameterTypeException;
+use willitscale\Streetlamp\Exceptions\Parameters\MissingRequiredFilesException;
+use willitscale\Streetlamp\Exceptions\Validators\InvalidParameterFailedToPassFilterValidation;
 use PHPUnit\Framework\TestCase;
 
 class FileParameterTest extends TestCase

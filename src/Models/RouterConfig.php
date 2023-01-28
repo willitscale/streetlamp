@@ -1,11 +1,11 @@
 <?php declare(strict_types=1);
 
-namespace n3tw0rk\Streetlamp\Models;
+namespace willitscale\Streetlamp\Models;
 
-use n3tw0rk\Streetlamp\Requests\HttpRequest;
-use n3tw0rk\Streetlamp\Requests\RequestInterface;
-use n3tw0rk\Streetlamp\RouteCacheHandlers\RouteCacheHandler;
-use n3tw0rk\Streetlamp\RouteCacheHandlers\FileRouteCacheHandler;
+use willitscale\Streetlamp\Requests\HttpRequest;
+use willitscale\Streetlamp\Requests\RequestInterface;
+use willitscale\Streetlamp\RouteCacheHandlers\RouteCacheHandler;
+use willitscale\Streetlamp\RouteCacheHandlers\FileRouteCacheHandler;
 
 readonly class RouterConfig
 {

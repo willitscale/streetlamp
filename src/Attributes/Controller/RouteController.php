@@ -1,12 +1,12 @@
 <?php declare(strict_types=1);
 
-namespace n3tw0rk\Streetlamp\Attributes\Controller;
+namespace willitscale\Streetlamp\Attributes\Controller;
 
 use Attribute;
-use n3tw0rk\Streetlamp\Attributes\AttributeContract;
-use n3tw0rk\Streetlamp\Exceptions\Attributes\InvalidAttributeContextException;
-use n3tw0rk\Streetlamp\Models\Controller;
-use n3tw0rk\Streetlamp\Models\Route;
+use willitscale\Streetlamp\Attributes\AttributeContract;
+use willitscale\Streetlamp\Exceptions\Attributes\InvalidAttributeContextException;
+use willitscale\Streetlamp\Models\Controller;
+use willitscale\Streetlamp\Models\Route;
 
 #[Attribute(Attribute::TARGET_CLASS)]
 class RouteController implements AttributeContract

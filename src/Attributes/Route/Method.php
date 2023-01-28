@@ -1,13 +1,13 @@
 <?php declare(strict_types=1);
 
-namespace n3tw0rk\Streetlamp\Attributes\Route;
+namespace willitscale\Streetlamp\Attributes\Route;
 
 use Attribute;
-use n3tw0rk\Streetlamp\Attributes\AttributeContract;
-use n3tw0rk\Streetlamp\Enums\HttpMethod;
-use n3tw0rk\Streetlamp\Exceptions\Attributes\InvalidAttributeContextException;
-use n3tw0rk\Streetlamp\Models\Controller;
-use n3tw0rk\Streetlamp\Models\Route;
+use willitscale\Streetlamp\Attributes\AttributeContract;
+use willitscale\Streetlamp\Enums\HttpMethod;
+use willitscale\Streetlamp\Exceptions\Attributes\InvalidAttributeContextException;
+use willitscale\Streetlamp\Models\Controller;
+use willitscale\Streetlamp\Models\Route;
 
 #[Attribute(Attribute::TARGET_METHOD)]
 readonly class Method implements AttributeContract

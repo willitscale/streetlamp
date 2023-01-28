@@ -1,14 +1,14 @@
 <?php declare(strict_types=1);
 
-namespace n3tw0rk\StreetlampTest;
+namespace willitscale\StreetlampTest;
 
 use Exception;
-use n3tw0rk\Streetlamp\Builders\RouterConfigBuilder;
-use n3tw0rk\Streetlamp\Requests\CommandLineRequest;
-use n3tw0rk\Streetlamp\RouteBuilder;
-use n3tw0rk\Streetlamp\RouteCacheHandlers\NullRouteCacheHandler;
-use n3tw0rk\Streetlamp\RouteCacheHandlers\RouteCacheHandler;
-use n3tw0rk\Streetlamp\Router;
+use willitscale\Streetlamp\Builders\RouterConfigBuilder;
+use willitscale\Streetlamp\Requests\CommandLineRequest;
+use willitscale\Streetlamp\RouteBuilder;
+use willitscale\Streetlamp\RouteCacheHandlers\NullRouteCacheHandler;
+use willitscale\Streetlamp\RouteCacheHandlers\RouteCacheHandler;
+use willitscale\Streetlamp\Router;
 use PHPUnit\Framework\TestCase;
 
 class RouteTestCase extends TestCase

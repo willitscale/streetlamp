@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace n3tw0rk\Streetlamp\Requests;
+namespace willitscale\Streetlamp\Requests;
 interface RequestInterface
 {
     public function getMethod(): string;

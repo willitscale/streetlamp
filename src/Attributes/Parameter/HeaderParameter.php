@@ -1,9 +1,9 @@
 <?php declare(strict_types=1);
 
-namespace n3tw0rk\Streetlamp\Attributes\Parameter;
+namespace willitscale\Streetlamp\Attributes\Parameter;
 
 use Attribute;
-use n3tw0rk\Streetlamp\Exceptions\Parameters\MissingRequiredHeaderException;
+use willitscale\Streetlamp\Exceptions\Parameters\MissingRequiredHeaderException;
 
 #[Attribute(Attribute::TARGET_PARAMETER)]
 class HeaderParameter extends Parameter
