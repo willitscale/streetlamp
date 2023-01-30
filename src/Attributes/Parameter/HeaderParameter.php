@@ -18,7 +18,7 @@ class HeaderParameter extends Parameter
         $headerServerKey = 'HTTP_' . strtoupper($this->key);
 
         if (empty($_SERVER[$headerServerKey])) {
-            throw new MissingRequiredHeaderException("HeaderParameter missing expected value " . $this->key);
+            throw new MissingRequiredHeaderException("HP001", "HeaderParameter missing expected value " . $this->key);
         }
 
         return $_SERVER[$headerServerKey];

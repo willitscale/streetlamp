@@ -103,7 +103,7 @@ readonly class RouteBuilder
     private function loadConfig(): array
     {
         if (!file_exists($this->routerConfig->getComposerFile())) {
-            throw new ComposerFileDoesNotExistException("Cannot locate the composer.json file.");
+            throw new ComposerFileDoesNotExistException("RTB001", "Cannot locate the composer.json file.");
         }
 
         $composerJsonFile = file_get_contents($this->routerConfig->getComposerFile());
@@ -112,7 +112,7 @@ readonly class RouteBuilder
 
         if (empty($json['autoload']['psr-4'])) {
             throw new ComposerFileInvalidFormatException(
-                "composer.json is invalid or missing psr-4 configuration."
+                "RTB002", "composer.json is invalid or missing psr-4 configuration."
             );
         }
 

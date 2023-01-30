@@ -25,7 +25,7 @@ class BodyParameter extends Parameter
         $streamValue = file_get_contents($this->resourceIdentifier);
 
         if (empty($streamValue)) {
-            throw new MissingRequireBodyException("BodyParameter missing or blank");
+            throw new MissingRequireBodyException("BP001", "BodyParameter missing or blank");
         }
 
         return $streamValue;

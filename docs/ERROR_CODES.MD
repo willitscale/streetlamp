@@ -1,0 +1,36 @@
+# Error Codes
+
+There's a number of exceptions thrown within Streetlamp due to improper use. 
+This will highlight those exceptions and help you remedy them.
+All error codes and corresponding exceptions documented extend the exception `StreetLampRequestException` which is typically designed to trigger a failure to the client.
+
+| Code   | Thrown By         | Exception                                      | HTTP Status | Description                                                                                                                                                                                                        |
+|--------|-------------------|------------------------------------------------|-------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| RTB001 | `RouteBuilder`    | `ComposerFileDoesNotExistException`            | 503         | Cannot find the referenced composer file.                                                                                                                                                                          |
+| RTB002 | `RouteBuilder`    | `ComposerFileInvalidFormatException`           | 503         | The composer file specified is invalid [JSON](https://www.json.org/json-en.html) or does not have a [PSR-4](https://www.php-fig.org/psr/psr-4/) configuration.                                                     |
+| R001   | `Router`          | `InvalidRouteResponseException`                | 500         | The route method did not return a valid `ResponseBuilder` object.                                                                                                                                                  |
+| R002   | `Router`          | `InvalidContentTypeException`                  | 415         | Request did match a route path, but did not match the accepted media type.                                                                                                                                         |
+| R003   | `Router`          | `NoValidRouteException`                        | 404         | Request did not match any route defined.                                                                                                                                                                           |
+| RM001  | `Route`           | `InvalidParameterAlreadyBoundException`        | 500         | There are multiple inputs bound to the same parameter.                                                                                                                                                             |
+| RB001  | `ResponseBuilder` | `InvalidResponseReturnedToClientException`     | 500         | Response to client is not a primitive data type. If response is a [JSON](https://www.json.org/json-en.html) object please ensure the content type is set to `application/json` so it can be automatically encoded. |
+| RC001  | `RouteController` | `InvalidAttributeContextException`             | 500         | Attempt to bind a route controller to a method and not a class.                                                                                                                                                    |
+| JS001  | `JsonProperty`    | `InvalidParameterTypeException`                | 400         | Data binding has failed due to missing required field.                                                                                                                                                             |
+| BP001  | `BodyParameter`   | `MissingRequireBodyException`                  | 400         | Request is missing the expected body data.                                                                                                                                                                         |
+| FP001  | `FileParameter`   | `MissingRequiredFilesException`                | 400         | Request is missing the expected file.                                                                                                                                                                              |
+| HP001  | `HeaderParameter` | `MissingRequiredHeaderException`               | 400         | Request is missing the expected header.                                                                                                                                                                            |
+| PR001  | `Parameter`       | `InvalidParameterTypeException`                | 400         | Request data for input field is not a string or array.                                                                                                                                                             |
+| PR002  | `Parameter`       | `InvalidParameterTypeDefinitionException`      | 500         | No data type defined for parameter in route method definition.                                                                                                                                                     |
+| PR003  | `Parameter`       | `InvalidParameterFailedToPassFilterValidation` | 400         | Request input failed to match validator checks.                                                                                                                                                                    |
+| PR004  | `Parameter`       | `InvalidParameterTypeDefinitionException`      | 500         | No bindings for specified data type in parameter for route method definition.                                                                                                                                      |
+| PP001  | `ParameterPath`   | `MissingRequiredPathException`                 | 400         | Request path is missing the expected variable parameter.                                                                                                                                                           |
+| PDP001 | `PostParameter`   | `MissingRequiredPostException`                 | 400         | Request is missing the expected post data.                                                                                                                                                                         |
+| QP001  | `QueryParameter`  | `MissingRequireQueryException`                 | 400         | Request is missing the expected query string parameter.                                                                                                                                                            |
+| MTD001 | `Method`          | `InvalidAttributeContextException`             | 500         | Method attribute bound to something other than a class method.                                                                                                                                                     |
+
+
+
+
+
+
+
+

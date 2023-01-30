@@ -93,7 +93,7 @@ class Route extends Context
     public function addParameter(string $parameterName, Parameter $parameter): void
     {
         if (array_key_exists($parameterName, $this->parameters)) {
-            throw new InvalidParameterAlreadyBoundException("ROUTE001", "Cannot bind the same parameter $parameterName to multiple inputs");
+            throw new InvalidParameterAlreadyBoundException("RM001", "Cannot bind the same parameter $parameterName to multiple inputs");
         }
 
         $this->parameters [$parameterName] = $parameter;

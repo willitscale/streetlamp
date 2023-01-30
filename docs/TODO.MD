@@ -9,6 +9,8 @@ Welcome to the TODO list. This is just a collection of thoughts and ideas on how
 ## Features
 - Review the possibility of optional path parameters to reduce Path annotations. From the initial review seems like it would cause path collisions. 
 - In data bindings review how to nest data bind objects within arrays.
+- The ability to print out the current paths of the application.
+- A way to easily clear the route cache.
 
 ## Resilience 
 - More Tests

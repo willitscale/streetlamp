@@ -16,7 +16,7 @@ class FileParameter extends Parameter
     public function value(array $pathMatches): string|int|bool|float
     {
         if (empty($_FILES[$this->key])) {
-            throw new MissingRequiredFilesException("FileParameter missing expected value for " . $this->key);
+            throw new MissingRequiredFilesException("FP001", "FileParameter missing expected value for " . $this->key);
         }
 
         return $_FILES[$this->key];

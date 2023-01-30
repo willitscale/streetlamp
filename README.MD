@@ -106,5 +106,6 @@ We could have also applied the `#[Path('/hello')]` to the `RouteController` and 
 - [Validators](docs/VALIDATORS.MD)
 - [Configuration](docs/CONFIGURATION.MD)
 - [Testing](docs/TESTING.MD)
+- [Error Codes](docs/ERROR_CODES.MD)
 - [Performance](docs/PERFORMANCE.MD)
 - [TODO](docs/TODO.MD)

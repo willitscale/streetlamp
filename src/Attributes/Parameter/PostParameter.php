@@ -16,7 +16,7 @@ class PostParameter extends Parameter
     public function value(array $pathMatches): string|int|bool|float|array
     {
         if (empty($_POST[$this->key])) {
-            throw new MissingRequiredPostException("Post missing expected value for " . $this->key);
+            throw new MissingRequiredPostException("PDP001", "Post missing expected value for " . $this->key);
         }
 
         return $_POST[$this->key];

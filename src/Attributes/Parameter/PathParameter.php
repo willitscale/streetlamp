@@ -16,7 +16,7 @@ class PathParameter extends Parameter
     public function value(array $pathMatches): string|int|bool|float
     {
         if (empty($pathMatches[$this->key])) {
-            throw new MissingRequiredPathException("Missing path parameter of $this->key");
+            throw new MissingRequiredPathException("PP001", "Missing path parameter of $this->key");
         }
 
         return current($pathMatches[$this->key]);

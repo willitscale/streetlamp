@@ -4,6 +4,7 @@ namespace willitscale\Streetlamp\Attributes\Parameter;
 
 use willitscale\Streetlamp\Attributes\DataBindings\DataBindingObjectInterface;
 use willitscale\Streetlamp\Attributes\Validators\ValidatorInterface;
+use willitscale\Streetlamp\Exceptions\InvalidParameterTypeDefinitionException;
 use willitscale\Streetlamp\Exceptions\InvalidParameterTypeException;
 use willitscale\Streetlamp\Exceptions\Validators\InvalidParameterFailedToPassFilterValidation;
 use ReflectionClass;
@@ -70,9 +71,10 @@ abstract class Parameter
 
     /**
      * @param mixed $value
-     * @return string|int|bool|float
-     * @throws InvalidParameterTypeException
+     * @return mixed
      * @throws InvalidParameterFailedToPassFilterValidation
+     * @throws InvalidParameterTypeDefinitionException
+     * @throws InvalidParameterTypeException
      */
     protected function castAndValidateValue(mixed $value): mixed
     {
@@ -81,7 +83,7 @@ abstract class Parameter
         }
 
         if (empty($this->type)) {
-            throw new InvalidParameterTypeException("PR002", "Unable to resolve data type for $this->key");
+            throw new InvalidParameterTypeDefinitionException("PR002", "Unable to resolve data type for $this->key");
         }
 
         foreach($this->validators as $validator) {
@@ -115,6 +117,6 @@ abstract class Parameter
             }
         }
 
-        throw new InvalidParameterTypeException("PARAM004", "Parameter $this->key references $type, but it has no data bindings");
+        throw new InvalidParameterTypeDefinitionException("PR004", "Parameter $this->key references $type, but it has no data bindings");
     }
 }

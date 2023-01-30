@@ -16,7 +16,7 @@ class QueryParameter extends Parameter
     public function value(array $pathMatches): string|int|bool|float
     {
         if (empty($_GET[$this->key])) {
-            throw new MissingRequireQueryException("Query string missing expected value for " . $this->key);
+            throw new MissingRequireQueryException("QP001", "Query string missing expected value for " . $this->key);
         }
 
         return $_GET[$this->key];
