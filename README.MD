@@ -1,9 +1,9 @@
 # Streetlamp
 
-![GitHub Workflow Status (with branch)](https://img.shields.io/github/actions/workflow/status/willitscale/streetlamp/php.yml)
-![Packagist License](https://img.shields.io/packagist/l/willitscale/streetlamp)
-![Packagist Version](https://img.shields.io/packagist/v/willitscale/streetlamp)
-![GitHub last commit](https://img.shields.io/github/last-commit/willitscale/streetlamp)
+[![GitHub Workflow Status (with branch)](https://img.shields.io/github/actions/workflow/status/willitscale/streetlamp/php.yml)](https://packagist.org/packages/willitscale/streetlamp)
+[![Packagist License](https://img.shields.io/packagist/l/willitscale/streetlamp)](https://github.com/willitscale/streetlamp/blob/main/LICENSE)
+[![Packagist Version](https://img.shields.io/packagist/v/willitscale/streetlamp)](https://packagist.org/packages/willitscale/streetlamp)
+[![GitHub last commit](https://img.shields.io/github/last-commit/willitscale/streetlamp)](https://github.com/willitscale/streetlamp/commits/main)
 
 ## Table of Contents
 - [1. Introduction](#1-introduction)
