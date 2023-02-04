@@ -4,7 +4,7 @@ namespace willitscale\Streetlamp\RouteCacheHandlers;
 
 class NullRouteCacheHandler extends RouteCacheHandler
 {
-    public function serialize(array $data): null
+    public function serialize(array $data): string|null
     {
         return null;
     }
