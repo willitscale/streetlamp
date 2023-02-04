@@ -1,5 +1,10 @@
 # Streetlamp
 
+![GitHub Workflow Status (with branch)](https://img.shields.io/github/actions/workflow/status/willitscale/streetlamp/php.yml)
+![Packagist License](https://img.shields.io/packagist/l/willitscale/streetlamp)
+![Packagist Version](https://img.shields.io/packagist/v/willitscale/streetlamp)
+![GitHub last commit](https://img.shields.io/github/last-commit/willitscale/streetlamp)
+
 ## Table of Contents
 - [1. Introduction](#1-introduction)
 - [2. Prerequisites](#2-prerequisites)
