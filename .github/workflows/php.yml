@@ -32,8 +32,6 @@ jobs:
     - name: Install dependencies
       run: composer install --prefer-dist --no-progress
 
-    - name: Print PHP Version
-      run: php --version
-
     - name: Run Unit Tests
+      uses: php:8.2-cli
       run: ./vendor/bin/phpunit tests
