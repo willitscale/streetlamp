@@ -18,7 +18,7 @@ class NullRouteCacheHandler extends RouteCacheHandler
     {
     }
 
-    public function retrieve(): null
+    public function retrieve(): string|null
     {
         return null;
     }
