@@ -12,7 +12,9 @@ readonly class HttpRequest implements RequestInterface
 
     public function getPath(): string
     {
-        return $_SERVER['REQUEST_URI'] ?? '/';
+        $path = $_SERVER['REQUEST_URI'] ?? '/';
+        list($path) = explode('?', $path);
+        return $path;
     }
 
     public function getContentType(): string
