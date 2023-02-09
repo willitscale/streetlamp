@@ -205,8 +205,9 @@ readonly class RouteBuilder
             $pathParts = explode(DIRECTORY_SEPARATOR, $file);
             $filename = end($pathParts);
             $class = str_replace('.php', '', $filename);
-            $replaced = str_replace([$root, $class . '.php'], '', $file);
-            $classNamespace = $namespace . str_replace(DIRECTORY_SEPARATOR, '\\', $replaced);
+            $replaced = str_replace([realpath($root), $root, $class . '.php'], '', $file);
+            $classNamespace = $namespace . str_replace(DIRECTORY_SEPARATOR, "\\", $replaced);
+            $classNamespace = str_replace("\\\\", "\\", $classNamespace);
 
             if (!class_exists($classNamespace . $class)) {
                 continue;
