@@ -14,6 +14,7 @@ readonly class HttpRequest implements RequestInterface
     {
         $path = $_SERVER['REQUEST_URI'] ?? '/';
         list($path) = explode('?', $path);
+        list($path) = explode('#', $path);
         return $path;
     }
 
