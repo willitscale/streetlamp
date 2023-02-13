@@ -30,7 +30,7 @@ The structure of the config file follows these constraints:
 }
 ```
 
-The config can also be set programatically too using the `RouterConfigBuilder` like so:
+The config can also be set programmatically too using the `RouterConfigBuilder` like so:
 
 ### RouterConfigBuilder
 
