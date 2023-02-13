@@ -2,7 +2,7 @@
 
 The Streetlamp has a flexible configuration which allows you to override most parts of the router.
 At the very top level you can do most of this with the `RouterConfig` or even easier with the `RouterConfigBuilder`.
-By default, you can initialise the `Router` without any config and for all intensive purposes will work just fine.
+By default, you can initialise the `Router` without any config and for all intents and purposes will work just fine.
 
 ## Config File
 
@@ -30,7 +30,7 @@ The structure of the config file follows these constraints:
 }
 ```
 
-The config can also be set pragmatically too using the `RouterConfigBuilder` like so:
+The config can also be set programatically too using the `RouterConfigBuilder` like so:
 
 ### RouterConfigBuilder
 
@@ -63,7 +63,7 @@ It's used as the base level to scan your application from.
 ### Composer File
 
 The composer file needs to be that of your application.
-This file is used deciding what directories to scan as it will iterate over the `autoload->psr-4` sources to extract routes from.
+This file is used for deciding which directories to scan as it will iterate over the `autoload->psr-4` sources to extract routes from.
 
 ### Cached
 
