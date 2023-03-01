@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace willitscale\Streetlamp;
 
@@ -55,7 +57,6 @@ readonly class Router
 
         try {
             foreach ($this->routeBuilder->getRoutes() as $route) {
-
                 $matches = [];
 
                 if (!$route->matchesRoute($request, $matches)) {
@@ -94,8 +95,9 @@ readonly class Router
 
                 if (!isset($response) || !($response instanceof ResponseBuilder)) {
                     throw new InvalidRouteResponseException(
-                        'R001', 'Call to ' . $route->getClass() . '::' .
-                            $route->getFunction(). ' did not return a Response object.'
+                        'R001',
+                        'Call to ' . $route->getClass() . '::' .
+                        $route->getFunction() . ' did not return a Response object.'
                     );
                 }
 
@@ -106,7 +108,8 @@ readonly class Router
 
             if ($pathMatched) {
                 throw new InvalidContentTypeException(
-                    'R002', 'Content type ' . $_SERVER["CONTENT_TYPE"] . ' did not match any matching path routes.'
+                    'R002',
+                    'Content type ' . $_SERVER["CONTENT_TYPE"] . ' did not match any matching path routes.'
                 );
             }
 

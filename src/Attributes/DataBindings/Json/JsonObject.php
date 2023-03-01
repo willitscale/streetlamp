@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace willitscale\Streetlamp\Attributes\DataBindings\Json;
 
@@ -22,7 +24,6 @@ class JsonObject implements DataBindingObjectInterface
         $properties = $reflectionClass->getProperties();
 
         foreach ($properties as $property) {
-
             $jsonProperties = $property->getAttributes(JsonProperty::class);
             if (empty($jsonProperties)) {
                 continue;
@@ -36,17 +37,14 @@ class JsonObject implements DataBindingObjectInterface
 
     public function getSerializable(ReflectionClass $reflectionClass, object $object): mixed
     {
-        $data = new stdClass;
+        $data = new stdClass();
 
         foreach ($reflectionClass->getProperties() as $property) {
-
             $name = $property->getName();
-
             $propertyAttributes = $property->getAttributes();
-
             $isJsonProperty = false;
 
-            foreach($propertyAttributes as $attribute) {
+            foreach ($propertyAttributes as $attribute) {
                 $attributeInstance = $attribute->newInstance();
                 if ($attributeInstance instanceof JsonIgnore) {
                     $isJsonProperty = false;
@@ -64,7 +62,6 @@ class JsonObject implements DataBindingObjectInterface
             $value = $property->getValue($object);
 
             if (!$property->getType()->isBuiltin()) {
-
                 $innerReflectionClass = new ReflectionClass($value);
                 $reflectionAttributes = $innerReflectionClass->getAttributes(JsonObject::class);
 
@@ -72,7 +69,7 @@ class JsonObject implements DataBindingObjectInterface
                     continue;
                 }
 
-                foreach($reflectionAttributes as $attribute) {
+                foreach ($reflectionAttributes as $attribute) {
                     $attributeInstance = $attribute->newInstance();
                     if ($attributeInstance instanceof DataBindingObjectInterface) {
                         $value = $attributeInstance->getSerializable($innerReflectionClass, $value);

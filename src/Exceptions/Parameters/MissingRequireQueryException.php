@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace willitscale\Streetlamp\Exceptions\Parameters;
 
 use willitscale\Streetlamp\Enums\HttpStatusCode;

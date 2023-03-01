@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace willitscale\Streetlamp\Models;
 
 use willitscale\Streetlamp\Enums\MediaType;
@@ -13,7 +15,8 @@ abstract class Context
         protected string|null $accepts = null,
         protected array $preFlight = [],
         protected array $postFlight = []
-    ) {}
+    ) {
+    }
 
     /**
      * @return string

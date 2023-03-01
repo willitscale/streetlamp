@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace willitscale\Streetlamp\Requests;
 
@@ -13,7 +15,8 @@ readonly class CommandLineRequest implements RequestInterface
         private string $method,
         private string $path,
         private string $contentType
-    ) {}
+    ) {
+    }
 
     public function getMethod(): string
     {

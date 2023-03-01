@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace willitscale\Streetlamp\Models;
 
@@ -9,7 +11,7 @@ use willitscale\Streetlamp\RouteCacheHandlers\FileRouteCacheHandler;
 
 readonly class RouterConfig
 {
-    const APPLICATION_DIRECTORY = '.' . DIRECTORY_SEPARATOR;
+    public const APPLICATION_DIRECTORY = '.' . DIRECTORY_SEPARATOR;
 
     /**
      * @param string $rootDirectory

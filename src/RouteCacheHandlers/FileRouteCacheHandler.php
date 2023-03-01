@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace willitscale\Streetlamp\RouteCacheHandlers;
 
@@ -7,7 +9,8 @@ class FileRouteCacheHandler extends RouteCacheHandler
     /**
      * @param string|null $path
      */
-    public function __construct(private string|null $path = null) {
+    public function __construct(private string|null $path = null)
+    {
         $this->path = $path ?? sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'router.data';
     }
 
