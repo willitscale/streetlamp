@@ -5,10 +5,6 @@ on:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
-    paths:
-      - "**.php"
-      - "phpcs.xml"
-      - ".github/workflows/phpcs.yml"
 
 permissions:
   contents: read
@@ -20,17 +16,6 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-
-    - name: Install PHP_CodeSniffer
-      run: |
-        curl -OL https://squizlabs.github.io/PHP_CodeSniffer/phpcs.phar
-        php phpcs.phar --version
-
-    - uses: thenabeel/action-phpcs@v8
-      with:
-        files: "**.php"
-        phpcs_path: php phpcs.phar
-        standard: phpcs.xml
 
     - name: Validate composer.json and composer.lock
       run: composer validate --strict
@@ -49,3 +34,10 @@ jobs:
 
     - name: Run Unit Tests
       uses: php-actions/phpunit@v9
+
+    - name: PHP Coding Style
+      uses: thenabeel/action-phpcs@v8
+      with:
+        files: "**.php"
+        phpcs_path: ./vendor/bin/phpcs
+        standard: phpcs.xml
