@@ -16,6 +16,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
 
     - name: Validate composer.json and composer.lock
       run: composer validate --strict
@@ -32,12 +34,12 @@ jobs:
     - name: Install dependencies
       run: composer install --prefer-dist --no-progress
 
-    - name: Run Unit Tests
-      uses: php-actions/phpunit@v9
-
     - name: PHP Coding Style
       uses: thenabeel/action-phpcs@v8
       with:
-        files: "src/**.php"
+        files: "src"
         phpcs_path: ./vendor/bin/phpcs -n
         standard: phpcs.xml
+
+    - name: Run Unit Tests
+      uses: php-actions/phpunit@v9
