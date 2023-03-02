@@ -1,6 +1,8 @@
-<?php declare(strict_types=1);
+<?php
 
-namespace TestApp;
+declare(strict_types=1);
+
+namespace willitscale\StreetlampTests\TestApp;
 
 use willitscale\Streetlamp\Attributes\Accepts;
 use willitscale\Streetlamp\Attributes\Controller\RouteController;

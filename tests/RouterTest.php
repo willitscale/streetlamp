@@ -1,4 +1,8 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
+namespace willitscale\StreetlampTests;
 
 use willitscale\Streetlamp\Enums\MediaType;
 use willitscale\StreetlampTest\RouteTestCase;
@@ -60,7 +64,7 @@ class RouterTest extends RouteTestCase
             self::COMPOSER_TEST_FILE
         );
         $response = $router->route(true);
-        UNSET($_POST['test']);
+        unset($_POST['test']);
         $this->assertEquals($data, $response);
     }
 
@@ -98,7 +102,7 @@ class RouterTest extends RouteTestCase
             self::COMPOSER_TEST_FILE
         );
         $response = $router->route(true);
-        UNSET($_GET['test']);
+        unset($_GET['test']);
         $this->assertEquals($data, $response);
     }
 

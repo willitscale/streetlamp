@@ -41,7 +41,7 @@ jobs:
         tools: phpcs, phpunit
 
     - name: Running Coding Style Checks
-      run: phpcs -n src src-test
+      run: phpcs -n src src-test tests
 
     - name: Running Unit Tests
       run: phpunit

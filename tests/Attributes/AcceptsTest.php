@@ -1,6 +1,8 @@
-<?php declare(strict_types=1);
+<?php
 
-namespace Attributes;
+declare(strict_types=1);
+
+namespace willitscale\StreetlampTests\Attributes;
 
 use willitscale\Streetlamp\Attributes\Accepts;
 use willitscale\Streetlamp\Models\Controller;
@@ -42,7 +44,7 @@ class AcceptsTest extends TestCase
     /**
      * @return array
      */
-    public function validAcceptAnnotations(): array
+    public static function validAcceptAnnotations(): array
     {
         return [
             'it should correctly match a test/test mime type when extracted' => [

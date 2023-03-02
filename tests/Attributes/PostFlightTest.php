@@ -1,6 +1,8 @@
-<?php declare(strict_types=1);
+<?php
 
-namespace Attributes;
+declare(strict_types=1);
+
+namespace willitscale\StreetlampTests\Attributes;
 
 use willitscale\Streetlamp\Attributes\PostFlight;
 use willitscale\Streetlamp\Models\Controller;
@@ -16,11 +18,11 @@ class PostFlightTest extends TestCase
      * @dataProvider validAnnotations
      */
     public function testProcessRouteAnnotationCorrectlyAndExtractThePostFlightClass(
-        array  $expectedClasses
+        array $expectedClasses
     ): void {
         $route = new Route('Test', 'test');
 
-        foreach($expectedClasses as $expectedClass) {
+        foreach ($expectedClasses as $expectedClass) {
             $postFlight = new PostFlight($expectedClass);
             $postFlight->applyToRoute($route);
         }
@@ -41,11 +43,11 @@ class PostFlightTest extends TestCase
      * @dataProvider validAnnotations
      */
     public function testProcessControllerAnnotationCorrectlyAndExtractThePostFlightClass(
-        array  $expectedClasses
+        array $expectedClasses
     ): void {
         $controller = new Controller('Test', 'test');
 
-        foreach($expectedClasses as $expectedClass) {
+        foreach ($expectedClasses as $expectedClass) {
             $postFlight = new PostFlight($expectedClass);
             $postFlight->applyToController($controller);
         }
@@ -59,7 +61,7 @@ class PostFlightTest extends TestCase
         }
     }
 
-    public function validAnnotations(): array
+    public static function validAnnotations(): array
     {
         return [
             'it should extract the class and namespace from a valid annotation' => [

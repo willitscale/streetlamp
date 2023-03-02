@@ -6,7 +6,8 @@
     "autoload": {
         "psr-4": {
             "willitscale\\Streetlamp\\": "src/",
-            "willitscale\\StreetlampTest\\": "src-test/"
+            "willitscale\\StreetlampTest\\": "src-test/",
+            "willitscale\\StreetlampTests\\": "tests/"
         }
     },
     "authors": [
