@@ -40,8 +40,8 @@ jobs:
         php-version: '8.2'
         tools: phpcs
 
-    - name: Run phpcs
-      run: phpcs -n src
+    - name: Running Coding Style Checks
+      run: phpcs -n src src-test
 
-    - name: Run Unit Tests
-      uses: php-actions/phpunit@v9
+    - name: Running Unit Tests
+      run: phpunit
