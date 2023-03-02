@@ -34,12 +34,14 @@ jobs:
     - name: Install dependencies
       run: composer install --prefer-dist --no-progress
 
-    - name: PHP Coding Style
-      uses: thenabeel/action-phpcs@v8
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
       with:
-        files: "src"
-        phpcs_path: ./vendor/bin/phpcs -n
-        standard: phpcs.xml
+        php-version: '8.2'
+        tools: phpcs
+
+    - name: Run phpcs
+      run: phpcs -q src
 
     - name: Run Unit Tests
       uses: php-actions/phpunit@v9
