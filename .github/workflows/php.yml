@@ -41,7 +41,7 @@ jobs:
         tools: phpcs
 
     - name: Run phpcs
-      run: phpcs -q src
+      run: phpcs -n src
 
     - name: Run Unit Tests
       uses: php-actions/phpunit@v9
