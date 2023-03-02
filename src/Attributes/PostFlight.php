@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace willitscale\Streetlamp\Attributes;
 
@@ -7,7 +9,7 @@ use willitscale\Streetlamp\Flight;
 use willitscale\Streetlamp\Models\Controller;
 use willitscale\Streetlamp\Models\Route;
 
-#[Attribute(Attribute::TARGET_CLASS|Attribute::TARGET_METHOD)]
+#[Attribute(Attribute::TARGET_CLASS | Attribute::TARGET_METHOD)]
 readonly class PostFlight implements AttributeContract
 {
     public function __construct(private string $flight)

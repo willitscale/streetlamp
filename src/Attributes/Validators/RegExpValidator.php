@@ -1,13 +1,17 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace willitscale\Streetlamp\Attributes\Validators;
 
 use Attribute;
 
-#[Attribute(Attribute::TARGET_PROPERTY|Attribute::TARGET_PARAMETER)]
+#[Attribute(Attribute::TARGET_PROPERTY | Attribute::TARGET_PARAMETER)]
 readonly class RegExpValidator implements ValidatorInterface
 {
-    public function __construct(private string $pattern, private string|null $replace = null) {}
+    public function __construct(private string $pattern, private string|null $replace = null)
+    {
+    }
 
     public function validate(string $value): bool
     {

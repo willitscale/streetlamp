@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace willitscale\Streetlamp\Attributes;
 
@@ -7,10 +9,11 @@ use willitscale\Streetlamp\Enums\MediaType;
 use willitscale\Streetlamp\Models\Controller;
 use willitscale\Streetlamp\Models\Route;
 
-#[Attribute(Attribute::TARGET_CLASS|Attribute::TARGET_METHOD)]
+#[Attribute(Attribute::TARGET_CLASS | Attribute::TARGET_METHOD)]
 readonly class Accepts implements AttributeContract
 {
-    public function __construct(private string|MediaType $mediaType) {
+    public function __construct(private string|MediaType $mediaType)
+    {
     }
 
     public function applyToController(Controller $controller): void

@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace willitscale\Streetlamp;
 
@@ -112,7 +114,8 @@ readonly class RouteBuilder
 
         if (empty($json['autoload']['psr-4'])) {
             throw new ComposerFileInvalidFormatException(
-                "RTB002", "composer.json is invalid or missing psr-4 configuration."
+                "RTB002",
+                "composer.json is invalid or missing psr-4 configuration."
             );
         }
 
@@ -150,7 +153,7 @@ readonly class RouteBuilder
             $path = substr($path, strlen($rootDirectory));
         }
 
-        foreach($this->routerConfig->getExcludedDirectories() as $directory) {
+        foreach ($this->routerConfig->getExcludedDirectories() as $directory) {
             if (str_starts_with($path, $directory)) {
                 return true;
             }
@@ -251,7 +254,6 @@ readonly class RouteBuilder
                     $this->logger->debug($noMethodRouteFoundException->getMessage());
                 }
             }
-
         }
         return $routes;
     }

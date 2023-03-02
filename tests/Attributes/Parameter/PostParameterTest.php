@@ -1,6 +1,8 @@
-<?php declare(strict_types=1);
+<?php
 
-namespace Attributes\Parameter;
+declare(strict_types=1);
+
+namespace willitscale\StreetlampTests\Attributes\Parameter;
 
 use willitscale\Streetlamp\Attributes\Parameter\PostParameter;
 use willitscale\Streetlamp\Attributes\Validators\FilterVarsValidator;
@@ -52,7 +54,7 @@ class PostParameterTest extends TestCase
         $postArgument->getValue([]);
     }
 
-    public function validValues(): array
+    public static function validValues(): array
     {
         return [
             'it should set a string value and extract a matching value' => [

@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace willitscale\Streetlamp\Attributes\Route;
 
@@ -13,7 +15,8 @@ use willitscale\Streetlamp\Models\Route;
 readonly class Method implements AttributeContract
 {
     public function __construct(private HttpMethod $method)
-    {}
+    {
+    }
 
     /**
      * @throws InvalidAttributeContextException

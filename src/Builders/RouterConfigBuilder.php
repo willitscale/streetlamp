@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace willitscale\Streetlamp\Builders;
 
@@ -14,13 +16,14 @@ class RouterConfigBuilder
     private string $composerFile = RouterConfig::APPLICATION_DIRECTORY . 'composer.json';
     private bool $cached = false;
     private bool $rethrowExceptions = false;
-    private array $excludedDirectories = [ 'tests' ];
+    private array $excludedDirectories = ['tests'];
     private RouteCacheHandler $routeCacheHandler;
     private RequestInterface $request;
     private array $globalPreFlights;
     private array $globalPostFlights;
 
-    public function setConfigFile(string $configFile): RouterConfigBuilder {
+    public function setConfigFile(string $configFile): RouterConfigBuilder
+    {
         if (!file_exists($configFile)) {
             return $this;
         }
@@ -47,7 +50,8 @@ class RouterConfigBuilder
      * @param string $rootDirectory
      * @return RouterConfigBuilder
      */
-    public function setRootDirectory(string $rootDirectory): RouterConfigBuilder {
+    public function setRootDirectory(string $rootDirectory): RouterConfigBuilder
+    {
         $this->rootDirectory = $rootDirectory;
         return $this;
     }
@@ -56,7 +60,8 @@ class RouterConfigBuilder
      * @param string $composerFile
      * @return RouterConfigBuilder
      */
-    public function setComposerFile(string $composerFile): RouterConfigBuilder {
+    public function setComposerFile(string $composerFile): RouterConfigBuilder
+    {
         $this->composerFile = $composerFile;
         return $this;
     }
@@ -65,7 +70,8 @@ class RouterConfigBuilder
      * @param bool $cached
      * @return RouterConfigBuilder
      */
-    public function setCached(bool $cached): RouterConfigBuilder {
+    public function setCached(bool $cached): RouterConfigBuilder
+    {
         $this->cached = $cached;
         return $this;
     }
@@ -74,7 +80,8 @@ class RouterConfigBuilder
      * @param bool $rethrowExceptions
      * @return RouterConfigBuilder
      */
-    public function setRethrowExceptions(bool $rethrowExceptions): RouterConfigBuilder {
+    public function setRethrowExceptions(bool $rethrowExceptions): RouterConfigBuilder
+    {
         $this->rethrowExceptions = $rethrowExceptions;
         return $this;
     }
@@ -83,7 +90,8 @@ class RouterConfigBuilder
      * @param array $excludedDirectories
      * @return RouterConfigBuilder
      */
-    public function setExcludedDirectories(array $excludedDirectories): RouterConfigBuilder {
+    public function setExcludedDirectories(array $excludedDirectories): RouterConfigBuilder
+    {
         $this->excludedDirectories = $excludedDirectories;
         return $this;
     }
@@ -131,7 +139,8 @@ class RouterConfigBuilder
     /**
      * @return RouterConfig
      */
-    public function build(): RouterConfig {
+    public function build(): RouterConfig
+    {
         return new RouterConfig(
             $this->rootDirectory,
             $this->composerFile,

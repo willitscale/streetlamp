@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace willitscale\Streetlamp\Builders;
 
@@ -102,14 +104,13 @@ class ResponseBuilder implements JsonSerializable
         }
 
         if (!$return) {
-            foreach($this->headers as $key => $value) {
+            foreach ($this->headers as $key => $value) {
                 header($key . ': ' . $value);
             }
         }
 
         if (isset($this->data)) {
-
-            if ( is_object($this->data)) {
+            if (is_object($this->data)) {
                 $reflectionClass = new ReflectionClass($this->data);
                 $reflectionAttributes = $reflectionClass->getAttributes(JsonObject::class);
 
@@ -130,7 +131,7 @@ class ResponseBuilder implements JsonSerializable
             }
 
             if ($return) {
-                return (string) $this->data;
+                return (string)$this->data;
             }
 
             echo $this->data;

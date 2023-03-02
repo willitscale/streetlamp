@@ -1,7 +1,7 @@
 {
   "autoload": {
     "psr-4": {
-      "TestApp": "TestApp"
+      "willitscale\\StreetlampTests\\TestApp\\": "TestApp"
     }
   }
 }

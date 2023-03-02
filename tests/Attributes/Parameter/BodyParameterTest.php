@@ -1,6 +1,8 @@
-<?php declare(strict_types=1);
+<?php
 
-namespace Attributes\Parameter;
+declare(strict_types=1);
+
+namespace willitscale\StreetlampTests\Attributes\Parameter;
 
 use willitscale\Streetlamp\Attributes\Parameter\BodyParameter;
 use willitscale\Streetlamp\Exceptions\InvalidParameterTypeException;
@@ -46,7 +48,7 @@ class BodyParameterTest extends TestCase
         $bodyArgument->getValue([]);
     }
 
-    public function validValues(): array
+    public static function validValues(): array
     {
         return [
             'it should use the file system instead of the input stream and extract the correct string value' => [

@@ -1,6 +1,8 @@
-<?php declare(strict_types=1);
+<?php
 
-namespace Attributes\Parameter;
+declare(strict_types=1);
+
+namespace willitscale\StreetlampTests\Attributes\Parameter;
 
 use willitscale\Streetlamp\Attributes\Parameter\FileParameter;
 use willitscale\Streetlamp\Attributes\Validators\FilterVarsValidator;
@@ -50,7 +52,7 @@ class FileParameterTest extends TestCase
         $fileArgument->getValue([]);
     }
 
-    public function validValues(): array
+    public static function validValues(): array
     {
         return [
             'it should set a string value and extract a matching value' => [

@@ -1,11 +1,12 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace willitscale\Streetlamp\Attributes\DataBindings\Json;
 
 use Attribute;
 
-#[Attribute(Attribute::TARGET_PROPERTY|Attribute::TARGET_PARAMETER)]
+#[Attribute(Attribute::TARGET_PROPERTY | Attribute::TARGET_PARAMETER)]
 class JsonIgnore
 {
-
 }

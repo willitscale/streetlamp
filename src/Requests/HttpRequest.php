@@ -1,10 +1,11 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace willitscale\Streetlamp\Requests;
 
 readonly class HttpRequest implements RequestInterface
 {
-
     public function getMethod(): string
     {
         return $_SERVER['REQUEST_METHOD'];

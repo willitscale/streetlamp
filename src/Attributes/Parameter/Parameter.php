@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace willitscale\Streetlamp\Attributes\Parameter;
 
@@ -60,7 +62,7 @@ abstract class Parameter
      */
     public function addValidator(ValidatorInterface $validator): void
     {
-        $this->validators []= $validator;
+        $this->validators[] = $validator;
     }
 
     /**
@@ -79,16 +81,25 @@ abstract class Parameter
     protected function castAndValidateValue(mixed $value): mixed
     {
         if (!is_string($value) && !is_array($value)) {
-            throw new InvalidParameterTypeException("PR001", "Parameter $this->key is not a string or array");
+            throw new InvalidParameterTypeException(
+                "PR001",
+                "Parameter $this->key is not a string or array"
+            );
         }
 
         if (empty($this->type)) {
-            throw new InvalidParameterTypeDefinitionException("PR002", "Unable to resolve data type for $this->key");
+            throw new InvalidParameterTypeDefinitionException(
+                "PR002",
+                "Unable to resolve data type for $this->key"
+            );
         }
 
-        foreach($this->validators as $validator) {
+        foreach ($this->validators as $validator) {
             if (!$validator->validate($value)) {
-                throw new InvalidParameterFailedToPassFilterValidation("PR003", "Parameter $this->key failed to pass the filter validation");
+                throw new InvalidParameterFailedToPassFilterValidation(
+                    "PR003",
+                    "Parameter $this->key failed to pass the filter validation"
+                );
             }
 
             $value = $validator->sanitize($value);
@@ -110,13 +121,16 @@ abstract class Parameter
 
         $attributes = $reflectionClass->getAttributes();
 
-        foreach($attributes as $attribute) {
+        foreach ($attributes as $attribute) {
             $attributeInstance = $attribute->newInstance();
             if ($attributeInstance instanceof DataBindingObjectInterface) {
                 return $attributeInstance->build($reflectionClass, $value);
             }
         }
 
-        throw new InvalidParameterTypeDefinitionException("PR004", "Parameter $this->key references $type, but it has no data bindings");
+        throw new InvalidParameterTypeDefinitionException(
+            "PR004",
+            "Parameter $this->key references $type, but it has no data bindings"
+        );
     }
 }

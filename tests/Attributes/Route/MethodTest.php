@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Attributes\Route;
 
@@ -33,7 +35,7 @@ class MethodTest extends TestCase
         $methodAnnotation->applyToController($controller);
     }
 
-    public function validRouteAnnotations():array
+    public static function validRouteAnnotations(): array
     {
         return [
             'it should identify the GET method and assign it to the route' => [

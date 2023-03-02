@@ -1,6 +1,8 @@
-<?php declare(strict_types=1);
+<?php
 
-namespace Attributes;
+declare(strict_types=1);
+
+namespace willitscale\StreetlampTests\Attributes;
 
 use willitscale\Streetlamp\Attributes\PreFlight;
 use willitscale\Streetlamp\Models\Controller;
@@ -16,11 +18,11 @@ class PreFlightTest extends TestCase
      * @dataProvider validAnnotations
      */
     public function testProcessRouteAnnotationCorrectlyAndExtractThePreflightClass(
-        array  $expectedClasses
+        array $expectedClasses
     ): void {
         $route = new Route('Test', 'test');
 
-        foreach($expectedClasses as $expectedClass) {
+        foreach ($expectedClasses as $expectedClass) {
             $preflightAnnotation = new PreFlight($expectedClass);
             $preflightAnnotation->applyToRoute($route);
         }
@@ -40,11 +42,11 @@ class PreFlightTest extends TestCase
      * @dataProvider validAnnotations
      */
     public function testProcessControllerAnnotationCorrectlyAndExtractThePreflightClass(
-        array  $expectedClasses
+        array $expectedClasses
     ): void {
         $controller = new Controller('Test', 'test');
 
-        foreach($expectedClasses AS $expectedClass) {
+        foreach ($expectedClasses as $expectedClass) {
             $preFlight = new PreFlight($expectedClass);
             $preFlight->applyToController($controller);
         }
@@ -57,7 +59,7 @@ class PreFlightTest extends TestCase
         }
     }
 
-    public function validAnnotations(): array
+    public static function validAnnotations(): array
     {
         return [
             'it should extract the class and namespace from a valid annotation' => [

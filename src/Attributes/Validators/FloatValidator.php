@@ -1,13 +1,17 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace willitscale\Streetlamp\Attributes\Validators;
 
 use Attribute;
 
-#[Attribute(Attribute::TARGET_PROPERTY|Attribute::TARGET_PARAMETER)]
+#[Attribute(Attribute::TARGET_PROPERTY | Attribute::TARGET_PARAMETER)]
 readonly class FloatValidator implements ValidatorInterface
 {
-    public function __construct(private float $max = PHP_FLOAT_MAX, private float $min = 0) {}
+    public function __construct(private float $max = PHP_FLOAT_MAX, private float $min = 0)
+    {
+    }
 
     public function validate(string $value): bool
     {
