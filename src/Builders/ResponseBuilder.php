@@ -92,7 +92,7 @@ class ResponseBuilder implements JsonSerializable
      */
     public function build(bool $return = false): null|string
     {
-        if (!empty($this->httpStatusCode)) {
+        if (!$return && !empty($this->httpStatusCode)) {
             http_response_code($this->httpStatusCode->value);
         }
 
