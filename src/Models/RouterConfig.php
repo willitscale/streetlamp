@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace willitscale\Streetlamp\Models;
 
+use willitscale\Streetlamp\CacheHandlers\CacheHandler;
+use willitscale\Streetlamp\CacheHandlers\FileCacheHandler;
 use willitscale\Streetlamp\Requests\HttpRequest;
 use willitscale\Streetlamp\Requests\RequestInterface;
-use willitscale\Streetlamp\RouteCacheHandlers\RouteCacheHandler;
-use willitscale\Streetlamp\RouteCacheHandlers\FileRouteCacheHandler;
 
 readonly class RouterConfig
 {
@@ -20,20 +20,20 @@ readonly class RouterConfig
      * @param bool $rethrowExceptions
      * @param array $excludedDirectories
      * @param RequestInterface $request
-     * @param RouteCacheHandler $routeCacheHandler
+     * @param CacheHandler $routeCacheHandler
      * @param array $globalPreFlights
      * @param array $globalPostFlights
      */
     public function __construct(
-        private string $rootDirectory = self::APPLICATION_DIRECTORY,
-        private string $composerFile = self::APPLICATION_DIRECTORY . 'composer.json',
-        private bool $cached = false,
-        private bool $rethrowExceptions = false,
-        private array $excludedDirectories = ['tests'],
+        private string           $rootDirectory = self::APPLICATION_DIRECTORY,
+        private string           $composerFile = self::APPLICATION_DIRECTORY . 'composer.json',
+        private bool             $cached = false,
+        private bool             $rethrowExceptions = false,
+        private array            $excludedDirectories = ['tests'],
         private RequestInterface $request = new HttpRequest(),
-        private RouteCacheHandler $routeCacheHandler = new FileRouteCacheHandler(),
-        private array $globalPreFlights = [],
-        private array $globalPostFlights = []
+        private CacheHandler     $routeCacheHandler = new FileCacheHandler(),
+        private array            $globalPreFlights = [],
+        private array            $globalPostFlights = []
     ) {
     }
 
@@ -86,9 +86,9 @@ readonly class RouterConfig
     }
 
     /**
-     * @return RouteCacheHandler
+     * @return CacheHandler
      */
-    public function getRouteCacheHandler(): RouteCacheHandler
+    public function getRouteCacheHandler(): CacheHandler
     {
         return $this->routeCacheHandler;
     }

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace willitscale\Streetlamp\RouteCacheHandlers;
+namespace willitscale\Streetlamp\CacheHandlers;
 
-class FileRouteCacheHandler extends RouteCacheHandler
+class FileCacheHandler extends CacheHandler
 {
     /**
      * @param string|null $path

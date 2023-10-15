@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace willitscale\Streetlamp\Builders;
 
+use willitscale\Streetlamp\CacheHandlers\CacheHandler;
+use willitscale\Streetlamp\CacheHandlers\FileCacheHandler;
 use willitscale\Streetlamp\Models\RouterConfig;
 use willitscale\Streetlamp\Requests\HttpRequest;
 use willitscale\Streetlamp\Requests\RequestInterface;
-use willitscale\Streetlamp\RouteCacheHandlers\RouteCacheHandler;
-use willitscale\Streetlamp\RouteCacheHandlers\FileRouteCacheHandler;
 
 class RouterConfigBuilder
 {
@@ -17,7 +17,7 @@ class RouterConfigBuilder
     private bool $cached = false;
     private bool $rethrowExceptions = false;
     private array $excludedDirectories = ['tests'];
-    private RouteCacheHandler $routeCacheHandler;
+    private CacheHandler $routeCacheHandler;
     private RequestInterface $request;
     private array $globalPreFlights;
     private array $globalPostFlights;
@@ -97,10 +97,10 @@ class RouterConfigBuilder
     }
 
     /**
-     * @param RouteCacheHandler $routeCacheHandler
+     * @param CacheHandler $routeCacheHandler
      * @return $this
      */
-    public function setRouteCacheHandler(RouteCacheHandler $routeCacheHandler): RouterConfigBuilder
+    public function setRouteCacheHandler(CacheHandler $routeCacheHandler): RouterConfigBuilder
     {
         $this->routeCacheHandler = $routeCacheHandler;
         return $this;
@@ -148,7 +148,7 @@ class RouterConfigBuilder
             $this->rethrowExceptions,
             $this->excludedDirectories,
             $this->request ?? new HttpRequest(),
-            $this->routeCacheHandler ?? new FileRouteCacheHandler(),
+            $this->routeCacheHandler ?? new FileCacheHandler(),
             $this->globalPreFlights ?? [],
             $this->globalPostFlights ?? []
         );

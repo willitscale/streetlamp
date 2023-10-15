@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace willitscale\Streetlamp\RouteCacheHandlers;
+namespace willitscale\Streetlamp\CacheHandlers;
 
-abstract class RouteCacheHandler
+abstract class CacheHandler
 {
     abstract public function serialize(array $data): string|null;
 
