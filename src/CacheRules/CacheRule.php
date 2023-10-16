@@ -2,18 +2,29 @@
 
 namespace willitscale\Streetlamp\CacheRules;
 
-use willitscale\Streetlamp\Builders\ResponseBuilder;
 use willitscale\Streetlamp\Models\Route;
 
-abstract class CacheRule
+class CacheRule
 {
-    public function __construct(protected int $cacheTtl)
+    const ONE_MINUTE = 60;
+    const ONE_HOUR = self::ONE_MINUTE * 60;
+    const ONE_DAY = self::ONE_HOUR * 24;
+    const ONE_WEEK = self::ONE_DAY * 7;
+
+    public function __construct(private readonly int $cacheTtl = self::ONE_HOUR)
     {
     }
 
-    abstract public function store(Route $route, ResponseBuilder $data): void;
+    /**
+     * @return int
+     */
+    public function getCacheTtl(): int
+    {
+        return $this->cacheTtl;
+    }
 
-    abstract public function get(Route $route): ResponseBuilder;
-
-    abstract public function exists(Route $route): bool;
+    public function getKey(Route $route, array $args = []): string
+    {
+        return hash('sha384', $route->getPath() . "__" . $route->getMethod() . "__" . $route->getAccepts());
+    }
 }

@@ -6,54 +6,33 @@ namespace willitscale\Streetlamp\CacheHandlers;
 
 class FileCacheHandler extends CacheHandler
 {
-    /**
-     * @param string|null $path
-     */
     public function __construct(private string|null $path = null)
     {
-        $this->path = $path ?? sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'router.data';
+        $this->path = $path ?? sys_get_temp_dir() . DIRECTORY_SEPARATOR;
     }
 
-    /**
-     * @param array $data
-     * @return string
-     */
-    public function serialize(array $data): string
+    public function serialize(mixed $data): string
     {
         return serialize($data);
     }
 
-    /**
-     * @param string $data
-     * @return array
-     */
-    public function deserialize(string $data): array
+    public function deserialize(string $data): mixed
     {
         return unserialize($data);
     }
 
-    /**
-     * @param string $data
-     * @return void
-     */
-    public function store(string $data): void
+    public function store(string $key, string $data, int $ttl = 0): void
     {
-        file_put_contents($this->path, $data);
+        file_put_contents($this->path . $key, $data);
     }
 
-    /**
-     * @return string
-     */
-    public function retrieve(): string
+    public function retrieve(string $key): string
     {
-        return file_get_contents($this->path);
+        return file_get_contents($this->path . $key);
     }
 
-    /**
-     * @return bool
-     */
-    public function exists(): bool
+    public function exists(string $key): bool
     {
-        return file_exists($this->path);
+        return file_exists($this->path . $key);
     }
 }

@@ -76,13 +76,17 @@ readonly class Router
                     $args[$key] = $parameter->getValue($matches);
                 }
 
-                if ($route->getCacheRule() && $route->getCacheRule()->exists($route)) {
-                    $response = $route->getCacheRule()->get($route);
-                    $this->postFlight($route, $response);
-                    return $response->build($return);
-                }
+                $cacheRule = $route->getCacheRule();
+                $cacheHandler = $this->routeBuilder->getRouterConfig()->getCacheHandler();
 
-                // Move and refactor this
+                if ($cacheRule) {
+                    $key = $cacheRule->getKey($route, $args);
+                    if ($cacheHandler->exists($key)) {
+                        $response = $cacheHandler->retrieveAndDeserialize($key);
+                        $this->postFlight($route, $response);
+                        return $response->build($return);
+                    }
+                }
 
                 $requestArgument = [
                     'request' => $request
@@ -109,17 +113,15 @@ readonly class Router
                     );
                 }
 
-                //
-
-                if ($route->getCacheRule()) {
-                    $route->getCacheRule()->store($route, $response);
+                if ($cacheRule) {
+                    $key = $cacheRule->getKey($route, $args);
+                    $ttl = $cacheRule->getCacheTtl();
+                    $cacheHandler->serializeAndStore($key, $response, false, $ttl);
                 }
 
                 $this->postFlight($route, $response);
 
-                $builtResponse =  $response->build($return);
-
-                return $builtResponse;
+                return $response->build($return);
             }
 
             if ($pathMatched) {

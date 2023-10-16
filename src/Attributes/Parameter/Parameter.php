@@ -16,20 +16,16 @@ abstract class Parameter
     protected string $type;
     protected array $validators = [];
 
-    /**
-     * @param string|null $key
-     */
     public function __construct(
         protected readonly string|null $key
     ) {
     }
 
-    /**
-     * @param array $pathMatches
-     * @return string|int|bool|float
-     * @throws InvalidParameterTypeException
-     * @throws InvalidParameterFailedToPassFilterValidation
-     */
+    public function getKey(): ?string
+    {
+        return $this->key;
+    }
+
     public function getValue(array $pathMatches): mixed
     {
         return $this->castAndValidateValue($this->value($pathMatches));
@@ -40,44 +36,23 @@ abstract class Parameter
         $this->type = $type;
     }
 
-    /**
-     * @return string
-     */
     public function getType(): string
     {
         return $this->type;
     }
 
-    /**
-     * @return ValidatorInterface[]
-     */
     public function getValidators(): array
     {
         return $this->validators;
     }
 
-    /**
-     * @param ValidatorInterface $validator
-     * @return void
-     */
     public function addValidator(ValidatorInterface $validator): void
     {
         $this->validators[] = $validator;
     }
 
-    /**
-     * @param array $pathMatches
-     * @return string|int|bool|float|array
-     */
     abstract public function value(array $pathMatches): string|int|bool|float|array;
 
-    /**
-     * @param mixed $value
-     * @return mixed
-     * @throws InvalidParameterFailedToPassFilterValidation
-     * @throws InvalidParameterTypeDefinitionException
-     * @throws InvalidParameterTypeException
-     */
     protected function castAndValidateValue(mixed $value): mixed
     {
         if (!is_string($value) && !is_array($value)) {
