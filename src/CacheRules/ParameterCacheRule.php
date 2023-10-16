@@ -16,7 +16,7 @@ class ParameterCacheRule extends CacheRule
     public function getKey(Route $route, array $args = []): string
     {
         $rule = $this->rule;
-        foreach($args as $key => $value) {
+        foreach ($args as $key => $value) {
             $rule = str_replace($key, $value, $rule);
         }
         return hash('sha384', parent::getKey($route, $args) . "__" . $rule);

@@ -14,16 +14,16 @@ readonly class RouterConfig
     public const APPLICATION_DIRECTORY = '.' . DIRECTORY_SEPARATOR;
 
     public function __construct(
-        private string           $rootDirectory = self::APPLICATION_DIRECTORY,
-        private string           $composerFile = self::APPLICATION_DIRECTORY . 'composer.json',
-        private bool             $cached = false,
-        private bool             $rethrowExceptions = false,
-        private array            $excludedDirectories = ['tests'],
+        private string $rootDirectory = self::APPLICATION_DIRECTORY,
+        private string $composerFile = self::APPLICATION_DIRECTORY . 'composer.json',
+        private bool $cached = false,
+        private bool $rethrowExceptions = false,
+        private array $excludedDirectories = ['tests'],
         private RequestInterface $request = new HttpRequest(),
-        private CacheHandler     $routeCacheHandler = new FileCacheHandler(),
-        private CacheHandler     $cacheHandler = new FileCacheHandler(),
-        private array            $globalPreFlights = [],
-        private array            $globalPostFlights = []
+        private CacheHandler $routeCacheHandler = new FileCacheHandler(),
+        private CacheHandler $cacheHandler = new FileCacheHandler(),
+        private array $globalPreFlights = [],
+        private array $globalPostFlights = []
     ) {
     }
 

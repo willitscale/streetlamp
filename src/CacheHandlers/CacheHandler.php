@@ -26,7 +26,8 @@ abstract class CacheHandler
         }
     }
 
-    public function retrieveAndDeserialize(string $key): mixed {
+    public function retrieveAndDeserialize(string $key): mixed
+    {
         $data = $this->retrieve($key);
         if ($data) {
             return $this->deserialize($data);
