@@ -17,12 +17,13 @@ The structure of the config file follows these constraints:
 {
     "rootDirectory":       ?string,   // The root directory of your application
     "composerFile":        ?string,   // The location of your application's composer file
-    "cached":              ?bool,     // Caching stores and retrieves the application's route mapping
+    "routeCached":         ?bool,     // Caching stores and retrieves the application's route mapping
     "rethrowExceptions":   ?bool,     // The router has built in error handling, but you can optionally 
                                       // throw the exceptions and handle them yourself
     "excludedDirectories": ?string[], // Paths to not allow the route builder to scan
     "request":             ?string    // Full namespace to a class that implements `RequestInterface`
-    "routeCacheHandler":   ?string,   // Full namespace to a class that extends `RouteCacheHandler`
+    "routeCacheHandler":   ?string,   // Full namespace to a class that extends `CacheHandler` for routes
+    "cacheHandler":        ?string,   // Full namespace to a class that extends `CacheHandler` for responses
     "globalPreFlights":    ?string[], // Array of namespaces and classes that implement `Flight` to 
                                       // be applied to all routes as pre-flights
     "globalPostFlights":   ?string[]  // Array of namespaces and classes that implement `Flight` to 
@@ -38,11 +39,12 @@ The config can also be set programmatically too using the `RouterConfigBuilder` 
         $routerConfig = (new RouterConfigBuilder())
             ->setRootDirectory(__DIR__)
             ->setComposerFile(__DIR__ . DIRECTORY_SEPARATOR . 'composer.json')
-            ->setCached(false)
+            ->setRouteCached(false)
             ->setRethrowExceptions(true)
             ->setExcludedDirectories(['tests'])
             ->setRequest(new CommandLineRequest('test', '/', 'text/html'))
-            ->setRouteCacheHandler(new NullRouteCacheHandler())
+            ->setRouteCacheHandler(new NullCacheHandler())
+            ->setCacheHandler(new NullCacheHandler())
             ->setGlobalPreFlights([Logger::class])
             ->setGlobalPostFlights([PerformanceAnalyser::class])
             ->build();
@@ -65,11 +67,11 @@ It's used as the base level to scan your application from.
 The composer file needs to be that of your application.
 This file is used for deciding which directories to scan as it will iterate over the `autoload->psr-4` sources to extract routes from.
 
-### Cached
+### Route Cached
 
-Setting cached to true will instruct the router to use the cached version of the route map where applicable.
+Setting route cached to true will instruct the router to use the cached version of the route map where applicable.
 If there is no valid route map cache then it will build and write it.
-Caching is powered by the cache handler and is something you can customise.
+Route caching is powered by the cache handler and is something you can customise.
 
 ### Re-Throw Exceptions
 
@@ -83,15 +85,22 @@ It's important to note that these are paths appended onto the end of the root di
 ### Request
 
 Request is an override to the request object being used.
-By default the `HttpRequest` is used, but if this does not fulfil your needs or you want to do a command line version then this will need to be replaced.
+By default, the `HttpRequest` is used, but if this does not fulfil your needs or you want to do a command line version then this will need to be replaced.
 There is a built in `CommandLineRequest` available, but you can define your own as long as it implements the `RequestInterface`.
+
+### Route Cache Handler
+
+The route cache handler allows you to override how the route maps are cached by the `RouteBuilder`.
+By default, this uses the `FileCacheHandler` which writes the cache to your system's temporary directory.
+There is a built in `NullCacheHandler` if you want to completely disable all caching.
+Similar to the `Request` this can be completely customised by implementing your own as long as it extends the `RouteHandler` abstract class.
 
 ### Cache Handler
 
-The cache handler allows you to override how the route maps are cached by the `RouteBuilder`.
-By default this uses the `FileRouteCacheHandler` which writes the cache to your system's temporary directory.
-There is a built in `NullRouteCacheHandler` if you want to completely disable all caching.
-Similar to the `Request` this can be completely customised by implementing your own as long as it extends the `RouteCacheHandler` abstract class.
+The cache handler allows you to define how responses from routes are cached.
+By default, this uses the `FileCacheHandler` which writes the cache to your system's temporary directory.
+There is a built in `NullCacheHandler` if you want to completely disable all caching.
+Similar to the `Request` this can be completely customised by implementing your own as long as it extends the `RouteHandler` abstract class.
 
 ### Global Pre-Flights
 

@@ -14,7 +14,7 @@ class RouterConfigBuilder
 {
     private string $rootDirectory = RouterConfig::APPLICATION_DIRECTORY;
     private string $composerFile = RouterConfig::APPLICATION_DIRECTORY . 'composer.json';
-    private bool $cached = false;
+    private bool $routeCached = false;
     private bool $rethrowExceptions = false;
     private array $excludedDirectories = ['tests'];
     private CacheHandler $routeCacheHandler;
@@ -59,9 +59,9 @@ class RouterConfigBuilder
         return $this;
     }
 
-    public function setCached(bool $cached): RouterConfigBuilder
+    public function setRouteCached(bool $routeCached): RouterConfigBuilder
     {
-        $this->cached = $cached;
+        $this->routeCached = $routeCached;
         return $this;
     }
 
@@ -115,7 +115,7 @@ class RouterConfigBuilder
         return new RouterConfig(
             $this->rootDirectory,
             $this->composerFile,
-            $this->cached,
+            $this->routeCached,
             $this->rethrowExceptions,
             $this->excludedDirectories,
             $this->request ?? new HttpRequest(),

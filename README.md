@@ -109,6 +109,7 @@ We could have also applied the `#[Path('/hello')]` to the `RouteController` and 
 - [Input Attributes](docs/INPUT_ATTRIBUTES.MD)
 - [Data Mapping](docs/DATA_MAPPING.MD)
 - [Validators](docs/VALIDATORS.MD)
+- [Caching](docs/CACHING.MD)
 - [Configuration](docs/CONFIGURATION.MD)
 - [Testing](docs/TESTING.MD)
 - [Error Codes](docs/ERROR_CODES.MD)
