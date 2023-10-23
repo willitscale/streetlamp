@@ -16,7 +16,7 @@ readonly class RouterConfig
     public function __construct(
         private string $rootDirectory = self::APPLICATION_DIRECTORY,
         private string $composerFile = self::APPLICATION_DIRECTORY . 'composer.json',
-        private bool $cached = false,
+        private bool $routeCached = false,
         private bool $rethrowExceptions = false,
         private array $excludedDirectories = ['tests'],
         private RequestInterface $request = new HttpRequest(),
@@ -46,9 +46,9 @@ readonly class RouterConfig
     /**
      * @return bool
      */
-    public function isCached(): bool
+    public function isRouteCached(): bool
     {
-        return $this->cached;
+        return $this->routeCached;
     }
 
     /**

@@ -35,7 +35,7 @@ class RouteTestCase extends TestCase
     ): Router {
         $routerConfig = (new RouterConfigBuilder())
             ->setComposerFile($composerFile)
-            ->setCached(false)
+            ->setRouteCached(false)
             ->setRootDirectory($rootDirectory)
             ->setRethrowExceptions(true)
             ->setRouteCacheHandler($routeCacheHandler)

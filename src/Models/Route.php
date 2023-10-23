@@ -6,7 +6,6 @@ namespace willitscale\Streetlamp\Models;
 
 use willitscale\Streetlamp\Attributes\Parameter\Parameter;
 use willitscale\Streetlamp\CacheRules\CacheRule;
-use willitscale\Streetlamp\CacheHandlers\CacheHandler;
 use willitscale\Streetlamp\Enums\HttpMethod;
 use willitscale\Streetlamp\Exceptions\Attributes\InvalidParameterAlreadyBoundException;
 use willitscale\Streetlamp\Requests\RequestInterface;
