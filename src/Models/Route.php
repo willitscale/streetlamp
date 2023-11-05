@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace willitscale\Streetlamp\Models;
 
 use willitscale\Streetlamp\Attributes\Parameter\Parameter;
+use willitscale\Streetlamp\CacheRules\CacheRule;
 use willitscale\Streetlamp\Enums\HttpMethod;
 use willitscale\Streetlamp\Exceptions\Attributes\InvalidParameterAlreadyBoundException;
 use willitscale\Streetlamp\Requests\RequestInterface;
@@ -20,6 +21,7 @@ class Route extends Context
      * @param array $parameters
      * @param array $preFlight
      * @param array $postFlight
+     * @param CacheRule|null $cacheRule
      */
     public function __construct(
         string $class,
@@ -29,9 +31,26 @@ class Route extends Context
         string|null $accepts = null,
         private array $parameters = [],
         array $preFlight = [],
-        array $postFlight = []
+        array $postFlight = [],
+        private CacheRule|null $cacheRule = null
     ) {
         parent::__construct($class, $path, $accepts, $preFlight, $postFlight);
+    }
+
+    /**
+     * @return CacheRule|null
+     */
+    public function getCacheRule(): ?CacheRule
+    {
+        return $this->cacheRule;
+    }
+
+    /**
+     * @param CacheRule|null $cache
+     */
+    public function setCacheRule(?CacheRule $cache): void
+    {
+        $this->cacheRule = $cache;
     }
 
     /**

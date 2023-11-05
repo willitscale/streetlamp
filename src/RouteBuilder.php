@@ -82,11 +82,11 @@ readonly class RouteBuilder
     {
         $routerCacheHandler = $this->routerConfig->getRouteCacheHandler();
 
-        if (!$this->routerConfig->isCached() || !$routerCacheHandler->exists()) {
+        if (!$this->routerConfig->isRouteCached() || !$routerCacheHandler->exists('router.data')) {
             throw new CacheFileDoesNotExistException('Cannot load cached config');
         }
 
-        $routerSerializedFile = $routerCacheHandler->retrieve();
+        $routerSerializedFile = $routerCacheHandler->retrieve('router.data');
 
         if (!$routerSerializedFile) {
             throw new CacheFileInvalidFormatException('Cannot load cached config');
@@ -135,8 +135,9 @@ readonly class RouteBuilder
         }
 
         $this->routerConfig->getRouteCacheHandler()->serializeAndStore(
+            'router.data',
             $routes,
-            !$this->getRouterConfig()->isCached()
+            !$this->getRouterConfig()->isRouteCached()
         );
 
         return $routes;

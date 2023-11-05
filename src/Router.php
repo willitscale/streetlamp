@@ -76,6 +76,18 @@ readonly class Router
                     $args[$key] = $parameter->getValue($matches);
                 }
 
+                $cacheRule = $route->getCacheRule();
+                $cacheHandler = $this->routeBuilder->getRouterConfig()->getCacheHandler();
+
+                if ($cacheRule) {
+                    $key = $cacheRule->getKey($route, $args);
+                    if ($cacheHandler->exists($key)) {
+                        $response = $cacheHandler->retrieveAndDeserialize($key);
+                        $this->postFlight($route, $response);
+                        return $response->build($return);
+                    }
+                }
+
                 $requestArgument = [
                     'request' => $request
                 ];
@@ -99,6 +111,12 @@ readonly class Router
                         'Call to ' . $route->getClass() . '::' .
                         $route->getFunction() . ' did not return a Response object.'
                     );
+                }
+
+                if ($cacheRule) {
+                    $key = $cacheRule->getKey($route, $args);
+                    $ttl = $cacheRule->getCacheTtl();
+                    $cacheHandler->serializeAndStore($key, $response, false, $ttl);
                 }
 
                 $this->postFlight($route, $response);

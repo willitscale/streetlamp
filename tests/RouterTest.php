@@ -11,10 +11,6 @@ class RouterTest extends RouteTestCase
 {
     const COMPOSER_TEST_FILE = __DIR__ . DIRECTORY_SEPARATOR . 'TestApp' . DIRECTORY_SEPARATOR . 'composer.test.json';
 
-    /**
-     * @return void
-     * @throws Exception
-     */
     public function testRouterGetMethodWithNoParameters(): void
     {
         $router = $this->setupRouter(
@@ -28,10 +24,6 @@ class RouterTest extends RouteTestCase
         $this->assertEquals('test', $response);
     }
 
-    /**
-     * @return void
-     * @throws Exception
-     */
     public function testRouterGetMethodWithContentTypeJsonAndNoParameters(): void
     {
         $expectedResponse = [
@@ -48,10 +40,6 @@ class RouterTest extends RouteTestCase
         $this->assertEquals(json_encode($expectedResponse), $response);
     }
 
-    /**
-     * @return void
-     * @throws Exception
-     */
     public function testRouterPostMethodWithPostParameter(): void
     {
         $data = 'post';
@@ -68,10 +56,6 @@ class RouterTest extends RouteTestCase
         $this->assertEquals($data, $response);
     }
 
-    /**
-     * @return void
-     * @throws Exception
-     */
     public function testRouterPutMethodWithPathParameter(): void
     {
         $data = 'put';
@@ -86,10 +70,6 @@ class RouterTest extends RouteTestCase
         $this->assertEquals($data, $response);
     }
 
-    /**
-     * @return void
-     * @throws Exception
-     */
     public function testRouterDeleteMethodWithQueryStringParameter(): void
     {
         $data = '123';
@@ -106,10 +86,6 @@ class RouterTest extends RouteTestCase
         $this->assertEquals($data, $response);
     }
 
-    /**
-     * @return void
-     * @throws Exception
-     */
     public function testRouterPatchMethodWithHeaderParameter(): void
     {
         $data = 'patch';
@@ -125,10 +101,6 @@ class RouterTest extends RouteTestCase
         $this->assertEquals($data, $response);
     }
 
-    /**
-     * @return void
-     * @throws Exception
-     */
     public function testRouterGetMethodWithPathParameterThatValidatesInput(): void
     {
         $expectedResponse = 99;
@@ -142,5 +114,63 @@ class RouterTest extends RouteTestCase
         );
         $response = $router->route(true);
         $this->assertEquals($expectedResponse, $response);
+    }
+
+    public function testRouterCacheAlwaysReturnsTheInitialCachedValue(): void
+    {
+        $expectedCacheValue = 99;
+        $unexpectedCacheValue = 23;
+
+        $router = $this->setupRouter(
+            'GET',
+            '/cache/' . $expectedCacheValue,
+            MediaType::TEXT_HTML->value,
+            __DIR__,
+            self::COMPOSER_TEST_FILE
+        );
+
+        $router->route(true);
+
+        $router = $this->setupRouter(
+            'GET',
+            '/cache/' . $unexpectedCacheValue,
+            MediaType::TEXT_HTML->value,
+            __DIR__,
+            self::COMPOSER_TEST_FILE
+        );
+
+        $response = $router->route(true);
+
+        $this->assertEquals($expectedCacheValue, $response);
+    }
+
+    public function testRouterCacheAlwaysReturnsTheParameterCachedValue(): void
+    {
+        $firstCachedValue = 99;
+        $secondCachedValue = 23;
+
+        $router = $this->setupRouter(
+            'GET',
+            '/cache/parameter/' . $firstCachedValue,
+            MediaType::TEXT_HTML->value,
+            __DIR__,
+            self::COMPOSER_TEST_FILE
+        );
+
+        $response = $router->route(true);
+
+        $this->assertEquals($firstCachedValue, $response);
+
+        $router = $this->setupRouter(
+            'GET',
+            '/cache/parameter/' . $secondCachedValue,
+            MediaType::TEXT_HTML->value,
+            __DIR__,
+            self::COMPOSER_TEST_FILE
+        );
+
+        $response = $router->route(true);
+
+        $this->assertEquals($secondCachedValue, $response);
     }
 }

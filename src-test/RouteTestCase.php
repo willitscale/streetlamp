@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace willitscale\StreetlampTest;
 
 use Exception;
+use PHPUnit\Framework\TestCase;
 use willitscale\Streetlamp\Builders\RouterConfigBuilder;
+use willitscale\Streetlamp\CacheHandlers\CacheHandler;
+use willitscale\Streetlamp\CacheHandlers\NullCacheHandler;
 use willitscale\Streetlamp\Requests\CommandLineRequest;
 use willitscale\Streetlamp\RouteBuilder;
-use willitscale\Streetlamp\RouteCacheHandlers\NullRouteCacheHandler;
-use willitscale\Streetlamp\RouteCacheHandlers\RouteCacheHandler;
 use willitscale\Streetlamp\Router;
-use PHPUnit\Framework\TestCase;
 
 class RouteTestCase extends TestCase
 {
@@ -21,7 +21,7 @@ class RouteTestCase extends TestCase
      * @param string $contentType
      * @param string $rootDirectory
      * @param string $composerFile
-     * @param RouteCacheHandler $routeCacheHandler
+     * @param CacheHandler $routeCacheHandler
      * @return Router
      * @throws Exception
      */
@@ -31,11 +31,11 @@ class RouteTestCase extends TestCase
         string $contentType,
         string $rootDirectory,
         string $composerFile,
-        RouteCacheHandler $routeCacheHandler = new NullRouteCacheHandler()
+        CacheHandler $routeCacheHandler = new NullCacheHandler()
     ): Router {
         $routerConfig = (new RouterConfigBuilder())
             ->setComposerFile($composerFile)
-            ->setCached(false)
+            ->setRouteCached(false)
             ->setRootDirectory($rootDirectory)
             ->setRethrowExceptions(true)
             ->setRouteCacheHandler($routeCacheHandler)
