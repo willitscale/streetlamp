@@ -13,12 +13,12 @@ readonly class IntValidator implements ValidatorInterface
     {
     }
 
-    public function validate(string $value): bool
+    public function validate(mixed $value): bool
     {
         return (intval($value) == $value) && $value <= $this->max && $value >= $this->min;
     }
 
-    public function sanitize(string $value): int
+    public function sanitize(mixed $value): int
     {
         return (int) $value;
     }

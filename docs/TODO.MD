@@ -18,6 +18,7 @@ Welcome to the TODO list. This is just a collection of thoughts and ideas on how
 - The ability to print out the current paths of the application.
 - A way to easily clear the route cache.
 - The new caching mechanism should support multiple caches, future iterations of the caching will offer multi cache support.
+- Support JSON arrays passed to the body and as an attribute of a class
 
 ## Resilience 
 - More Tests

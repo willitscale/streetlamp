@@ -6,6 +6,6 @@ namespace willitscale\Streetlamp\Attributes\Validators;
 
 interface ValidatorInterface
 {
-    public function validate(string $value): bool;
-    public function sanitize(string $value): string|int|float|bool;
+    public function validate(mixed $value): bool;
+    public function sanitize(mixed $value): mixed;
 }
