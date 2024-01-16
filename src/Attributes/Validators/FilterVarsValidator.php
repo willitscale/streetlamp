@@ -15,12 +15,12 @@ readonly class FilterVarsValidator implements ValidatorInterface
     ) {
     }
 
-    public function validate(string $value): bool
+    public function validate(mixed $value): bool
     {
         return (false !== filter_var($value, $this->filter, $this->options));
     }
 
-    public function sanitize(string $value): string|int|float|bool
+    public function sanitize(mixed $value): mixed
     {
         return filter_var($value, $this->filter, $this->options);
     }

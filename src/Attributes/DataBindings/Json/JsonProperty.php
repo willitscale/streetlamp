@@ -23,15 +23,16 @@ class JsonProperty
     public function buildProperty(object $instance, ReflectionProperty $property, mixed $jsonValue): void
     {
         $key = (empty($this->alias)) ? $property->getName() : $this->alias;
-        $value = $jsonValue->$key;
 
-        if ($this->required && empty($value)) {
+        if ($this->required && empty($jsonValue->{$key})) {
             $className = get_class($instance);
             throw new InvalidParameterTypeException(
                 "JS001",
                 "Parameter $key in $className is required, but not passed."
             );
         }
+
+        $value = $jsonValue->{$key};
 
         $attributes = $property->getAttributes();
 

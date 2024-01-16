@@ -13,12 +13,12 @@ readonly class RegExpValidator implements ValidatorInterface
     {
     }
 
-    public function validate(string $value): bool
+    public function validate(mixed $value): bool
     {
         return preg_match($this->pattern, $value);
     }
 
-    public function sanitize(string $value): string
+    public function sanitize(mixed $value): mixed
     {
         if (!$this->replace) {
             return $value;

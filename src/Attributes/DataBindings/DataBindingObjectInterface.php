@@ -9,9 +9,9 @@ use stdClass;
 
 interface DataBindingObjectInterface
 {
-    public function build(ReflectionClass $class, string $data): object;
+    public function build(ReflectionClass $reflectionClass, string $data): object;
 
-    public function getObject(ReflectionClass $class, mixed $data): object;
+    public function getObject(ReflectionClass $reflectionClass, mixed $data): object;
 
     public function getSerializable(ReflectionClass $reflectionClass, object $object): mixed;
 }

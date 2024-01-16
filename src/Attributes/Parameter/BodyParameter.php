@@ -19,10 +19,10 @@ class BodyParameter extends Parameter
 
     /**
      * @param array $pathMatches
-     * @return string|int|bool|float
+     * @return string|int|bool|float|array
      * @throws MissingRequireBodyException
      */
-    public function value(array $pathMatches): string|int|bool|float
+    public function value(array $pathMatches): string|int|bool|float|array
     {
         $streamValue = file_get_contents($this->resourceIdentifier);
 

@@ -14,7 +14,7 @@ With Streetlamp comes a small selection of pre-built validators:
 | `IntValidator`        | Returns an int value                                                                                                                | Validates input is an int within the given range                                                              |
 | `RegExpValidator`     | Returns a string matching the replace criteria if set, otherwise returns input                                                      | Validates input matches the regular expression pattern given                                                  |
 
-Validators can be used along side either one of the input parameters or within data bindings.
+Validators can be used alongside either one of the input parameters or within data bindings.
 
 ## Definition
 
@@ -28,7 +28,8 @@ FilterVarsValidator(int $filter, int|array $options = 0);
     #[Method(HttpMethod::GET)]
     #[Path('/validator/{validatorId}')]
     public function simpleGetWithPathParameterAndValidator(
-        #[PathParameter('validatorId'] int $validatorId
+        #[PathParameter('validatorId'] 
+        #[MustBeDivisibleByThreeValidator] int $validatorId
     ): ResponseBuilder {
         return (new ResponseBuilder())
             ->setData($validatorId)
@@ -45,6 +46,7 @@ When implementing a custom validator if you throw any exceptions, it's essential
 Example of a custom validator:
 
 ```php
+#[Attribute(Attribute::TARGET_PARAMETER)]
 readonly class MustBeDivisibleByThreeValidator implements ValidatorInterface
 {
     public function validate(string $value): bool

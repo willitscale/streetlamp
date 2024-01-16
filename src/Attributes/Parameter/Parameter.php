@@ -14,10 +14,10 @@ use ReflectionClass;
 abstract class Parameter
 {
     protected string $type;
-    protected array $validators = [];
 
     public function __construct(
-        protected readonly string|null $key
+        protected readonly string|null $key,
+        protected array $validators = []
     ) {
     }
 

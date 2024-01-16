@@ -7,6 +7,8 @@ namespace willitscale\StreetlampTests\TestApp;
 use willitscale\Streetlamp\Attributes\Accepts;
 use willitscale\Streetlamp\Attributes\Cache\Cache;
 use willitscale\Streetlamp\Attributes\Controller\RouteController;
+use willitscale\Streetlamp\Attributes\DataBindings\Json\JsonProperty;
+use willitscale\Streetlamp\Attributes\Parameter\BodyParameter;
 use willitscale\Streetlamp\Attributes\Parameter\HeaderParameter;
 use willitscale\Streetlamp\Attributes\Parameter\PathParameter;
 use willitscale\Streetlamp\Attributes\Parameter\PostParameter;
@@ -113,6 +115,28 @@ class TestController
     ): ResponseBuilder {
         return (new ResponseBuilder())
             ->setData($cacheId)
+            ->setContentType(MediaType::APPLICATION_JSON)
+            ->setHttpStatusCode(HttpStatusCode::HTTP_OK);
+    }
+
+    #[Method(HttpMethod::POST)]
+    #[Path('/data/validation')]
+    public function validateSingleInput(
+        #[BodyParameter([], __DIR__ . DIRECTORY_SEPARATOR . 'test.dat')] DataType $dataType
+    ): ResponseBuilder {
+        return (new ResponseBuilder())
+            ->setData($dataType)
+            ->setContentType(MediaType::APPLICATION_JSON)
+            ->setHttpStatusCode(HttpStatusCode::HTTP_OK);
+    }
+
+    #[Method(HttpMethod::POST)]
+    #[Path('/data/validations')]
+    public function validateMultipleInputs(
+        #[BodyParameter([new DataValidator()], __DIR__ . DIRECTORY_SEPARATOR . 'test.dat')] array $dataTypes
+    ): ResponseBuilder {
+        return (new ResponseBuilder())
+            ->setData($dataTypes)
             ->setContentType(MediaType::APPLICATION_JSON)
             ->setHttpStatusCode(HttpStatusCode::HTTP_OK);
     }

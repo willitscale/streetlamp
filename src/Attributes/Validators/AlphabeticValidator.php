@@ -9,12 +9,12 @@ use Attribute;
 #[Attribute(Attribute::TARGET_PROPERTY | Attribute::TARGET_PARAMETER)]
 class AlphabeticValidator implements ValidatorInterface
 {
-    public function validate(string $value): bool
+    public function validate(mixed $value): bool
     {
         return preg_match('/^[a-z]+$/i', $value);
     }
 
-    public function sanitize(string $value): string
+    public function sanitize(mixed $value): mixed
     {
         return $value;
     }

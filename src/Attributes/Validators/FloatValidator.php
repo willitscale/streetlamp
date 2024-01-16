@@ -13,12 +13,12 @@ readonly class FloatValidator implements ValidatorInterface
     {
     }
 
-    public function validate(string $value): bool
+    public function validate(mixed $value): bool
     {
         return (floatval($value) == $value) && $value <= $this->max && $value >= $this->min;
     }
 
-    public function sanitize(string $value): float
+    public function sanitize(mixed $value): float
     {
         return (float) $value;
     }
