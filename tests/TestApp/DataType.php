@@ -11,9 +11,8 @@ class DataType implements JsonSerializable
 {
     public function __construct(
         #[JsonProperty(true)] private string $name,
-        #[JsonProperty(true)] private int    $age
-    )
-    {
+        #[JsonProperty(true)] private int $age
+    ) {
     }
 
     public function jsonSerialize(): mixed
