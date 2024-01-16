@@ -16,7 +16,7 @@ class DataValidator implements ValidatorInterface
             return false;
         }
 
-        foreach($value as $object) {
+        foreach ($value as $object) {
             if (!isset($object->name) || !isset($object->age)) {
                 return false;
             }
@@ -29,7 +29,7 @@ class DataValidator implements ValidatorInterface
     {
         $value = json_decode($value);
 
-        foreach($value as &$object) {
+        foreach ($value as &$object) {
             $object = new DataType($object->name, $object->age);
         }
 

@@ -11,10 +11,13 @@ class DataType implements JsonSerializable
 {
     public function __construct(
         #[JsonProperty(true)] private string $name,
-        #[JsonProperty(true)] private int $age
-    ) {}
+        #[JsonProperty(true)] private int    $age
+    )
+    {
+    }
 
-    public function jsonSerialize(): mixed {
-        return (object) get_object_vars($this);
+    public function jsonSerialize(): mixed
+    {
+        return (object)get_object_vars($this);
     }
 }

@@ -8,7 +8,6 @@ use willitscale\Streetlamp\Enums\MediaType;
 use willitscale\Streetlamp\Exceptions\InvalidParameterTypeException;
 use willitscale\Streetlamp\Exceptions\Validators\InvalidParameterFailedToPassFilterValidation;
 use willitscale\StreetlampTest\RouteTestCase;
-use function PHPUnit\Framework\assertEquals;
 
 class RouterTest extends RouteTestCase
 {
@@ -215,7 +214,7 @@ class RouterTest extends RouteTestCase
 
         $response = $router->route(true);
 
-        assertEquals($testData, json_decode($response, true));
+        $this->assertEquals($testData, json_decode($response, true));
     }
 
     public function testRouterDataMappingWithIncorrectDataFailsToCreateObject(): void
@@ -263,7 +262,7 @@ class RouterTest extends RouteTestCase
         );
 
         $response = $router->route(true);
-        assertEquals($testData, json_decode($response, true));
+        $this->assertEquals($testData, json_decode($response, true));
     }
 
     public function testRouterDataMappingWithIncorrectDataFailsToCreateAnArrayOfObjects(): void
