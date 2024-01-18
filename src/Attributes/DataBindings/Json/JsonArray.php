@@ -58,7 +58,7 @@ class JsonArray implements ArrayMapInterface, JsonAttribute
 
         $instances = [];
         foreach ($value as $data) {
-            $instances []= $this->getObject($reflectionClass, $data);
+            $instances [] = $this->getObject($reflectionClass, $data);
         }
 
         return $instances;

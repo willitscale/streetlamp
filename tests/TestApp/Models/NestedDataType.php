@@ -12,8 +12,8 @@ use willitscale\Streetlamp\Attributes\DataBindings\Json\JsonProperty;
 readonly class NestedDataType
 {
     public function __construct(
-      #[JsonArray(DataType::class, true)] private array $dataTypes,
-      #[JsonProperty(true)] private array $strings
+        #[JsonArray(DataType::class, true)] private array $dataTypes,
+        #[JsonProperty(true)] private array $strings
     ) {
     }
 

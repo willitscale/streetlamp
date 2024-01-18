@@ -25,7 +25,8 @@ abstract class Parameter
     ) {
     }
 
-    public function setArrayMap(ArrayMapInterface $arrayMap): void {
+    public function setArrayMap(ArrayMapInterface $arrayMap): void
+    {
         $this->arrayMap = $arrayMap;
     }
 
@@ -98,7 +99,8 @@ abstract class Parameter
         };
     }
 
-    private function buildArray(mixed $value): array {
+    private function buildArray(mixed $value): array
+    {
         if (!isset($this->arrayMap)) {
             return (array) $value;
         }
