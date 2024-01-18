@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace willitscale\Streetlamp\Attributes\DataBindings;
 
 use ReflectionClass;
-use stdClass;
 
 interface DataBindingObjectInterface
 {

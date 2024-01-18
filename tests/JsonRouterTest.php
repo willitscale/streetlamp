@@ -83,4 +83,71 @@ class JsonRouterTest extends RouteTestCase
         $this->expectException(InvalidParameterTypeException::class);
         $router->route(true);
     }
+
+    public function testJsonObjectWithNestedArrayMapsCorrectlyToBody(): void
+    {
+        $testData = [
+            'dataTypes' => [
+                [
+                    'name' => 'Test',
+                    'age' => 123
+                ],
+                [
+                    'name' => 'Tester',
+                    'age' => 321
+                ]
+            ],
+            'strings' => [
+                'one',
+                'two',
+                'three'
+            ]
+        ];
+
+        file_put_contents(self::TEST_BODY_FILE, json_encode($testData));
+
+        $router = $this->setupRouter(
+            'POST',
+            '/json/nested',
+            MediaType::APPLICATION_JSON->value,
+            __DIR__,
+            self::COMPOSER_TEST_FILE
+        );
+
+        $response = $router->route(true);
+        $this->assertEquals($testData, json_decode($response, true));
+    }
+
+    public function testJsonObjectWithNestedArrayThrowsExceptionForMissingNestedProperty(): void
+    {
+        $testData = [
+            'dataTypes' => [
+                [
+                    'name' => 'Test',
+                    'age' => 123
+                ],
+                [
+                    'name' => 'Tester'
+                ]
+            ],
+            'strings' => [
+                'one',
+                'two',
+                'three'
+            ]
+        ];
+
+        file_put_contents(self::TEST_BODY_FILE, json_encode($testData));
+
+        $router = $this->setupRouter(
+            'POST',
+            '/json/nested',
+            MediaType::APPLICATION_JSON->value,
+            __DIR__,
+            self::COMPOSER_TEST_FILE
+        );
+
+        $this->expectException(InvalidParameterTypeException::class);
+        $router->route(true);
+    }
 }
