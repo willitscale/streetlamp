@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace willitscale\Streetlamp\Attributes\Parameter;
 
+use willitscale\Streetlamp\Attributes\DataBindings\ArrayMapInterface;
 use willitscale\Streetlamp\Attributes\DataBindings\DataBindingObjectInterface;
 use willitscale\Streetlamp\Attributes\Validators\ValidatorInterface;
+use willitscale\Streetlamp\Exceptions\InvalidParameterArrayExpectedException;
+use willitscale\Streetlamp\Exceptions\InvalidParameterJsonExpectedException;
 use willitscale\Streetlamp\Exceptions\InvalidParameterTypeDefinitionException;
 use willitscale\Streetlamp\Exceptions\InvalidParameterTypeException;
 use willitscale\Streetlamp\Exceptions\Validators\InvalidParameterFailedToPassFilterValidation;
@@ -14,11 +17,16 @@ use ReflectionClass;
 abstract class Parameter
 {
     protected string $type;
+    protected ArrayMapInterface $arrayMap;
 
     public function __construct(
-        protected readonly string|null $key,
+        protected readonly ?string $key,
         protected array $validators = []
     ) {
+    }
+
+    public function setArrayMap(ArrayMapInterface $arrayMap): void {
+        $this->arrayMap = $arrayMap;
     }
 
     public function getKey(): ?string
@@ -84,10 +92,34 @@ abstract class Parameter
             'int' => (int)$value,
             'float' => (float)$value,
             'bool' => (bool)$value,
-            'string' => $value,
-            'array' => (array)$value,
+            'string' => (string)$value,
+            'array' => $this->buildArray($value),
             default => $this->buildObject($value, $this->type)
         };
+    }
+
+    private function buildArray(mixed $value): array {
+        if (!isset($this->arrayMap)) {
+            return (array) $value;
+        }
+
+        $decodedValue = json_decode($value);
+
+        if (!$decodedValue) {
+            throw new InvalidParameterJsonExpectedException(
+                "PR005",
+                "Invalid JSON passed."
+            );
+        }
+
+        if (!is_array($decodedValue)) {
+            throw new InvalidParameterArrayExpectedException(
+                "PR006",
+                "Invalid JSON passed."
+            );
+        }
+
+        return $this->arrayMap->map($decodedValue);
     }
 
     private function buildObject(string $value, string $type): object
