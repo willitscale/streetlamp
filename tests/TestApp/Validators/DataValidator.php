@@ -1,9 +1,12 @@
 <?php
 
-namespace willitscale\StreetlampTests\TestApp;
+declare(strict_types=1);
+
+namespace willitscale\StreetlampTests\TestApp\Validators;
 
 use Attribute;
 use willitscale\Streetlamp\Attributes\Validators\ValidatorInterface;
+use willitscale\StreetlampTests\TestApp\Models\DataType;
 
 #[Attribute]
 class DataValidator implements ValidatorInterface

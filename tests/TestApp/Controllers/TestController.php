@@ -2,12 +2,11 @@
 
 declare(strict_types=1);
 
-namespace willitscale\StreetlampTests\TestApp;
+namespace willitscale\StreetlampTests\TestApp\Controllers;
 
 use willitscale\Streetlamp\Attributes\Accepts;
 use willitscale\Streetlamp\Attributes\Cache\Cache;
 use willitscale\Streetlamp\Attributes\Controller\RouteController;
-use willitscale\Streetlamp\Attributes\DataBindings\Json\JsonProperty;
 use willitscale\Streetlamp\Attributes\Parameter\BodyParameter;
 use willitscale\Streetlamp\Attributes\Parameter\HeaderParameter;
 use willitscale\Streetlamp\Attributes\Parameter\PathParameter;
@@ -23,11 +22,15 @@ use willitscale\Streetlamp\Enums\HttpMethod;
 use willitscale\Streetlamp\Enums\HttpStatusCode;
 use willitscale\Streetlamp\Enums\MediaType;
 use willitscale\Streetlamp\Requests\RequestInterface;
+use willitscale\StreetlampTests\TestApp\Models\DataType;
+use willitscale\StreetlampTests\TestApp\Validators\DataValidator;
 
 #[RouteController]
 #[Path('/')]
 class TestController
 {
+    const DATA_DIR = __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'test.dat';
+
     #[Method(HttpMethod::GET)]
     public function simpleGet(): ResponseBuilder
     {
@@ -122,7 +125,7 @@ class TestController
     #[Method(HttpMethod::POST)]
     #[Path('/data/validation')]
     public function validateSingleInput(
-        #[BodyParameter([], __DIR__ . DIRECTORY_SEPARATOR . 'test.dat')] DataType $dataType
+        #[BodyParameter([], self::DATA_DIR)] DataType $dataType
     ): ResponseBuilder {
         return (new ResponseBuilder())
             ->setData($dataType)
@@ -133,7 +136,7 @@ class TestController
     #[Method(HttpMethod::POST)]
     #[Path('/data/validations')]
     public function validateMultipleInputs(
-        #[BodyParameter([new DataValidator()], __DIR__ . DIRECTORY_SEPARATOR . 'test.dat')] array $dataTypes
+        #[BodyParameter([new DataValidator()], self::DATA_DIR)] array $dataTypes
     ): ResponseBuilder {
         return (new ResponseBuilder())
             ->setData($dataTypes)

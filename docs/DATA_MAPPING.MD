@@ -11,6 +11,15 @@ As JSON is the most commonly used format for data exchange, there's an included 
 When defining a data binding in your route, you simply need to bind the input to that particular route.
 Similarly, if you want to return an object you just need to set it as the data in the `ResponseBuilder`.
 
+## Signatures
+
+```php
+#[JsonObject]
+#[JsonIgnore]
+#[JsonProperty(bool $required = true, ?string $alias = null)]
+#[JsonArray(string $className, bool $required = true, ?string $alias = null)]
+```
+
 ## Example
 
 ### Controller
@@ -74,3 +83,41 @@ curl  --request POST \
 }'
 ```
 
+## Mapping Arrays
+
+In addition to mapping objects directly to variables, you can also map arrays of objects too.
+This is done using the `JsonArray` attribute which can be applied to input parameters and properties of a `JsonObject`.
+
+### Controller
+
+```php
+    #[Method(HttpMethod::POST)]
+    #[Path('/array')]
+    public function mapJsonArray(
+        #[BodyParameter]
+        #[JsonArray(DataType::class)] array $dataTypes
+    ): ResponseBuilder {
+        return (new ResponseBuilder())
+            ->setData($dataTypes)
+            ->setContentType(MediaType::APPLICATION_JSON)
+            ->setHttpStatusCode(HttpStatusCode::HTTP_OK);
+    }
+```
+
+The `JsonArray` object defined must be a `JsonObject` and each object will apply the validation rules where applicable too.
+
+### Model
+
+```php
+#[JsonObject]
+readonly class NestedDataType
+{
+    public function __construct(
+      #[JsonArray(DataType::class, true)] public array $dataTypeArray,
+      #[JsonProperty(true)] public array $nativeArray
+    ) {
+    }
+}
+```
+
+Only one of either the `JsonArray` or `JsonProperty` can be applied to a property with the `JsonArray` taking priority.

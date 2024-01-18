@@ -12,11 +12,11 @@ use ReflectionClass;
 use ReflectionProperty;
 
 #[Attribute(Attribute::TARGET_PROPERTY | Attribute::TARGET_PARAMETER)]
-class JsonProperty
+readonly class JsonProperty implements JsonAttribute
 {
     public function __construct(
-        readonly private bool $required = true,
-        readonly private string|null $alias = null
+        private bool $required = true,
+        private ?string $alias = null
     ) {
     }
 
@@ -59,7 +59,7 @@ class JsonProperty
         $property->setValue($instance, $value);
     }
 
-    public function getAlias(): string|null
+    public function getAlias(): ?string
     {
         return $this->alias;
     }

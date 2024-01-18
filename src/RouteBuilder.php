@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace willitscale\Streetlamp;
 
 use willitscale\Streetlamp\Attributes\AttributeContract;
+use willitscale\Streetlamp\Attributes\DataBindings\ArrayMapInterface;
 use willitscale\Streetlamp\Attributes\Parameter\Parameter;
 use willitscale\Streetlamp\Attributes\Validators\ValidatorInterface;
 use willitscale\Streetlamp\Builders\RouterConfigBuilder;
@@ -333,6 +334,7 @@ readonly class RouteBuilder
 
         $validators = [];
         $parameterInstance = null;
+        $arrayMapInterface = null;
 
         foreach ($attributes as $attribute) {
             $instance = $attribute->newInstance();
@@ -341,6 +343,8 @@ readonly class RouteBuilder
                 $parameterInstance = $instance;
             } elseif ($instance instanceof ValidatorInterface) {
                 $validators [] = $instance;
+            } elseif ($instance instanceof ArrayMapInterface) {
+                $arrayMapInterface = $instance;
             }
         }
 
@@ -350,6 +354,10 @@ readonly class RouteBuilder
 
         if (empty($parameterInstance)) {
             throw new MethodParameterNotMappedException("No valid Parameter attribute against method parameter");
+        }
+
+        if (!empty($arrayMapInterface)) {
+            $parameterInstance->setArrayMap($arrayMapInterface);
         }
 
         $route->addParameter(

@@ -12,27 +12,12 @@ use stdClass;
 #[Attribute(Attribute::TARGET_CLASS)]
 class JsonObject implements DataBindingObjectInterface
 {
+    use JsonDataBinding;
+
     public function build(ReflectionClass $reflectionClass, string $data): object
     {
         $jsonData = json_decode($data);
         return $this->getObject($reflectionClass, $jsonData);
-    }
-
-    public function getObject(ReflectionClass $reflectionClass, mixed $data): object
-    {
-        $instance = $reflectionClass->newInstanceWithoutConstructor();
-        $properties = $reflectionClass->getProperties();
-
-        foreach ($properties as $property) {
-            $jsonProperties = $property->getAttributes(JsonProperty::class);
-            if (empty($jsonProperties)) {
-                continue;
-            }
-            $jsonProperty = $jsonProperties[0]->newInstance();
-            $jsonProperty->buildProperty($instance, $property, $data);
-        }
-
-        return $instance;
     }
 
     public function getSerializable(ReflectionClass $reflectionClass, object $object): mixed
@@ -49,7 +34,7 @@ class JsonObject implements DataBindingObjectInterface
                 if ($attributeInstance instanceof JsonIgnore) {
                     $isJsonProperty = false;
                     break;
-                } elseif ($attributeInstance instanceof JsonProperty) {
+                } elseif ($attributeInstance instanceof JsonAttribute) {
                     $isJsonProperty = true;
                     $name = $attributeInstance->getAlias() ?? $name;
                 }

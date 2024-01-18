@@ -1,6 +1,8 @@
 <?php
 
-namespace willitscale\StreetlampTests\TestApp;
+declare(strict_types=1);
+
+namespace willitscale\StreetlampTests\TestApp\Models;
 
 use JsonSerializable;
 use willitscale\Streetlamp\Attributes\DataBindings\Json\JsonObject;
