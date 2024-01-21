@@ -1,0 +1,30 @@
+#!/usr/bin/env php
+<?php declare(strict_types=1);
+
+new StreetLamp($argv);
+
+final readonly class StreetLamp
+{
+    public function __construct(array $arguments)
+    {
+        array_shift($arguments);
+        list($command, $action) = $arguments;
+        $this->command($command, $action);
+    }
+
+    public function command(string $command, ?string $action = null): void
+    {
+        switch ($command) {
+            case 'init':
+                $this->init($action);
+                break;
+            case '':
+                break;
+        }
+    }
+
+    function init(?string $action): void
+    {
+        echo $action, PHP_EOL;
+    }
+}

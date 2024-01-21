@@ -13,8 +13,7 @@ Welcome to the TODO list. This is just a collection of thoughts and ideas on how
 - Make sure all paths are using `realpath`
 
 ## Features
-- Review the possibility of optional path parameters to reduce Path annotations. From the initial review seems like it would cause path collisions. 
-- In data bindings review how to nest data bind objects within arrays.
+- Review the possibility of optional path parameters to reduce Path annotations. From the initial review seems like it would cause path collisions.
 - The ability to print out the current paths of the application.
 - A way to easily clear the route cache.
 - The new caching mechanism should support multiple caches, future iterations of the caching will offer multi cache support.
