@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace willitscale\Streetlamp;
 
 use willitscale\Streetlamp\Builders\RouterConfigBuilder;
-use willitscale\Streetlamp\Models\RouterConfig;
 
 final readonly class Streetlamp
 {
@@ -14,16 +13,21 @@ final readonly class Streetlamp
         'routes' => 'List all available routes for the application.'
     ];
 
+    private const INIT_ACTIONS = [
+        'docker' => 'Scaffold a basic docker application.'
+    ];
+
+    private const ROUTE_ACTIONS = [
+        'list' => 'List all available routes'
+    ];
+
     public function __construct(int $argumentCount, array $arguments)
     {
         if (3 > $argumentCount) {
-            echo "Expected at least 2 arguments in the form of COMMAND ACTION ...", PHP_EOL,
-                 "All available commands: ", PHP_EOL;
-
-            foreach (self::ALLOWED_COMMANDS as $command => $description) {
-                echo '  ', str_pad($command, 10), ' - ', $description, PHP_EOL;
-            }
-            exit(1);
+            $this->missingArgument(
+                "Expected at least 1 argument in the form of COMMAND ...",
+                self::ALLOWED_COMMANDS
+            );
         }
 
         array_shift($arguments);
@@ -33,7 +37,7 @@ final readonly class Streetlamp
         $this->command($command, $action, $arguments);
     }
 
-    public function command(string $command, string $action, ?array $arguments = []): void
+    private function command(string $command, string $action, ?array $arguments = []): void
     {
         switch ($command) {
             case 'init':
@@ -52,14 +56,17 @@ final readonly class Streetlamp
                 $this->docker($arguments);
                 break;
             default:
-                echo "Invalid action", PHP_EOL;
-                exit(1);
+                $this->missingArgument(
+                    "Invalid action for init command",
+                    self::INIT_ACTIONS
+                );
         }
     }
 
     private function docker(?array $arguments = []): void
     {
         echo "Setting up Docker for Streetlamp", PHP_EOL;
+        
         mkdir($_SERVER['PWD'] . '/docker/nginx', 0777, true);
         copy(__DIR__ . '/../templates/nginx.conf.tmpl', $_SERVER['PWD'] . '/docker/nginx/default.conf');
         copy(__DIR__ . '/../templates/docker-compose.yml.tmpl', $_SERVER['PWD'] . '/docker-compose.yml');
@@ -74,8 +81,10 @@ final readonly class Streetlamp
                 $this->listRoutes($arguments);
                 break;
             default:
-                echo "Invalid action", PHP_EOL;
-                exit(1);
+                $this->missingArgument(
+                    "Invalid action for routes command",
+                    self::ROUTE_ACTIONS
+                );
         }
     }
 
@@ -103,9 +112,9 @@ final readonly class Streetlamp
 
         $maxMethodLength = strlen($methodColumn);
         $maxPathLength = strlen($pathColumn);
-        $maxClassLength = strlen($acceptsColumn);
-        $maxFunctionLength = strlen($classColumn);
-        $maxAcceptsLength = strlen($functionColumn);
+        $maxAcceptsLength = strlen($acceptsColumn);
+        $maxClassLength = strlen($classColumn);
+        $maxFunctionLength = strlen($functionColumn);
 
         foreach($routeBuilder->getRoutes() as $route) {
             $maxMethodLength = max(strlen($route->getMethod()), $maxMethodLength);
@@ -148,5 +157,15 @@ final readonly class Streetlamp
     private function printTableBreak($length): void
     {
         echo str_repeat('-', $length), PHP_EOL;
+    }
+
+    private function missingArgument(string $message, array $options): void
+    {
+        echo $message, PHP_EOL,
+        "All available arguments: ", PHP_EOL;
+        foreach ($options as $argument => $description) {
+            echo '  ', str_pad($argument, 10), ' - ', $description, PHP_EOL;
+        }
+        exit(1);
     }
 }
