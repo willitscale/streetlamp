@@ -25,7 +25,7 @@ class ValidatorTestController
     #[Method(HttpMethod::GET)]
     #[Path('/validator/{validatorId}')]
     public function simpleGetWithPathParameterAndValidator(
-        #[PathParameter('validatorId')] #[IntValidator(100)] int $validatorId
+        #[PathParameter('validatorId')] #[IntValidator(0, 100)] int $validatorId
     ): ResponseBuilder {
         return (new ResponseBuilder())
             ->setData($validatorId)
