@@ -19,7 +19,7 @@ class FloatValidatorTest extends TestCase
      */
     public function testThatValidateCorrectlyValidatesTheInput(
         string $input,
-        bool   $expectedResult,
+        bool $expectedResult,
         ?float $min = 0,
         ?float $max = PHP_FLOAT_MAX
     ): void {
@@ -36,7 +36,7 @@ class FloatValidatorTest extends TestCase
      */
     public function testThatSanitizeCorrectlySanitizesTheInput(
         string $input,
-        float  $expectedResult
+        float $expectedResult
     ): void {
         $regExpValidator = new FloatValidator();
         $response = $regExpValidator->sanitize($input);
