@@ -9,13 +9,15 @@ use Attribute;
 #[Attribute(Attribute::TARGET_PROPERTY | Attribute::TARGET_PARAMETER)]
 readonly class RegExpValidator implements ValidatorInterface
 {
-    public function __construct(private string $pattern, private string|null $replace = null)
-    {
+    public function __construct(
+        private string $pattern,
+        private string|null $replace = null
+    ) {
     }
 
     public function validate(mixed $value): bool
     {
-        return preg_match($this->pattern, $value);
+        return (bool) preg_match($this->pattern, $value);
     }
 
     public function sanitize(mixed $value): mixed

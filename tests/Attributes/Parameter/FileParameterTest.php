@@ -7,9 +7,7 @@ namespace willitscale\StreetlampTests\Attributes\Parameter;
 use willitscale\Streetlamp\Attributes\Parameter\FileParameter;
 use willitscale\Streetlamp\Attributes\Validators\FilterVarsValidator;
 use willitscale\Streetlamp\Attributes\Validators\ValidatorInterface;
-use willitscale\Streetlamp\Exceptions\InvalidParameterTypeException;
 use willitscale\Streetlamp\Exceptions\Parameters\MissingRequiredFilesException;
-use willitscale\Streetlamp\Exceptions\Validators\InvalidParameterFailedToPassFilterValidation;
 use PHPUnit\Framework\TestCase;
 
 class FileParameterTest extends TestCase
@@ -21,8 +19,6 @@ class FileParameterTest extends TestCase
      * @param string $dataType
      * @param ValidatorInterface[] $validators
      * @return void
-     * @throws InvalidParameterTypeException
-     * @throws InvalidParameterFailedToPassFilterValidation
      * @dataProvider validValues
      */
     public function testAValueIsExtractedCorrectlyFromFiles(
@@ -42,8 +38,6 @@ class FileParameterTest extends TestCase
 
     /**
      * @return void
-     * @throws InvalidParameterFailedToPassFilterValidation
-     * @throws InvalidParameterTypeException
      */
     public function testThatAnExceptionIsThrownWhenAMissingFileIsSpecified(): void
     {

@@ -66,7 +66,7 @@ final readonly class Streetlamp
     private function docker(?array $arguments = []): void
     {
         echo "Setting up Docker for Streetlamp", PHP_EOL;
-        
+
         mkdir($_SERVER['PWD'] . '/docker/nginx', 0777, true);
         copy(__DIR__ . '/../templates/nginx.conf.tmpl', $_SERVER['PWD'] . '/docker/nginx/default.conf');
         copy(__DIR__ . '/../templates/docker-compose.yml.tmpl', $_SERVER['PWD'] . '/docker-compose.yml');
