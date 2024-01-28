@@ -22,7 +22,7 @@ class IntValidatorTest extends TestCase
         bool $expectedResult,
         ?int $min = 0,
         ?int $max = PHP_INT_MAX
-    ):void {
+    ): void {
         $regExpValidator = new IntValidator($min, $max);
         $response = $regExpValidator->validate($input);
         $this->assertEquals($expectedResult, $response);
@@ -37,7 +37,7 @@ class IntValidatorTest extends TestCase
     public function testThatSanitizeCorrectlySanitizesTheInput(
         string $input,
         int $expectedResult
-    ):void {
+    ): void {
         $regExpValidator = new IntValidator();
         $response = $regExpValidator->sanitize($input);
         $this->assertEquals($expectedResult, $response);

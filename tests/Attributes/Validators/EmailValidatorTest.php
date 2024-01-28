@@ -18,7 +18,7 @@ class EmailValidatorTest extends TestCase
     public function testThatValidateCorrectlyValidatesTheInput(
         string $input,
         bool $expectedResult
-    ):void {
+    ): void {
         $regExpValidator = new EmailValidator();
         $response = $regExpValidator->validate($input);
         $this->assertEquals($expectedResult, $response);

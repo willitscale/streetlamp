@@ -20,7 +20,7 @@ class RegExpValidatorTest extends TestCase
         string $pattern,
         string $input,
         bool $expectedResult
-    ):void {
+    ): void {
         $regExpValidator = new RegExpValidator($pattern);
         $response = $regExpValidator->validate($input);
         $this->assertEquals($expectedResult, $response);
@@ -39,7 +39,7 @@ class RegExpValidatorTest extends TestCase
         string $replace,
         string $input,
         string $expectedResult
-    ):void {
+    ): void {
         $regExpValidator = new RegExpValidator($pattern, $replace);
         $response = $regExpValidator->sanitize($input);
         $this->assertEquals($expectedResult, $response);

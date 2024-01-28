@@ -22,7 +22,7 @@ class FilterValidatorTest extends TestCase
         string $input,
         bool $expectedResult,
         int|array $options = 0
-    ):void {
+    ): void {
         $regExpValidator = new FilterVarsValidator($filter, $options);
         $response = $regExpValidator->validate($input);
         $this->assertEquals($expectedResult, $response);
@@ -41,7 +41,7 @@ class FilterValidatorTest extends TestCase
         string $input,
         string $expectedResult,
         int|array $options = 0
-    ):void {
+    ): void {
         $regExpValidator = new FilterVarsValidator($filter, $options);
         $response = $regExpValidator->sanitize($input);
         $this->assertEquals($expectedResult, $response);

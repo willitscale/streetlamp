@@ -18,7 +18,7 @@ class AlphabeticValidatorTest extends TestCase
     public function testThatValidateCorrectlyValidatesTheInput(
         string $input,
         bool $expectedResult
-    ):void {
+    ): void {
         $regExpValidator = new AlphabeticValidator();
         $response = $regExpValidator->validate($input);
         $this->assertEquals($expectedResult, $response);
