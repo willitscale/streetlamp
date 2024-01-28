@@ -54,7 +54,7 @@ class IntValidatorTest extends TestCase
                 "expectedResult" => true
             ],
             "it should fail to validate the value passed is a valid integer" => [
-                "input" => "123a",
+                "input" => "123abc",
                 "expectedResult" => false
             ],
             "it should validate that the value passed is a valid integer between the min and max thresholds" => [
