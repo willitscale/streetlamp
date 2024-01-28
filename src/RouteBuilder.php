@@ -29,6 +29,8 @@ use ReflectionParameter;
 
 readonly class RouteBuilder
 {
+    const ROUTER_DATA_KEY = 'router.data';
+
     private RouterConfig|null $routerConfig;
 
     /**
@@ -83,17 +85,25 @@ readonly class RouteBuilder
     {
         $routerCacheHandler = $this->routerConfig->getRouteCacheHandler();
 
-        if (!$this->routerConfig->isRouteCached() || !$routerCacheHandler->exists('router.data')) {
+        if (!$this->routerConfig->isRouteCached() || !$routerCacheHandler->exists(self::ROUTER_DATA_KEY)) {
             throw new CacheFileDoesNotExistException('Cannot load cached config');
         }
 
-        $routerSerializedFile = $routerCacheHandler->retrieve('router.data');
+        $routerSerializedFile = $routerCacheHandler->retrieve(self::ROUTER_DATA_KEY);
 
         if (!$routerSerializedFile) {
             throw new CacheFileInvalidFormatException('Cannot load cached config');
         }
 
         return $routerCacheHandler->deserialize($routerSerializedFile);
+    }
+
+    /**
+     * @return bool
+     */
+    public function clearCachedConfig(): bool
+    {
+        return $this->routerConfig->getRouteCacheHandler()->clear(self::ROUTER_DATA_KEY);
     }
 
     /**
@@ -136,7 +146,7 @@ readonly class RouteBuilder
         }
 
         $this->routerConfig->getRouteCacheHandler()->serializeAndStore(
-            'router.data',
+            self::ROUTER_DATA_KEY,
             $routes,
             !$this->getRouterConfig()->isRouteCached()
         );

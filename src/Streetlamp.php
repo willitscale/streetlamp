@@ -18,12 +18,17 @@ final readonly class Streetlamp
     ];
 
     private const ROUTE_ACTIONS = [
-        'list' => 'List all available routes'
+        'list' => 'List all available routes.',
+        'cache' => 'Route cache operations.'
+    ];
+
+    private const CACHE_OPERATIONS = [
+        'clear' => 'Clear the route cache.'
     ];
 
     public function __construct(int $argumentCount, array $arguments)
     {
-        if (3 > $argumentCount) {
+        if (2 > $argumentCount) {
             $this->missingArgument(
                 "Expected at least 1 argument in the form of COMMAND ...",
                 self::ALLOWED_COMMANDS
@@ -32,32 +37,45 @@ final readonly class Streetlamp
 
         array_shift($arguments);
         $command = array_shift($arguments);
-        $action = array_shift($arguments);
 
-        $this->command($command, $action, $arguments);
+        $this->command($command, $arguments);
     }
 
-    private function command(string $command, string $action, ?array $arguments = []): void
+    private function command(string $command, ?array $arguments = []): void
     {
         switch ($command) {
             case 'init':
-                $this->init($action, $arguments);
+                $this->init($arguments);
                 break;
             case 'routes':
-                $this->routes($action, $arguments);
+                $this->routes($arguments);
                 break;
+            default:
+                $this->missingArgument(
+                    "Command given of available commands:",
+                    self::ALLOWED_COMMANDS
+                );
         }
     }
 
-    private function init(string $action, ?array $arguments = []): void
+    private function init(?array $arguments = []): void
     {
+        if (empty($arguments)) {
+            $this->missingArgument(
+                "Missing action for init command:",
+                self::INIT_ACTIONS
+            );
+        }
+
+        $action = array_shift($arguments);
+
         switch ($action) {
             case 'docker':
                 $this->docker($arguments);
                 break;
             default:
                 $this->missingArgument(
-                    "Invalid action for init command",
+                    "Invalid action for init command:",
                     self::INIT_ACTIONS
                 );
         }
@@ -74,21 +92,62 @@ final readonly class Streetlamp
         echo "Done. Run `docker compose up` to start your application locally and go to http://localhost once it's finished.", PHP_EOL;
     }
 
-    private function routes(string $action, ?array $arguments = []):void
+    private function routes(?array $arguments = []): void
     {
+        if (empty($arguments)) {
+            $this->missingArgument(
+                "Missing action for routes command:",
+                self::ROUTE_ACTIONS
+            );
+        }
+
+        $action = array_shift($arguments);
+
         switch ($action) {
             case 'list':
                 $this->listRoutes($arguments);
                 break;
+            case 'cache':
+                $this->listCache($arguments);
+                break;
             default:
                 $this->missingArgument(
-                    "Invalid action for routes command",
+                    "Invalid action for routes command:",
                     self::ROUTE_ACTIONS
                 );
         }
     }
 
-    private function listRoutes(?array $arguments = []): void
+    private function listCache(?array $arguments = []): void
+    {
+        if (empty($arguments)) {
+            $this->missingArgument(
+                "Missing operation for cache action:",
+                self::CACHE_OPERATIONS
+            );
+        }
+
+        $operation = array_shift($arguments);
+
+        switch ($operation) {
+            case 'clear':
+                $this->cacheClear($arguments);
+                break;
+            default:
+                $this->missingArgument(
+                    "Invalid operation for cache action:",
+                    self::CACHE_OPERATIONS
+                );
+        }
+    }
+
+    private function cacheClear(?array $arguments = []): void
+    {
+        $routeBuilder = $this->buildRouteBuilderFromArguments($arguments);
+        $routeBuilder->clearCachedConfig();
+    }
+
+    private function buildRouteBuilderFromArguments(?array $arguments = [])
     {
         $routerConfig = new RouterConfigBuilder();
 
@@ -100,7 +159,12 @@ final readonly class Streetlamp
             $routerConfig->setComposerFile(array_shift($arguments));
         }
 
-        $routeBuilder = new RouteBuilder($routerConfig->build());
+        return new RouteBuilder($routerConfig->build());
+    }
+
+    private function listRoutes(?array $arguments = []): void
+    {
+        $routeBuilder = $this->buildRouteBuilderFromArguments($arguments);
 
         $methodColumn = 'Method';
         $pathColumn = 'Path';
@@ -116,7 +180,7 @@ final readonly class Streetlamp
         $maxClassLength = strlen($classColumn);
         $maxFunctionLength = strlen($functionColumn);
 
-        foreach($routeBuilder->getRoutes() as $route) {
+        foreach ($routeBuilder->getRoutes() as $route) {
             $maxMethodLength = max(strlen($route->getMethod()), $maxMethodLength);
             $maxPathLength = max(strlen($route->getPath()), $maxPathLength);
             $maxAcceptsLength = max(strlen($route->getAccepts() ?? ''), $maxAcceptsLength);
@@ -134,21 +198,21 @@ final readonly class Streetlamp
         $this->printTableBreak($totalLength);
 
         echo '| ',
-            str_pad($methodColumn, $maxMethodLength), ' | ',
-            str_pad($pathColumn, $maxPathLength), ' | ',
-            str_pad($acceptsColumn, $maxAcceptsLength), ' | ',
-            str_pad($classColumn, $maxClassLength), ' | ',
-            str_pad($functionColumn, $maxFunctionLength), ' |', PHP_EOL;
+        str_pad($methodColumn, $maxMethodLength), ' | ',
+        str_pad($pathColumn, $maxPathLength), ' | ',
+        str_pad($acceptsColumn, $maxAcceptsLength), ' | ',
+        str_pad($classColumn, $maxClassLength), ' | ',
+        str_pad($functionColumn, $maxFunctionLength), ' |', PHP_EOL;
 
         $this->printTableBreak($totalLength);
 
-        foreach($routeBuilder->getRoutes() as $route) {
+        foreach ($routeBuilder->getRoutes() as $route) {
             echo '| ',
-                str_pad($route->getMethod(), $maxMethodLength), ' | ',
-                str_pad($route->getPath(), $maxPathLength), ' | ',
-                str_pad($route->getAccepts() ?? '', $maxAcceptsLength),  ' | ',
-                str_pad($route->getClass(), $maxClassLength), ' | ',
-                str_pad($route->getFunction(), $maxFunctionLength), ' |', PHP_EOL;
+            str_pad($route->getMethod(), $maxMethodLength), ' | ',
+            str_pad($route->getPath(), $maxPathLength), ' | ',
+            str_pad($route->getAccepts() ?? '', $maxAcceptsLength), ' | ',
+            str_pad($route->getClass(), $maxClassLength), ' | ',
+            str_pad($route->getFunction(), $maxFunctionLength), ' |', PHP_EOL;
         }
 
         $this->printTableBreak($totalLength);

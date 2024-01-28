@@ -15,8 +15,8 @@ Welcome to the TODO list. This is just a collection of thoughts and ideas on how
 ## Features
 - Review the possibility of optional path parameters to reduce Path annotations. From the initial review seems like it would cause path collisions.
 - The ability to print out the current paths of the application.
-- A way to easily clear the route cache.
 - The new caching mechanism should support multiple caches, future iterations of the caching will offer multi cache support.
+- Multi-lingual
 
 ## Resilience 
 - More Tests
