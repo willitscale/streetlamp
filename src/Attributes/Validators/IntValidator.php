@@ -9,8 +9,10 @@ use Attribute;
 #[Attribute(Attribute::TARGET_PROPERTY | Attribute::TARGET_PARAMETER)]
 readonly class IntValidator implements ValidatorInterface
 {
-    public function __construct(private int $max = PHP_INT_MAX, private int $min = 0)
-    {
+    public function __construct(
+        private int $min = 0,
+        private int $max = PHP_INT_MAX
+    ) {
     }
 
     public function validate(mixed $value): bool

@@ -17,7 +17,7 @@ readonly class FilterVarsValidator implements ValidatorInterface
 
     public function validate(mixed $value): bool
     {
-        return (false !== filter_var($value, $this->filter, $this->options));
+        return false !== filter_var($value, $this->filter, $this->options);
     }
 
     public function sanitize(mixed $value): mixed

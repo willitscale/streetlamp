@@ -7,9 +7,7 @@ namespace willitscale\StreetlampTests\Attributes\Parameter;
 use willitscale\Streetlamp\Attributes\Parameter\HeaderParameter;
 use willitscale\Streetlamp\Attributes\Validators\FilterVarsValidator;
 use willitscale\Streetlamp\Attributes\Validators\ValidatorInterface;
-use willitscale\Streetlamp\Exceptions\InvalidParameterTypeException;
 use willitscale\Streetlamp\Exceptions\Parameters\MissingRequiredHeaderException;
-use willitscale\Streetlamp\Exceptions\Validators\InvalidParameterFailedToPassFilterValidation;
 use PHPUnit\Framework\TestCase;
 
 class HeaderParameterTest extends TestCase
@@ -21,8 +19,6 @@ class HeaderParameterTest extends TestCase
      * @param string $dataType
      * @param ValidatorInterface[] $validators
      * @return void
-     * @throws InvalidParameterTypeException
-     * @throws InvalidParameterFailedToPassFilterValidation
      * @dataProvider validValues
      */
     public function testAValueIsExtractedCorrectlyFromHeaders(
@@ -43,8 +39,6 @@ class HeaderParameterTest extends TestCase
 
     /**
      * @return void
-     * @throws InvalidParameterFailedToPassFilterValidation
-     * @throws InvalidParameterTypeException
      */
     public function testThatAnExceptionIsThrownWhenAMissingHeaderIsSpecified(): void
     {

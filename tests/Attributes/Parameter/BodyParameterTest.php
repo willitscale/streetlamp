@@ -5,9 +5,7 @@ declare(strict_types=1);
 namespace willitscale\StreetlampTests\Attributes\Parameter;
 
 use willitscale\Streetlamp\Attributes\Parameter\BodyParameter;
-use willitscale\Streetlamp\Exceptions\InvalidParameterTypeException;
 use willitscale\Streetlamp\Exceptions\Parameters\MissingRequireBodyException;
-use willitscale\Streetlamp\Exceptions\Validators\InvalidParameterFailedToPassFilterValidation;
 use PHPUnit\Framework\TestCase;
 
 class BodyParameterTest extends TestCase
@@ -17,8 +15,6 @@ class BodyParameterTest extends TestCase
      * @param string $dataType
      * @param string $resourceIdentifier
      * @return void
-     * @throws InvalidParameterTypeException
-     * @throws InvalidParameterFailedToPassFilterValidation
      * @dataProvider validValues
      */
     public function testAValueIsExtractedCorrectlyFromTheBody(
@@ -38,8 +34,6 @@ class BodyParameterTest extends TestCase
 
     /**
      * @return void
-     * @throws InvalidParameterFailedToPassFilterValidation
-     * @throws InvalidParameterTypeException
      */
     public function testThatAnExceptionIsThrownWhenThereIsNoOrAnEmptyBody(): void
     {

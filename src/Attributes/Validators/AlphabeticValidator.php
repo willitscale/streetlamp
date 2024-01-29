@@ -11,7 +11,7 @@ class AlphabeticValidator implements ValidatorInterface
 {
     public function validate(mixed $value): bool
     {
-        return preg_match('/^[a-z]+$/i', $value);
+        return (bool)preg_match('/^[a-z]+$/i', $value);
     }
 
     public function sanitize(mixed $value): mixed

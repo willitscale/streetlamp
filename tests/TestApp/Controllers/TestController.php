@@ -5,32 +5,23 @@ declare(strict_types=1);
 namespace willitscale\StreetlampTests\TestApp\Controllers;
 
 use willitscale\Streetlamp\Attributes\Accepts;
-use willitscale\Streetlamp\Attributes\Cache\Cache;
 use willitscale\Streetlamp\Attributes\Controller\RouteController;
-use willitscale\Streetlamp\Attributes\Parameter\BodyParameter;
 use willitscale\Streetlamp\Attributes\Parameter\HeaderParameter;
 use willitscale\Streetlamp\Attributes\Parameter\PathParameter;
 use willitscale\Streetlamp\Attributes\Parameter\PostParameter;
 use willitscale\Streetlamp\Attributes\Parameter\QueryParameter;
 use willitscale\Streetlamp\Attributes\Path;
 use willitscale\Streetlamp\Attributes\Route\Method;
-use willitscale\Streetlamp\Attributes\Validators\IntValidator;
 use willitscale\Streetlamp\Builders\ResponseBuilder;
-use willitscale\Streetlamp\CacheRules\CacheRule;
-use willitscale\Streetlamp\CacheRules\ParameterCacheRule;
 use willitscale\Streetlamp\Enums\HttpMethod;
 use willitscale\Streetlamp\Enums\HttpStatusCode;
 use willitscale\Streetlamp\Enums\MediaType;
 use willitscale\Streetlamp\Requests\RequestInterface;
-use willitscale\StreetlampTests\TestApp\Models\DataType;
-use willitscale\StreetlampTests\TestApp\Validators\DataValidator;
 
 #[RouteController]
 #[Path('/')]
 class TestController
 {
-    const DATA_DIR = __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'test.dat';
-
     #[Method(HttpMethod::GET)]
     public function simpleGet(): ResponseBuilder
     {
@@ -85,62 +76,5 @@ class TestController
         return (new ResponseBuilder())
             ->setData($test)
             ->setHttpStatusCode(HttpStatusCode::HTTP_ACCEPTED);
-    }
-
-    #[Method(HttpMethod::GET)]
-    #[Path('/validator/{validatorId}')]
-    public function simpleGetWithPathParameterAndValidator(
-        #[PathParameter('validatorId')] #[IntValidator(100)] int $validatorId
-    ): ResponseBuilder {
-        return (new ResponseBuilder())
-            ->setData($validatorId)
-            ->setContentType(MediaType::APPLICATION_JSON)
-            ->setHttpStatusCode(HttpStatusCode::HTTP_OK);
-    }
-
-    #[Method(HttpMethod::GET)]
-    #[Path('/cache/{cacheId}')]
-    #[Cache(new CacheRule())]
-    public function simpleGetWithCacheRule(
-        #[PathParameter('cacheId')] int $cacheId
-    ): ResponseBuilder {
-        return (new ResponseBuilder())
-            ->setData($cacheId)
-            ->setContentType(MediaType::APPLICATION_JSON)
-            ->setHttpStatusCode(HttpStatusCode::HTTP_OK);
-    }
-
-    #[Method(HttpMethod::GET)]
-    #[Path('/cache/parameter/{cacheId}')]
-    #[Cache(new ParameterCacheRule("__{cacheId}__"))]
-    public function simpleGetWithParameterCacheRule(
-        #[PathParameter('cacheId')] int $cacheId
-    ): ResponseBuilder {
-        return (new ResponseBuilder())
-            ->setData($cacheId)
-            ->setContentType(MediaType::APPLICATION_JSON)
-            ->setHttpStatusCode(HttpStatusCode::HTTP_OK);
-    }
-
-    #[Method(HttpMethod::POST)]
-    #[Path('/data/validation')]
-    public function validateSingleInput(
-        #[BodyParameter([], self::DATA_DIR)] DataType $dataType
-    ): ResponseBuilder {
-        return (new ResponseBuilder())
-            ->setData($dataType)
-            ->setContentType(MediaType::APPLICATION_JSON)
-            ->setHttpStatusCode(HttpStatusCode::HTTP_OK);
-    }
-
-    #[Method(HttpMethod::POST)]
-    #[Path('/data/validations')]
-    public function validateMultipleInputs(
-        #[BodyParameter([new DataValidator()], self::DATA_DIR)] array $dataTypes
-    ): ResponseBuilder {
-        return (new ResponseBuilder())
-            ->setData($dataTypes)
-            ->setContentType(MediaType::APPLICATION_JSON)
-            ->setHttpStatusCode(HttpStatusCode::HTTP_OK);
     }
 }
