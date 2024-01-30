@@ -5,7 +5,7 @@ There's a couple of different approaches to this and a more bespoke configuratio
 This setup is taking the assumption that this is being setup for a singular vhost with a very relaxed level of mapping (e.g. like a docker config).
 This is also taking the assumption that this is being setup with a PHP FPM configuration.
 
-## vHost try_files approach
+## vHost try_files directive
 
 Typically, I'd advise against this approach with nginx, but there may be a need for it, so I'll cover it anyway.
 I'd advise against it due to it opening up your PHP files directly to the world instead of using the `index.php` as a gateway.
@@ -35,7 +35,7 @@ server {
 
 ___Note: This is the configuration used when running `./vendor/bin/streetlamp init docker`___
 
-## vHost rewrite
+## vHost rewrite directive
 
 The rewrite approach is my personal preference and maintains the constraint of the `index.php` being the sole gateway for the application.
 Now, unlike the `try_files` approach of nginx it does mean that even assets have to use the `index.php` as a proxy.
@@ -48,7 +48,7 @@ server {
     access_log /dev/stdout main;
     error_log /dev/stderr info;
 
-    location ~* ^/(?!(index\.php)) {
+    location / {
       rewrite ^ /index.php$is_args$args;
     }
 
