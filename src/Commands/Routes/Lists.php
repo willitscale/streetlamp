@@ -14,56 +14,56 @@ class Lists extends Command implements CommandInterface
     {
         $routeBuilder = $this->buildRouteBuilderFromArguments($arguments);
 
-        $methodColumn = 'Method';
-        $pathColumn = 'Path';
-        $acceptsColumn = 'Accepts';
-        $classColumn = 'Class';
-        $functionColumn = 'Function';
+        $columnHeaders = [
+            'Method',
+            'Path',
+            'Accepts',
+            'Class',
+            'Function'
+        ];
 
-        $columnBreaksLength = 16;
+        $columnBreaksLength = (count($columnHeaders) - 1) * 3 + 4;
+        $columnLengths = [];
 
-        $maxMethodLength = strlen($methodColumn);
-        $maxPathLength = strlen($pathColumn);
-        $maxAcceptsLength = strlen($acceptsColumn);
-        $maxClassLength = strlen($classColumn);
-        $maxFunctionLength = strlen($functionColumn);
-
-        foreach ($routeBuilder->getRoutes() as $route) {
-            $maxMethodLength = max(strlen($route->getMethod()), $maxMethodLength);
-            $maxPathLength = max(strlen($route->getPath()), $maxPathLength);
-            $maxAcceptsLength = max(strlen($route->getAccepts() ?? ''), $maxAcceptsLength);
-            $maxClassLength = max(strlen($route->getClass()), $maxClassLength);
-            $maxFunctionLength = max(strlen($route->getFunction()), $maxFunctionLength);
+        for($i = 0; $i < count($columnHeaders); $i++) {
+            $columnLengths[$i] = strlen($columnHeaders[$i]);
         }
 
-        $totalLength = $maxMethodLength +
-            $maxPathLength +
-            $maxAcceptsLength +
-            $maxClassLength +
-            $maxFunctionLength +
-            $columnBreaksLength;
+        foreach ($routeBuilder->getRoutes() as $route) {
+            $columnLengths[0] = max(strlen($route->getMethod()), $columnLengths[0]);
+            $columnLengths[1] = max(strlen($route->getPath()), $columnLengths[1]);
+            $columnLengths[2] = max(strlen($route->getAccepts() ?? ''), $columnLengths[2]);
+            $columnLengths[3] = max(strlen($route->getClass()), $columnLengths[3]);
+            $columnLengths[4] = max(strlen($route->getFunction()), $columnLengths[4]);
+        }
+
+        $totalLength = array_sum($columnLengths) + $columnBreaksLength;
 
         $this->printTableBreak($totalLength);
-
-        echo '| ',
-        str_pad($methodColumn, $maxMethodLength), ' | ',
-        str_pad($pathColumn, $maxPathLength), ' | ',
-        str_pad($acceptsColumn, $maxAcceptsLength), ' | ',
-        str_pad($classColumn, $maxClassLength), ' | ',
-        str_pad($functionColumn, $maxFunctionLength), ' |', PHP_EOL;
-
+        $this->printRow($columnHeaders, $columnLengths);
         $this->printTableBreak($totalLength);
 
         foreach ($routeBuilder->getRoutes() as $route) {
-            echo '| ',
-            str_pad($route->getMethod(), $maxMethodLength), ' | ',
-            str_pad($route->getPath(), $maxPathLength), ' | ',
-            str_pad($route->getAccepts() ?? '', $maxAcceptsLength), ' | ',
-            str_pad($route->getClass(), $maxClassLength), ' | ',
-            str_pad($route->getFunction(), $maxFunctionLength), ' |', PHP_EOL;
+            $row = [
+                $route->getMethod(),
+                $route->getPath(),
+                $route->getAccepts() ?? '',
+                $route->getClass(),
+                $route->getFunction()
+            ];
+            $this->printRow($row, $columnLengths);
         }
 
         $this->printTableBreak($totalLength);
+    }
+
+    private function printRow(array $row, array $columnLengths): void
+    {
+        for($i = 0; $i < count($row); $i++) {
+            $row[$i] = str_pad($row[$i], $columnLengths[$i]);
+        }
+
+        echo '| ', implode(' | ', $row), ' |', PHP_EOL;
     }
 
     private function printTableBreak($length): void
