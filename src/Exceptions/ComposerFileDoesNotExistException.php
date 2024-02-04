@@ -12,6 +12,6 @@ class ComposerFileDoesNotExistException extends StreetLampRequestException
         string $code = "",
         string $message = ""
     ) {
-        parent::__construct($code, $message, HttpStatusCode::HTTP_SERVICE_UNAVAILABLE);
+        parent::__construct($code, $message, HttpStatusCode::HTTP_INTERNAL_SERVER_ERROR);
     }
 }

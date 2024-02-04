@@ -12,6 +12,6 @@ try {
         ->make(Streetlamp::class)
         ->command($argv);
 } catch (Exception $e) {
-    var_dump($e->getMessage());
+    echo $e->getMessage(), PHP_EOL;
     exit(1);
 }
