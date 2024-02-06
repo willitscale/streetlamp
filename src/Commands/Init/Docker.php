@@ -4,17 +4,31 @@ declare(strict_types=1);
 
 namespace willitscale\Streetlamp\Commands\Init;
 
+use willitscale\Streetlamp\Commands\Command;
 use willitscale\Streetlamp\Commands\CommandInterface;
 
-class Docker implements CommandInterface
+class Docker extends Command implements CommandInterface
 {
+    private const ERROR_MESSAGE = "Missing operation for docker action:";
+    private const AVAILABLE_COMMANDS = [
+        'nginx' => 'Initialise a docker environment with Nginx.',
+        'apache' => 'Initialise a docker environment with Apache.'
+    ];
+
     public function command(?array $arguments = []): void
     {
-        echo "Setting up Docker for Streetlamp", PHP_EOL;
+        $command = $this->popArgument(
+            $arguments,
+            self::AVAILABLE_COMMANDS,
+            self::ERROR_MESSAGE
+        );
 
-        mkdir($_SERVER['PWD'] . '/docker/nginx', 0777, true);
-        copy(__DIR__ . '/../templates/nginx.conf.tmpl', $_SERVER['PWD'] . '/docker/nginx/default.conf');
-        copy(__DIR__ . '/../templates/docker-compose.yml.tmpl', $_SERVER['PWD'] . '/docker-compose.yml');
+        $this->execute(
+            $command,
+            $arguments,
+            self::AVAILABLE_COMMANDS,
+            self::ERROR_MESSAGE
+        );
 
         echo "Done. Run `docker compose up` to start your application locally and go to http://localhost once it's finished.", PHP_EOL;
     }
