@@ -19,6 +19,7 @@ class Nginx implements CommandInterface
         }
 
         copy(self::ROOT_DIR . 'templates/nginx/nginx.conf.tmpl', $_SERVER['PWD'] . '/docker/nginx/default.conf');
+        copy(self::ROOT_DIR . 'templates/nginx/Dockerfile.tmpl', $_SERVER['PWD'] . '/docker/nginx/Dockerfile');
 
         $dockerCompose = file_get_contents(self::ROOT_DIR . 'templates/docker-compose.yml.tmpl');
 
