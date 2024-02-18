@@ -19,7 +19,7 @@ class Docker extends Command implements CommandInterface
 
     public function __construct(
         readonly protected Apache $apache,
-        readonly protected Nginx  $nginx
+        readonly protected Nginx $nginx
     ) {
     }
 
