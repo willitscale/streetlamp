@@ -9,11 +9,13 @@ use willitscale\Streetlamp\Attributes\DataBindings\ArrayMapInterface;
 use willitscale\Streetlamp\Attributes\Parameter\Parameter;
 use willitscale\Streetlamp\Attributes\Validators\ValidatorInterface;
 use willitscale\Streetlamp\Builders\RouterConfigBuilder;
+use willitscale\Streetlamp\Enums\HttpStatusCode;
 use willitscale\Streetlamp\Exceptions\Attributes\InvalidParameterAlreadyBoundException;
 use willitscale\Streetlamp\Exceptions\CacheFileDoesNotExistException;
 use willitscale\Streetlamp\Exceptions\CacheFileInvalidFormatException;
 use willitscale\Streetlamp\Exceptions\ComposerFileDoesNotExistException;
 use willitscale\Streetlamp\Exceptions\ComposerFileInvalidFormatException;
+use willitscale\Streetlamp\Exceptions\InvalidApplicationDirectoryException;
 use willitscale\Streetlamp\Exceptions\MethodParameterNotMappedException;
 use willitscale\Streetlamp\Exceptions\NoMethodRouteFoundException;
 use willitscale\Streetlamp\Exceptions\StreetLampException;
@@ -115,18 +117,31 @@ readonly class RouteBuilder
      */
     private function loadConfig(): array
     {
-        if (!file_exists($this->routerConfig->getComposerFile())) {
-            throw new ComposerFileDoesNotExistException("RTB001", "Cannot locate the composer.json file.");
+        $composerJsonFilePath = $this->routerConfig->getComposerFile();
+
+        if (!file_exists($composerJsonFilePath)) {
+            throw new ComposerFileDoesNotExistException(
+                "RTB001",
+                "Cannot locate the composer file {$composerJsonFilePath}."
+            );
         }
 
-        $composerJsonFile = file_get_contents($this->routerConfig->getComposerFile());
+        if (is_dir($composerJsonFilePath)) {
+            throw new ComposerFileDoesNotExistException(
+                "RTB002",
+                "Path specified {$composerJsonFilePath} is a directory not a composer file."
+            );
+        }
+
+
+        $composerJsonFile = file_get_contents($composerJsonFilePath);
 
         $json = json_decode($composerJsonFile, true);
 
         if (empty($json['autoload']['psr-4'])) {
             throw new ComposerFileInvalidFormatException(
-                "RTB002",
-                "composer.json is invalid or missing psr-4 configuration."
+                "RTB003",
+                "Composer file specified is invalid or missing psr-4 configuration."
             );
         }
 
@@ -178,9 +193,17 @@ readonly class RouteBuilder
      * @param string $directory
      * @param array $results
      * @return array
+     * @throws InvalidApplicationDirectoryException
      */
     private function getDirectoryContents(string $directory, array &$results = array()): array
     {
+        if (!is_dir($directory)) {
+            throw new InvalidApplicationDirectoryException(
+                "RTB004",
+                "{$directory} is not a valid application directory."
+            );
+        }
+
         $files = scandir($directory);
 
         foreach ($files as $value) {

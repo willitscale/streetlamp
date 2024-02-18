@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace willitscale\StreetlampTests\Attributes;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use willitscale\Streetlamp\Attributes\PostFlight;
 use willitscale\Streetlamp\Models\Controller;
 use willitscale\Streetlamp\Models\Route;
@@ -11,12 +12,7 @@ use PHPUnit\Framework\TestCase;
 
 class PostFlightTest extends TestCase
 {
-    /**
-     * @test
-     * @param array $expectedClasses
-     * @return void
-     * @dataProvider validAnnotations
-     */
+    #[DataProvider('validAnnotations')]
     public function testProcessRouteAnnotationCorrectlyAndExtractThePostFlightClass(
         array $expectedClasses
     ): void {
@@ -36,12 +32,7 @@ class PostFlightTest extends TestCase
         }
     }
 
-    /**
-     * @test
-     * @param array $expectedClasses
-     * @return void
-     * @dataProvider validAnnotations
-     */
+    #[DataProvider('validAnnotations')]
     public function testProcessControllerAnnotationCorrectlyAndExtractThePostFlightClass(
         array $expectedClasses
     ): void {

@@ -42,6 +42,8 @@ Here's all the code you need to get going:
 ```php
 <?php declare(strict_types=1);
 
+require_once 'vendor/autoload.php';
+
 use willitscale\Streetlamp\Router;
 
 (new Router())->route();
@@ -56,6 +58,10 @@ A controller can be defined by simply giving a class the attribute of `RouteCont
 
 ```php
 <?php declare(strict_types=1);
+
+namespace Example;
+
+use willitscale\Streetlamp\Attributes\Controller\RouteController;
 
 #[RouteController]
 class MyRouteClass {

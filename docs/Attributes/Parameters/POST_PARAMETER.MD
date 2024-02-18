@@ -21,7 +21,7 @@ Code:
     #[Method(HttpMethod::POST)]
     #[Path('/post')]
     public function postParameter(
-        #[FileParameter('name')] string $name
+        #[PostParameter('name')] string $name
     ): ResponseBuilder {
         return (new ResponseBuilder())
             ->setData($name)

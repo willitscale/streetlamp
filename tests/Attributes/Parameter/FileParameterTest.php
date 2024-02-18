@@ -4,23 +4,15 @@ declare(strict_types=1);
 
 namespace willitscale\StreetlampTests\Attributes\Parameter;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use willitscale\Streetlamp\Attributes\Parameter\FileParameter;
 use willitscale\Streetlamp\Attributes\Validators\FilterVarsValidator;
-use willitscale\Streetlamp\Attributes\Validators\ValidatorInterface;
 use willitscale\Streetlamp\Exceptions\Parameters\MissingRequiredFilesException;
 use PHPUnit\Framework\TestCase;
 
 class FileParameterTest extends TestCase
 {
-    /**
-     * @param string $key
-     * @param string $inputValue
-     * @param bool|int|float|string $expectedValue
-     * @param string $dataType
-     * @param ValidatorInterface[] $validators
-     * @return void
-     * @dataProvider validValues
-     */
+    #[DataProvider('validValues')]
     public function testAValueIsExtractedCorrectlyFromFiles(
         string $key,
         string $inputValue,
@@ -36,9 +28,6 @@ class FileParameterTest extends TestCase
         unset($_FILES[$key]);
     }
 
-    /**
-     * @return void
-     */
     public function testThatAnExceptionIsThrownWhenAMissingFileIsSpecified(): void
     {
         $this->expectException(MissingRequiredFilesException::class);

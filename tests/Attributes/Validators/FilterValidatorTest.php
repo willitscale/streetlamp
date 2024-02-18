@@ -4,19 +4,13 @@ declare(strict_types=1);
 
 namespace willitscale\StreetlampTests\Attributes\Validators;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use willitscale\Streetlamp\Attributes\Validators\FilterVarsValidator;
 
 class FilterValidatorTest extends TestCase
 {
-    /**
-     * @param int $filter
-     * @param string $input
-     * @param bool $expectedResult
-     * @param int|array $options
-     * @return void
-     * @dataProvider validateScenarios
-     */
+    #[DataProvider('validateScenarios')]
     public function testThatValidateCorrectlyValidatesTheInput(
         int $filter,
         string $input,
@@ -28,14 +22,7 @@ class FilterValidatorTest extends TestCase
         $this->assertEquals($expectedResult, $response);
     }
 
-    /**
-     * @param int $filter
-     * @param string $input
-     * @param string $expectedResult
-     * @param int|array $options
-     * @return void
-     * @dataProvider sanitizeScenarios
-     */
+    #[DataProvider('sanitizeScenarios')]
     public function testThatSanitizeCorrectlySanitizesTheInput(
         int $filter,
         string $input,
@@ -47,10 +34,7 @@ class FilterValidatorTest extends TestCase
         $this->assertEquals($expectedResult, $response);
     }
 
-    /**
-     * @return array[]
-     */
-    public function validateScenarios(): array
+    public static function validateScenarios(): array
     {
         return [
             "it should validate that a string containing a URL filters correctly" => [
@@ -66,10 +50,7 @@ class FilterValidatorTest extends TestCase
         ];
     }
 
-    /**
-     * @return array[]
-     */
-    public function sanitizeScenarios(): array
+    public static function sanitizeScenarios(): array
     {
         return [
             "it should validate that a date string matches correctly" => [

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace willitscale\StreetlampTests\Attributes;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use willitscale\Streetlamp\Attributes\Path;
 use willitscale\Streetlamp\Models\Controller;
 use willitscale\Streetlamp\Models\Route;
@@ -11,12 +12,7 @@ use PHPUnit\Framework\TestCase;
 
 class PathTest extends TestCase
 {
-    /**
-     * @test
-     * @param string $expected
-     * @return void
-     * @dataProvider validAcceptAnnotations
-     */
+    #[DataProvider('validAcceptAnnotations')]
     public function testProcessRouteAnnotationExtractsValidPathFromAnnotationAndBindsItToTheRoute(
         string $expected
     ): void {
@@ -26,12 +22,7 @@ class PathTest extends TestCase
         $this->assertEquals($expected, $route->getPath());
     }
 
-    /**
-     * @test
-     * @param string $expected
-     * @return void
-     * @dataProvider validAcceptAnnotations
-     */
+    #[DataProvider('validAcceptAnnotations')]
     public function testProcessControllerAnnotationExtractsValidMediaTypeFromAcceptAnnotationAndBindsItToTheController(
         string $expected
     ): void {

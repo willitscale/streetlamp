@@ -21,7 +21,7 @@ Code:
     #[Method(HttpMethod::GET)]
     #[Path('/header')]
     public function headerParameter(
-        #[FileParameter('header')] string $header
+        #[HeaderParameter('header')] string $header
     ): ResponseBuilder {
         return (new ResponseBuilder())
             ->setHttpStatusCode(HttpStatusCode::HTTP_ACCEPTED);

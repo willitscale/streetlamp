@@ -4,18 +4,13 @@ declare(strict_types=1);
 
 namespace willitscale\StreetlampTests\Attributes\Validators;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use willitscale\Streetlamp\Attributes\Validators\RegExpValidator;
 
 class RegExpValidatorTest extends TestCase
 {
-    /**
-     * @param string $pattern
-     * @param string $input
-     * @param bool $expectedResult
-     * @return void
-     * @dataProvider validateScenarios
-     */
+    #[DataProvider('validateScenarios')]
     public function testThatValidateCorrectlyValidatesTheInput(
         string $pattern,
         string $input,
@@ -26,14 +21,7 @@ class RegExpValidatorTest extends TestCase
         $this->assertEquals($expectedResult, $response);
     }
 
-    /**
-     * @param string $pattern
-     * @param string $replace
-     * @param string $input
-     * @param string $expectedResult
-     * @return void
-     * @dataProvider sanitizeScenarios
-     */
+    #[DataProvider('sanitizeScenarios')]
     public function testThatSanitizeCorrectlySanitizesTheInput(
         string $pattern,
         string $replace,
@@ -45,10 +33,7 @@ class RegExpValidatorTest extends TestCase
         $this->assertEquals($expectedResult, $response);
     }
 
-    /**
-     * @return array[]
-     */
-    public function validateScenarios(): array
+    public static function validateScenarios(): array
     {
         return [
             "it should validate that a date string matches correctly" => [
@@ -64,10 +49,7 @@ class RegExpValidatorTest extends TestCase
         ];
     }
 
-    /**
-     * @return array[]
-     */
-    public function sanitizeScenarios(): array
+    public static function sanitizeScenarios(): array
     {
         return [
             "it should sanitize the input by replacing the matched values" => [

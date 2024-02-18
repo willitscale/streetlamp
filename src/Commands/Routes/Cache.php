@@ -2,25 +2,21 @@
 
 declare(strict_types=1);
 
-namespace willitscale\Streetlamp;
+namespace willitscale\Streetlamp\Commands\Routes;
 
 use willitscale\Streetlamp\Commands\Command;
 use willitscale\Streetlamp\Commands\CommandInterface;
-use willitscale\Streetlamp\Commands\Init;
-use willitscale\Streetlamp\Commands\Routes;
+use willitscale\Streetlamp\Commands\Routes\Cache\Clear;
 
-class Streetlamp extends Command implements CommandInterface
+class Cache extends Command implements CommandInterface
 {
-    private const ERROR_MESSAGE = "Expected at least 1 argument in the form of COMMAND ...";
-
+    private const ERROR_MESSAGE = "Missing operation for cache action:";
     private const AVAILABLE_COMMANDS = [
-        'init' => 'Initialise a resource.',
-        'routes' => 'List all available routes for the application.'
+        'clear' => 'Clear the route cache.'
     ];
 
     public function __construct(
-        readonly protected Init $init,
-        readonly protected Routes $routes
+        readonly protected Clear $clear
     ) {
     }
 
@@ -36,7 +32,7 @@ class Streetlamp extends Command implements CommandInterface
             $command,
             $arguments,
             self::AVAILABLE_COMMANDS,
-            self::ERROR_MESSAGE,
+            self::ERROR_MESSAGE
         );
     }
 }

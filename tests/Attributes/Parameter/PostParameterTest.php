@@ -4,23 +4,15 @@ declare(strict_types=1);
 
 namespace willitscale\StreetlampTests\Attributes\Parameter;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use willitscale\Streetlamp\Attributes\Parameter\PostParameter;
 use willitscale\Streetlamp\Attributes\Validators\FilterVarsValidator;
-use willitscale\Streetlamp\Attributes\Validators\ValidatorInterface;
 use willitscale\Streetlamp\Exceptions\Parameters\MissingRequiredPostException;
 use PHPUnit\Framework\TestCase;
 
 class PostParameterTest extends TestCase
 {
-    /**
-     * @param string $key
-     * @param string $inputValue
-     * @param bool|int|float|string $expectedValue
-     * @param string $dataType
-     * @param ValidatorInterface[] $validators
-     * @return void
-     * @dataProvider validValues
-     */
+    #[DataProvider('validValues')]
     public function testAValueIsExtractedCorrectlyFromPost(
         string $key,
         string $inputValue,
@@ -38,9 +30,6 @@ class PostParameterTest extends TestCase
         unset($_POST[$key]);
     }
 
-    /**
-     * @return void
-     */
     public function testThatAnExceptionIsThrownWhenAMissingPostIsSpecified(): void
     {
         $this->expectException(MissingRequiredPostException::class);
