@@ -23,7 +23,7 @@ class Nginx implements CommandInterface
         $dockerCompose = file_get_contents(self::ROOT_DIR . 'templates/docker-compose.yml.tmpl');
 
         preg_replace("/({NGINX})([^{]+)({\/NGINX})/", "$2", $dockerCompose);
-        preg_replace("/{[A-Z]+}[^{]+\{\/[A-Z]+}/", "", $dockerCompose);
+        preg_replace("/{[A-Z]+}[^{]+\{\/[A-Z]+}\n/m", "", $dockerCompose);
 
         file_put_contents($_SERVER['PWD'] . '/docker-compose.yml', $dockerCompose);
     }
