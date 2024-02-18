@@ -2,12 +2,12 @@ version: "3.9"
 
 services:
   www:
-{NGINX}    image: nginx:1{/NGINX}
-{APACHE}   image: httpd:2{/APACHE}
+{NGINX}    build: docker/nginx{/NGINX}
+{APACHE}    build: docker/apache{/APACHE}
     volumes:
         - ./:/app
 {NGINX}        - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf{/NGINX}
-{APACHE}       - ./docker/apache/default.conf:/etc/apache2/sites-enabled/default.conf{/APACHE}
+{APACHE}        - ./docker/apache/default.conf:/usr/local/apache2/conf/vhosts/default.conf{/APACHE}
     working_dir: /app
     depends_on:
       php:
@@ -19,12 +19,12 @@ services:
     image: php:8.3-fpm
     volumes:
         - ./:/app
-    depends_on:
-      composer:
-        condition: service_completed_successfully
-
-  composer:
-    image: composer:2
-    volumes:
-      - ./:/app
-    command: [ "composer", "install", "--no-dev" ]
+#    depends_on:
+#      composer:
+#        condition: service_completed_successfully
+#
+#  composer:
+#    image: composer:2
+#    volumes:
+#      - ./:/app
+#    command: [ "composer", "install", "--no-dev" ]

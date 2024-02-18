@@ -1,0 +1,19 @@
+<VirtualHost *:80>
+
+  DocumentRoot /app
+  DirectoryIndex /index.php index.php
+
+  ErrorLog /dev/stderr
+  CustomLog /dev/stdout combined
+
+  <Directory "/app">
+    Options Indexes FollowSymlinks MultiViews
+    AllowOverride None
+    Require all granted
+    RewriteEngine on
+    RewriteRule ^(.*)$ index.php/$1 [L,QSA]
+  </Directory>
+
+  ProxyPassMatch ^/(.*\.php(/.*)?)$ fcgi://php:9000/app/index.php
+
+</VirtualHost>

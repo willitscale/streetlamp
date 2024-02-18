@@ -6,6 +6,8 @@ namespace willitscale\Streetlamp\Commands\Init;
 
 use willitscale\Streetlamp\Commands\Command;
 use willitscale\Streetlamp\Commands\CommandInterface;
+use willitscale\Streetlamp\Commands\Init\Servers\Apache;
+use willitscale\Streetlamp\Commands\Init\Servers\Nginx;
 
 class Docker extends Command implements CommandInterface
 {
@@ -14,6 +16,13 @@ class Docker extends Command implements CommandInterface
         'nginx' => 'Initialise a docker environment with Nginx.',
         'apache' => 'Initialise a docker environment with Apache.'
     ];
+
+    public function __construct(
+        readonly protected Apache $apache,
+        readonly protected Nginx $nginx
+    ) {
+
+    }
 
     public function command(?array $arguments = []): void
     {

@@ -8,14 +8,24 @@ use willitscale\Streetlamp\Commands\CommandInterface;
 
 class Apache implements CommandInterface
 {
+    const ROOT_DIR = __DIR__ . '/../../../../';
 
     public function command(?array $arguments = []): void
     {
-        mkdir($_SERVER['PWD'] . '/docker/apache', 0777, true);
-        copy(__DIR__ . '/../templates/apache.conf.tmpl', $_SERVER['PWD'] . '/docker/apache/default.conf');
-        $dockerCompose = file_get_contents(__DIR__ . '/../templates/docker-compose.yml.tmpl');
-        preg_replace("/({APACHE})([^{]+)({\/APACHE})/", "$2", $dockerCompose);
-        preg_replace("/{[A-Z]+}[^{]+\{\/[A-Z]+}/", "", $dockerCompose);
+        $nginxDir = $_SERVER['PWD'] . '/docker/apache';
+
+        if (!file_exists($nginxDir)) {
+            mkdir($nginxDir, 0777, true);
+        }
+
+        copy(self::ROOT_DIR . 'templates/apache/apache.conf.tmpl', $_SERVER['PWD'] . '/docker/apache/default.conf');
+        copy(self::ROOT_DIR . 'templates/apache/Dockerfile.tmpl', $_SERVER['PWD'] . '/docker/apache/Dockerfile');
+
+        $dockerCompose = file_get_contents(self::ROOT_DIR . 'templates/docker-compose.yml.tmpl');
+
+        $dockerCompose = preg_replace("/({APACHE})([^{]+)({\/APACHE})/", "$2", $dockerCompose);
+        $dockerCompose = preg_replace("/{[A-Z]+}[^{]+\{\/[A-Z]+}\n/m", "", $dockerCompose);
+
         file_put_contents($_SERVER['PWD'] . '/docker-compose.yml', $dockerCompose);
     }
 }
