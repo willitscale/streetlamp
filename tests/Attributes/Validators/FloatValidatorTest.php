@@ -4,19 +4,13 @@ declare(strict_types=1);
 
 namespace willitscale\StreetlampTests\Attributes\Validators;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use willitscale\Streetlamp\Attributes\Validators\FloatValidator;
 
 class FloatValidatorTest extends TestCase
 {
-    /**
-     * @param string $input
-     * @param bool $expectedResult
-     * @param float|null $min
-     * @param float|null $max
-     * @return void
-     * @dataProvider validateScenarios
-     */
+    #[DataProvider('validateScenarios')]
     public function testThatValidateCorrectlyValidatesTheInput(
         string $input,
         bool $expectedResult,
@@ -28,12 +22,7 @@ class FloatValidatorTest extends TestCase
         $this->assertEquals($expectedResult, $response);
     }
 
-    /**
-     * @param string $input
-     * @param float $expectedResult
-     * @return void
-     * @dataProvider sanitizeScenarios
-     */
+    #[DataProvider('sanitizeScenarios')]
     public function testThatSanitizeCorrectlySanitizesTheInput(
         string $input,
         float $expectedResult
@@ -43,10 +32,7 @@ class FloatValidatorTest extends TestCase
         $this->assertEquals($expectedResult, $response);
     }
 
-    /**
-     * @return array[]
-     */
-    public function validateScenarios(): array
+    public static function validateScenarios(): array
     {
         return [
             "it should validate that the value passed is a valid float" => [
@@ -72,10 +58,7 @@ class FloatValidatorTest extends TestCase
         ];
     }
 
-    /**
-     * @return array[]
-     */
-    public function sanitizeScenarios(): array
+    public static function sanitizeScenarios(): array
     {
         return [
             "it should validate that a string sanitizes to the float equivalent" => [

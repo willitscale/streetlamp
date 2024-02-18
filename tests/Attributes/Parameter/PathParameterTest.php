@@ -4,23 +4,15 @@ declare(strict_types=1);
 
 namespace willitscale\StreetlampTests\Attributes\Parameter;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use willitscale\Streetlamp\Attributes\Parameter\PathParameter;
 use willitscale\Streetlamp\Attributes\Validators\FilterVarsValidator;
-use willitscale\Streetlamp\Attributes\Validators\ValidatorInterface;
 use willitscale\Streetlamp\Exceptions\Parameters\MissingRequiredPathException;
 use PHPUnit\Framework\TestCase;
 
 class PathParameterTest extends TestCase
 {
-    /**
-     * @param string $key
-     * @param string $inputValue
-     * @param bool|int|float|string $expectedValue
-     * @param string $dataType
-     * @param ValidatorInterface[] $validators
-     * @return void
-     * @dataProvider validValues
-     */
+    #[DataProvider('validValues')]
     public function testAValueIsExtractedCorrectlyFromPathParameters(
         string $key,
         string $inputValue,
@@ -36,9 +28,6 @@ class PathParameterTest extends TestCase
         $this->assertEquals($expectedValue, $returnedValue);
     }
 
-    /**
-     * @return void
-     */
     public function testThatAnExceptionIsThrownWhenAMissingPathParameterIsSpecified(): void
     {
         $this->expectException(MissingRequiredPathException::class);

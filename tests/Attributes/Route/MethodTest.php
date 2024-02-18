@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Attributes\Route;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use willitscale\Streetlamp\Attributes\Route\Method;
 use willitscale\Streetlamp\Enums\HttpMethod;
 use willitscale\Streetlamp\Exceptions\Attributes\InvalidAttributeContextException;
@@ -13,11 +14,7 @@ use PHPUnit\Framework\TestCase;
 
 class MethodTest extends TestCase
 {
-    /**
-     * @param HttpMethod $expectedMethod
-     * @return void
-     * @dataProvider validRouteAnnotations
-     */
+    #[DataProvider('validRouteAnnotations')]
     public function testMethodIsAssignedToTheRouteCorrectly(
         HttpMethod $expectedMethod
     ): void {

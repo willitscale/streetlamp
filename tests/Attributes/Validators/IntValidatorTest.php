@@ -4,19 +4,13 @@ declare(strict_types=1);
 
 namespace willitscale\StreetlampTests\Attributes\Validators;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use willitscale\Streetlamp\Attributes\Validators\IntValidator;
 
 class IntValidatorTest extends TestCase
 {
-    /**
-     * @param string $input
-     * @param bool $expectedResult
-     * @param int|null $min
-     * @param int|null $max
-     * @return void
-     * @dataProvider validateScenarios
-     */
+    #[DataProvider('validateScenarios')]
     public function testThatValidateCorrectlyValidatesTheInput(
         string $input,
         bool $expectedResult,
@@ -28,12 +22,7 @@ class IntValidatorTest extends TestCase
         $this->assertEquals($expectedResult, $response);
     }
 
-    /**
-     * @param string $input
-     * @param int $expectedResult
-     * @return void
-     * @dataProvider sanitizeScenarios
-     */
+    #[DataProvider('sanitizeScenarios')]
     public function testThatSanitizeCorrectlySanitizesTheInput(
         string $input,
         int $expectedResult
@@ -43,10 +32,7 @@ class IntValidatorTest extends TestCase
         $this->assertEquals($expectedResult, $response);
     }
 
-    /**
-     * @return array[]
-     */
-    public function validateScenarios(): array
+    public static function validateScenarios(): array
     {
         return [
             "it should validate that the value passed is a valid integer" => [
@@ -72,10 +58,7 @@ class IntValidatorTest extends TestCase
         ];
     }
 
-    /**
-     * @return array[]
-     */
-    public function sanitizeScenarios(): array
+    public static function sanitizeScenarios(): array
     {
         return [
             "it should validate that a string sanitizes to the integer equivalent" => [
