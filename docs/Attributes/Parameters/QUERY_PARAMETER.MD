@@ -21,7 +21,7 @@ Code:
     #[Method(HttpMethod::GET)]
     #[Path('/query')]
     public function queryParameter(
-        #[FileParameter('age')] int $age
+        #[QueryParameter('age')] int $age
     ): ResponseBuilder {
         return (new ResponseBuilder())
             ->setData($age)
@@ -32,6 +32,6 @@ Code:
 cURL:
 ```shell
 curl --request GET \
-    --location 'http://localhost/path/123' \
+    --location 'http://localhost/query' \
     --data-urlencode 'age=30'
 ```

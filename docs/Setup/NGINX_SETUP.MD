@@ -15,7 +15,6 @@ If you do have files that you may need to access directly then this would probab
 ```text
 server {
     listen 80;
-    server_name localhost;
 
     access_log /dev/stdout main;
     error_log /dev/stderr info;
@@ -33,8 +32,6 @@ server {
 }
 ```
 
-___Note: This is the configuration used when running `./vendor/bin/streetlamp init docker`___
-
 ## vHost rewrite directive
 
 The rewrite approach is my personal preference and maintains the constraint of the `index.php` being the sole gateway for the application.
@@ -43,7 +40,6 @@ Now, unlike the `try_files` approach of nginx it does mean that even assets have
 ```text
 server {
     listen 80;
-    server_name localhost;
 
     access_log /dev/stdout main;
     error_log /dev/stderr info;
@@ -73,3 +69,5 @@ If you wanted to allow assets to be accessed outside of PHP you could do so by a
 ```
 
 This will allow the files to resolve as they usually would.
+
+___Note: This is the configuration used when running `./vendor/bin/streetlamp init docker`___

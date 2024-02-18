@@ -8,7 +8,7 @@ server {
   index index.php;
 
   location / {
-    try_files $uri $uri/ /index.php;
+    rewrite ^ /index.php$is_args$args;
   }
 
   location ~ \.php$ {

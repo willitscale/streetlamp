@@ -21,7 +21,7 @@ Code:
     #[Method(HttpMethod::GET)]
     #[Path('/path/{paramId}')]
     public function pathParameter(
-        #[FileParameter('paramId')] int $paramId
+        #[PathParameter('paramId')] int $paramId
     ): ResponseBuilder {
         return (new ResponseBuilder())
             ->setData($paramId)

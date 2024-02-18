@@ -19,12 +19,12 @@ services:
     image: php:8.3-fpm
     volumes:
         - ./:/app
-#    depends_on:
-#      composer:
-#        condition: service_completed_successfully
-#
-#  composer:
-#    image: composer:2
-#    volumes:
-#      - ./:/app
-#    command: [ "composer", "install", "--no-dev" ]
+    depends_on:
+      composer:
+        condition: service_completed_successfully
+
+  composer:
+    image: composer:2
+    volumes:
+      - ./:/app
+    command: [ "composer", "install", "--no-dev" ]
