@@ -9,7 +9,6 @@ use willitscale\Streetlamp\Commands\CommandInterface;
 
 class Lists extends Command implements CommandInterface
 {
-
     public function command(?array $arguments = []): void
     {
         $routeBuilder = $this->buildRouteBuilderFromArguments($arguments);
@@ -25,7 +24,7 @@ class Lists extends Command implements CommandInterface
         $columnBreaksLength = (count($columnHeaders) - 1) * 3 + 4;
         $columnLengths = [];
 
-        for($i = 0; $i < count($columnHeaders); $i++) {
+        for ($i = 0; $i < count($columnHeaders); $i++) {
             $columnLengths[$i] = strlen($columnHeaders[$i]);
         }
 
@@ -59,7 +58,7 @@ class Lists extends Command implements CommandInterface
 
     private function printRow(array $row, array $columnLengths): void
     {
-        for($i = 0; $i < count($row); $i++) {
+        for ($i = 0; $i < count($row); $i++) {
             $row[$i] = str_pad($row[$i], $columnLengths[$i]);
         }
 
