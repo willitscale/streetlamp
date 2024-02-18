@@ -11,6 +11,7 @@
     AllowOverride None
     Require all granted
     RewriteEngine on
+    RewriteCond $1 !^(favicon\.ico|favicon\.png|media|robots\.txt|crossdomain\.xml|css|js)
     RewriteRule ^(.*)$ index.php/$1 [L,QSA]
   </Directory>
 

@@ -7,8 +7,11 @@ server {
   root /app;
   index index.php;
 
-  location / {
-    rewrite ^ /index.php$is_args$args;
+  location ~* \.(js|ico|gif|jpg|png|svg|css|jpeg|eot|woff|ttf)$ {
+  }
+
+  location ~* ^/(?!(index\.php)) {
+    rewrite ^ /index.php;
   }
 
   location ~ \.php$ {
