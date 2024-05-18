@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace willitscale\Streetlamp\Models;
 
+use Psr\Http\Message\RequestInterface;
 use willitscale\Streetlamp\CacheHandlers\CacheHandler;
 use willitscale\Streetlamp\CacheHandlers\FileCacheHandler;
 use willitscale\Streetlamp\Requests\HttpRequest;
-use willitscale\Streetlamp\Requests\RequestInterface;
 
 readonly class RouterConfig
 {

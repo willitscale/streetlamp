@@ -8,6 +8,10 @@ use DI\Container;
 use DI\DependencyException;
 use DI\NotFoundException;
 use Exception;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\MiddlewareInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 use willitscale\Streetlamp\Builders\ResponseBuilder;
 use willitscale\Streetlamp\Enums\HttpStatusCode;
 use willitscale\Streetlamp\Exceptions\ComposerFileDoesNotExistException;
@@ -17,10 +21,10 @@ use willitscale\Streetlamp\Exceptions\InvalidRouteResponseException;
 use willitscale\Streetlamp\Exceptions\NoValidRouteException;
 use willitscale\Streetlamp\Exceptions\StreetLampRequestException;
 use willitscale\Streetlamp\Models\Route;
-use willitscale\Streetlamp\Requests\RequestInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use ReflectionException;
+use willitscale\Streetlamp\Responses\HttpResponse;
 
 readonly class Router
 {
@@ -54,6 +58,10 @@ readonly class Router
         $pathMatched = false;
 
         $request = $this->routeBuilder->getRouterConfig()->getRequest();
+
+        $this->container->set(get_class($request), $request);
+        $this->container->set(ResponseInterface::class, $this->container->get(HttpResponse::class));
+
 
         try {
             foreach ($this->routeBuilder->getRoutes() as $route) {
@@ -152,35 +160,36 @@ readonly class Router
     }
 
     /**
-     * @param Route $route
-     * @param RequestInterface $request
-     * @return void
      * @throws DependencyException
      * @throws NotFoundException
      */
-    private function preFlight(Route $route, RequestInterface $request): void
-    {
+    private function preFlight(
+        Route $route,
+        ServerRequestInterface $request
+    ): void {
         foreach ($route->getPreFlight() as $preFlight) {
             $flight = $this->container->get($preFlight);
-            if ($flight instanceof Flight) {
-                $flight->pre($request);
+            if ($flight instanceof MiddlewareInterface) {
+                $flight->process($request);
             }
         }
     }
 
     /**
-     * @param Route $route
-     * @param ResponseBuilder $response
-     * @return void
      * @throws DependencyException
      * @throws NotFoundException
      */
-    private function postFlight(Route $route, ResponseBuilder $response): void
-    {
+    private function postFlight(
+        Route $route,
+        ServerRequestInterface $request,
+        RequestHandlerInterface $requestHandler,
+        ResponseInterface &$response
+    ): void {
         foreach ($route->getPostFlight() as $postFlight) {
             $flight = $this->container->get($postFlight);
-            if ($flight instanceof Flight) {
-                $flight->post($response);
+            if ($flight instanceof MiddlewareInterface) {
+                $flight->setResponse($response);
+                $response = $flight->process($request, $requestHandler);
             }
         }
     }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace willitscale\StreetlampTests\TestApp\Controllers;
 
+use Psr\Http\Message\RequestInterface;
 use willitscale\Streetlamp\Attributes\Accepts;
 use willitscale\Streetlamp\Attributes\Controller\RouteController;
 use willitscale\Streetlamp\Attributes\Parameter\HeaderParameter;
@@ -16,7 +17,6 @@ use willitscale\Streetlamp\Builders\ResponseBuilder;
 use willitscale\Streetlamp\Enums\HttpMethod;
 use willitscale\Streetlamp\Enums\HttpStatusCode;
 use willitscale\Streetlamp\Enums\MediaType;
-use willitscale\Streetlamp\Requests\RequestInterface;
 
 #[RouteController]
 #[Path('/')]

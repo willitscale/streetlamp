@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace willitscale\Streetlamp\Attributes;
 
 use Attribute;
-use willitscale\Streetlamp\Flight;
 use willitscale\Streetlamp\Models\Controller;
 use willitscale\Streetlamp\Models\Route;
 

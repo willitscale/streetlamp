@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace willitscale\Streetlamp\Models;
 
 use willitscale\Streetlamp\Enums\MediaType;
-use willitscale\Streetlamp\Flight;
 
 abstract class Context
 {
