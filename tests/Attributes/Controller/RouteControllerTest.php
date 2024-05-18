@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace willitscale\StreetlampTests\Attributes\Controller;
 
+use PHPUnit\Framework\Attributes\Test;
 use willitscale\Streetlamp\Attributes\Controller\RouteController;
 use willitscale\Streetlamp\Exceptions\Attributes\InvalidAttributeContextException;
 use willitscale\Streetlamp\Models\Controller;
@@ -12,6 +13,7 @@ use PHPUnit\Framework\TestCase;
 
 class RouteControllerTest extends TestCase
 {
+    #[Test]
     public function testControllerAttributeAppliesCorrectlyToController(): void
     {
         $controllerAnnotation = new RouteController();
@@ -20,6 +22,7 @@ class RouteControllerTest extends TestCase
         $this->assertTrue($controller->isController());
     }
 
+    #[Test]
     public function testControllerAttributeFailsToApplyToRoute(): void
     {
         $this->expectException(InvalidAttributeContextException::class);

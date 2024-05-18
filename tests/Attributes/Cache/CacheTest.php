@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace willitscale\StreetlampTests\Attributes\Cache;
 
+use PHPUnit\Framework\Attributes\Test;
 use willitscale\Streetlamp\Attributes\Cache\Cache;
 use willitscale\Streetlamp\CacheRules\CacheRule;
 use willitscale\Streetlamp\Exceptions\Attributes\InvalidAttributeContextException;
@@ -13,6 +14,7 @@ use PHPUnit\Framework\TestCase;
 
 class CacheTest extends TestCase
 {
+    #[Test]
     public function testCacheAttributeDoesNotApplyToController(): void
     {
         $this->expectException(InvalidAttributeContextException::class);
@@ -21,6 +23,7 @@ class CacheTest extends TestCase
         $cacheAnnotation->applyToController($controller);
     }
 
+    #[Test]
     public function testCacheAttributeAppliesCorrectlyToRoute(): void
     {
         $cacheAnnotation = new Cache(new CacheRule());

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace willitscale\StreetlampTests;
 
+use PHPUnit\Framework\Attributes\Test;
 use willitscale\Streetlamp\Enums\MediaType;
 use willitscale\StreetlampTest\RouteTestCase;
 
@@ -30,6 +31,7 @@ class CacheRouterTest extends RouteTestCase
         }
     }
 
+    #[Test]
     public function testRouterCacheAlwaysReturnsTheInitialCachedValue(): void
     {
         $expectedCacheValue = 99;

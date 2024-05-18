@@ -5,12 +5,14 @@ declare(strict_types=1);
 namespace willitscale\StreetlampTests\Attributes\Parameter;
 
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use willitscale\Streetlamp\Attributes\Parameter\BodyParameter;
 use willitscale\Streetlamp\Exceptions\Parameters\MissingRequireBodyException;
 use PHPUnit\Framework\TestCase;
 
 class BodyParameterTest extends TestCase
 {
+    #[Test]
     #[DataProvider('validValues')]
     public function testAValueIsExtractedCorrectlyFromTheBody(
         bool|int|float|string $expectedValue,
@@ -27,6 +29,7 @@ class BodyParameterTest extends TestCase
         }
     }
 
+    #[Test]
     public function testThatAnExceptionIsThrownWhenThereIsNoOrAnEmptyBody(): void
     {
         $this->expectException(MissingRequireBodyException::class);

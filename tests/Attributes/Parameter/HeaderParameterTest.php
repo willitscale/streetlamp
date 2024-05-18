@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace willitscale\StreetlampTests\Attributes\Parameter;
 
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use willitscale\Streetlamp\Attributes\Parameter\HeaderParameter;
 use willitscale\Streetlamp\Attributes\Validators\FilterVarsValidator;
 use willitscale\Streetlamp\Exceptions\Parameters\MissingRequiredHeaderException;
@@ -12,6 +13,7 @@ use PHPUnit\Framework\TestCase;
 
 class HeaderParameterTest extends TestCase
 {
+    #[Test]
     #[DataProvider('validValues')]
     public function testAValueIsExtractedCorrectlyFromHeaders(
         string $key,
@@ -29,6 +31,7 @@ class HeaderParameterTest extends TestCase
         unset($_SERVER[$serverKey]);
     }
 
+    #[Test]
     public function testThatAnExceptionIsThrownWhenAMissingHeaderIsSpecified(): void
     {
         $this->expectException(MissingRequiredHeaderException::class);
