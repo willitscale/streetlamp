@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace willitscale\Streetlamp\Models;
 
+use Psr\Http\Message\RequestInterface;
 use willitscale\Streetlamp\CacheHandlers\CacheHandler;
 use willitscale\Streetlamp\CacheHandlers\FileCacheHandler;
-use willitscale\Streetlamp\Requests\HttpRequest;
-use willitscale\Streetlamp\Requests\RequestInterface;
 
 readonly class RouterConfig
 {
@@ -22,62 +21,40 @@ readonly class RouterConfig
         private RequestInterface $request = new HttpRequest(),
         private CacheHandler $routeCacheHandler = new FileCacheHandler(),
         private CacheHandler $cacheHandler = new FileCacheHandler(),
-        private array $globalPreFlights = [],
-        private array $globalPostFlights = []
+        private array $globalMiddleware = []
     ) {
     }
 
-    /**
-     * @return string
-     */
     public function getRootDirectory(): string
     {
         return $this->rootDirectory;
     }
 
-    /**
-     * @return string
-     */
     public function getComposerFile(): string
     {
         return $this->composerFile;
     }
 
-    /**
-     * @return bool
-     */
     public function isRouteCached(): bool
     {
         return $this->routeCached;
     }
 
-    /**
-     * @return bool
-     */
     public function isRethrowExceptions(): bool
     {
         return $this->rethrowExceptions;
     }
 
-    /**
-     * @return array
-     */
     public function getExcludedDirectories(): array
     {
         return $this->excludedDirectories;
     }
 
-    /**
-     * @return RequestInterface
-     */
     public function getRequest(): RequestInterface
     {
         return $this->request;
     }
 
-    /**
-     * @return CacheHandler
-     */
     public function getRouteCacheHandler(): CacheHandler
     {
         return $this->routeCacheHandler;
@@ -88,19 +65,8 @@ readonly class RouterConfig
         return $this->cacheHandler;
     }
 
-    /**
-     * @return array
-     */
-    public function getGlobalPreFlights(): array
+    public function getGlobalMiddleware(): array
     {
-        return $this->globalPreFlights;
-    }
-
-    /**
-     * @return array
-     */
-    public function getGlobalPostFlights(): array
-    {
-        return $this->globalPostFlights;
+        return $this->globalMiddleware;
     }
 }

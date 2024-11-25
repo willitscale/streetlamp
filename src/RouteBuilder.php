@@ -31,10 +31,6 @@ readonly class RouteBuilder
 {
     private RouterConfig|null $routerConfig;
 
-    /**
-     * @param RouterConfig|null $routerConfig
-     * @param LoggerInterface $logger
-     */
     public function __construct(
         RouterConfig|null $routerConfig = null,
         private LoggerInterface $logger = new NullLogger()
@@ -48,16 +44,12 @@ readonly class RouteBuilder
         }
     }
 
-    /**
-     * @return RouterConfig
-     */
     public function getRouterConfig(): RouterConfig
     {
         return $this->routerConfig;
     }
 
     /**
-     * @return Route[]
      * @throws ComposerFileDoesNotExistException
      * @throws ComposerFileInvalidFormatException
      * @throws ReflectionException
@@ -144,10 +136,6 @@ readonly class RouteBuilder
         return $routes;
     }
 
-    /**
-     * @param string $path
-     * @return bool
-     */
     private function isInExcludedDirectory(string $path): bool
     {
         $rootDirectory = $this->routerConfig->getRootDirectory() . DIRECTORY_SEPARATOR;
@@ -164,11 +152,6 @@ readonly class RouteBuilder
         return false;
     }
 
-    /**
-     * @param string $directory
-     * @param array $results
-     * @return array
-     */
     private function getDirectoryContents(string $directory, array &$results = array()): array
     {
         $files = scandir($directory);
@@ -187,9 +170,6 @@ readonly class RouteBuilder
     }
 
     /**
-     * @param string $root
-     * @param string $namespace
-     * @return array
      * @throws InvalidParameterAlreadyBoundException
      * @throws ReflectionException
      */
@@ -229,12 +209,8 @@ readonly class RouteBuilder
 
             $this->logger->debug($class . ' is being scanned ');
 
-            if (!empty($this->routerConfig->getGlobalPreFlights())) {
-                $controller->setPreFlight($this->routerConfig->getGlobalPreFlights());
-            }
-
-            if (!empty($this->routerConfig->getGlobalPostFlights())) {
-                $controller->setPostFlight($this->routerConfig->getGlobalPostFlights());
+            if (!empty($this->routerConfig->getGlobalMiddleware())) {
+                $controller->setMiddleware($this->routerConfig->getGlobalMiddleware());
             }
 
             foreach ($attributes as $attribute) {
@@ -261,9 +237,6 @@ readonly class RouteBuilder
     }
 
     /**
-     * @param Controller $controller
-     * @param ReflectionMethod $method
-     * @return Route
      * @throws Exceptions\Attributes\InvalidParameterAlreadyBoundException
      * @throws NoMethodRouteFoundException
      */
@@ -289,12 +262,8 @@ readonly class RouteBuilder
             $route->setAccepts($controller->getAccepts());
         }
 
-        if (!empty($controller->getPreFlight())) {
-            $route->setPreFlight($controller->getPreFlight());
-        }
-
-        if (!empty($controller->getPostFlight())) {
-            $route->setPostFlight($controller->getPostFlight());
+        if (!empty($controller->getMiddleware())) {
+            $route->setMiddleware($controller->getMiddleware());
         }
 
         foreach ($attributes as $attribute) {
@@ -318,9 +287,6 @@ readonly class RouteBuilder
     }
 
     /**
-     * @param Route $route
-     * @param ReflectionParameter $parameter
-     * @return void
      * @throws InvalidParameterAlreadyBoundException
      * @throws MethodParameterNotMappedException
      */

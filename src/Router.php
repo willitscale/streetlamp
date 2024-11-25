@@ -8,6 +8,10 @@ use DI\Container;
 use DI\DependencyException;
 use DI\NotFoundException;
 use Exception;
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\MiddlewareInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 use willitscale\Streetlamp\Builders\ResponseBuilder;
 use willitscale\Streetlamp\Enums\HttpStatusCode;
 use willitscale\Streetlamp\Exceptions\ComposerFileDoesNotExistException;
@@ -17,7 +21,6 @@ use willitscale\Streetlamp\Exceptions\InvalidRouteResponseException;
 use willitscale\Streetlamp\Exceptions\NoValidRouteException;
 use willitscale\Streetlamp\Exceptions\StreetLampRequestException;
 use willitscale\Streetlamp\Models\Route;
-use willitscale\Streetlamp\Requests\RequestInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use ReflectionException;
@@ -69,7 +72,8 @@ readonly class Router
                     continue;
                 }
 
-                $this->preFlight($route, $request);
+                // TODO: PART 1 Recursively call this with the response build as the final call
+                $this->middleware($route, $request);
 
                 $args = [];
                 foreach ($route->getParameters() as $key => $parameter) {
@@ -83,7 +87,7 @@ readonly class Router
                     $key = $cacheRule->getKey($route, $args);
                     if ($cacheHandler->exists($key)) {
                         $response = $cacheHandler->retrieveAndDeserialize($key);
-                        $this->postFlight($route, $response);
+                        // TODO: PART 2 Callback maybe?
                         return $response->build($return);
                     }
                 }
@@ -131,7 +135,7 @@ readonly class Router
                 );
             }
 
-            throw new NoValidRouteException('R003', 'No valid route found for ' . $request->getPath() . '.');
+            throw new NoValidRouteException('R003', 'No valid route found for ' . $request->getUri() . '.');
         } catch (StreetLampRequestException $StreetLampRequestException) {
             if ($this->routeBuilder->getRouterConfig()->isRethrowExceptions()) {
                 throw $StreetLampRequestException;
@@ -151,37 +155,12 @@ readonly class Router
         return null;
     }
 
-    /**
-     * @param Route $route
-     * @param RequestInterface $request
-     * @return void
-     * @throws DependencyException
-     * @throws NotFoundException
-     */
-    private function preFlight(Route $route, RequestInterface $request): void
-    {
-        foreach ($route->getPreFlight() as $preFlight) {
-            $flight = $this->container->get($preFlight);
-            if ($flight instanceof Flight) {
-                $flight->pre($request);
-            }
-        }
-    }
-
-    /**
-     * @param Route $route
-     * @param ResponseBuilder $response
-     * @return void
-     * @throws DependencyException
-     * @throws NotFoundException
-     */
-    private function postFlight(Route $route, ResponseBuilder $response): void
-    {
-        foreach ($route->getPostFlight() as $postFlight) {
-            $flight = $this->container->get($postFlight);
-            if ($flight instanceof Flight) {
-                $flight->post($response);
-            }
-        }
+    private function middleware(
+        Route $route,
+        ServerRequestInterface $request,
+        RequestHandlerInterface $requestHandler
+    ): void {
+        $middleware = $route->popMiddleware();
+        $middleware->process($request, $requestHandler);
     }
 }

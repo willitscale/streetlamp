@@ -21,6 +21,7 @@ abstract class Parameter
 
     public function __construct(
         protected readonly ?string $key,
+        protected readonly bool $required,
         protected array $validators = []
     ) {
     }
@@ -33,6 +34,11 @@ abstract class Parameter
     public function getKey(): ?string
     {
         return $this->key;
+    }
+
+    public function getRequired(): bool
+    {
+        return $this->required;
     }
 
     public function getValue(array $pathMatches): mixed
