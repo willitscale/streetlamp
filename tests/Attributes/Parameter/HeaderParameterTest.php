@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace willitscale\StreetlampTests\Attributes\Parameter;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use willitscale\Streetlamp\Attributes\Parameter\HeaderParameter;
 use willitscale\Streetlamp\Attributes\Validators\FilterVarsValidator;
 use willitscale\Streetlamp\Attributes\Validators\ValidatorInterface;
@@ -14,19 +16,11 @@ use PHPUnit\Framework\TestCase;
 
 class HeaderParameterTest extends TestCase
 {
-    /**
-     * @param string $key
-     * @param string $inputValue
-     * @param bool|int|float|string $expectedValue
-     * @param string $dataType
-     * @param ValidatorInterface[] $validators
-     * @return void
-     * @throws InvalidParameterTypeException
-     * @throws InvalidParameterFailedToPassFilterValidation
-     * @dataProvider validValues
-     */
+    #[Test]
+    #[DataProvider('validValues')]
     public function testAValueIsExtractedCorrectlyFromHeaders(
         string $key,
+        bool $required,
         string $inputValue,
         bool|int|float|string $expectedValue,
         string $dataType,
@@ -34,22 +28,18 @@ class HeaderParameterTest extends TestCase
     ): void {
         $serverKey = 'HTTP_' . strtoupper($key);
         $_SERVER[$serverKey] = $inputValue;
-        $headerArgument = new HeaderParameter($key, $validators);
+        $headerArgument = new HeaderParameter($key, $required, $validators);
         $headerArgument->setType($dataType);
         $returnedValue = $headerArgument->getValue([]);
         $this->assertEquals($expectedValue, $returnedValue);
         unset($_SERVER[$serverKey]);
     }
 
-    /**
-     * @return void
-     * @throws InvalidParameterFailedToPassFilterValidation
-     * @throws InvalidParameterTypeException
-     */
+    #[Test]
     public function testThatAnExceptionIsThrownWhenAMissingHeaderIsSpecified(): void
     {
         $this->expectException(MissingRequiredHeaderException::class);
-        $headerArgument = new HeaderParameter('string', []);
+        $headerArgument = new HeaderParameter('string', true, []);
         $headerArgument->getValue([]);
     }
 
@@ -58,6 +48,7 @@ class HeaderParameterTest extends TestCase
         return [
             'it should set a string value and extract a matching value' => [
                 'key' => 'test',
+                'required' => true,
                 'inputValue' => 'test',
                 'expectedValue' => 'test',
                 'dataType' => 'string',
@@ -65,6 +56,7 @@ class HeaderParameterTest extends TestCase
             ],
             'it should set an int value and extract a matching value' => [
                 'key' => 'test',
+                'required' => true,
                 'inputValue' => '321',
                 'expectedValue' => 321,
                 'dataType' => 'int',
@@ -72,6 +64,7 @@ class HeaderParameterTest extends TestCase
             ],
             'it should set a float value and extract a matching value' => [
                 'key' => 'test',
+                'required' => true,
                 'inputValue' => '1.23',
                 'expectedValue' => 1.23,
                 'dataType' => 'float',
@@ -79,6 +72,7 @@ class HeaderParameterTest extends TestCase
             ],
             'it should set a bool value and extract a matching value' => [
                 'key' => 'test',
+                'required' => true,
                 'inputValue' => '1',
                 'expectedValue' => true,
                 'dataType' => 'bool',
@@ -86,6 +80,7 @@ class HeaderParameterTest extends TestCase
             ],
             'it should set the a string value and extract a numeric value' => [
                 'key' => 'test',
+                'required' => true,
                 'inputValue' => '123test',
                 'expectedValue' => 123,
                 'dataType' => 'int',

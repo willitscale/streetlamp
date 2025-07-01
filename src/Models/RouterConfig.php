@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace willitscale\Streetlamp\Models;
 
-use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use willitscale\Streetlamp\CacheHandlers\CacheHandler;
 use willitscale\Streetlamp\CacheHandlers\FileCacheHandler;
+use willitscale\Streetlamp\Requests\ServerRequest;
 
 readonly class RouterConfig
 {
@@ -18,7 +19,7 @@ readonly class RouterConfig
         private bool $routeCached = false,
         private bool $rethrowExceptions = false,
         private array $excludedDirectories = ['tests'],
-        private RequestInterface $request = new HttpRequest(),
+        private ServerRequestInterface $request = new ServerRequest(),
         private CacheHandler $routeCacheHandler = new FileCacheHandler(),
         private CacheHandler $cacheHandler = new FileCacheHandler(),
         private array $globalMiddleware = []
@@ -50,7 +51,7 @@ readonly class RouterConfig
         return $this->excludedDirectories;
     }
 
-    public function getRequest(): RequestInterface
+    public function getRequest(): ServerRequestInterface
     {
         return $this->request;
     }

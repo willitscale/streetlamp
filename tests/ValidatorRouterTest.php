@@ -43,7 +43,7 @@ class ValidatorRouterTest extends RouteTestCase
             __DIR__,
             self::COMPOSER_TEST_FILE
         );
-        $response = $router->route(true);
+        $response = $router->route()->getBody()->getContents();
         $this->assertEquals($expectedResponse, $response);
     }
 
@@ -64,7 +64,7 @@ class ValidatorRouterTest extends RouteTestCase
             self::COMPOSER_TEST_FILE
         );
 
-        $response = $router->route(true);
+        $response = $router->route(true)->getBody()->getContents();
 
         $this->assertEquals($testData, json_decode($response, true));
     }
@@ -113,7 +113,7 @@ class ValidatorRouterTest extends RouteTestCase
             self::COMPOSER_TEST_FILE
         );
 
-        $response = $router->route(true);
+        $response = $router->route()->getBody()->getContents();
         $this->assertEquals($testData, json_decode($response, true));
     }
 

@@ -4,47 +4,34 @@ declare(strict_types=1);
 
 namespace willitscale\StreetlampTests\Attributes\Parameter;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use willitscale\Streetlamp\Attributes\Parameter\FileParameter;
 use willitscale\Streetlamp\Attributes\Validators\FilterVarsValidator;
-use willitscale\Streetlamp\Attributes\Validators\ValidatorInterface;
-use willitscale\Streetlamp\Exceptions\InvalidParameterTypeException;
 use willitscale\Streetlamp\Exceptions\Parameters\MissingRequiredFilesException;
-use willitscale\Streetlamp\Exceptions\Validators\InvalidParameterFailedToPassFilterValidation;
 use PHPUnit\Framework\TestCase;
 
 class FileParameterTest extends TestCase
 {
-    /**
-     * @param string $key
-     * @param string $inputValue
-     * @param bool|int|float|string $expectedValue
-     * @param string $dataType
-     * @param ValidatorInterface[] $validators
-     * @return void
-     * @throws InvalidParameterTypeException
-     * @throws InvalidParameterFailedToPassFilterValidation
-     * @dataProvider validValues
-     */
+    #[Test]
+    #[DataProvider('validValues')]
     public function testAValueIsExtractedCorrectlyFromFiles(
         string $key,
+        bool $required,
         string $inputValue,
         bool|int|float|string $expectedValue,
         string $dataType,
         array $validators
     ): void {
         $_FILES[$key] = $inputValue;
-        $fileArgument = new FileParameter($key, $validators);
+        $fileArgument = new FileParameter($key, $required, $validators);
         $fileArgument->setType($dataType);
         $returnedValue = $fileArgument->getValue([]);
         $this->assertEquals($expectedValue, $returnedValue);
         unset($_FILES[$key]);
     }
 
-    /**
-     * @return void
-     * @throws InvalidParameterFailedToPassFilterValidation
-     * @throws InvalidParameterTypeException
-     */
+    #[Test]
     public function testThatAnExceptionIsThrownWhenAMissingFileIsSpecified(): void
     {
         $this->expectException(MissingRequiredFilesException::class);
@@ -57,6 +44,7 @@ class FileParameterTest extends TestCase
         return [
             'it should set a string value and extract a matching value' => [
                 'key' => 'test',
+                'required' => true,
                 'inputValue' => 'test',
                 'expectedValue' => 'test',
                 'dataType' => 'string',
@@ -64,6 +52,7 @@ class FileParameterTest extends TestCase
             ],
             'it should set an int value and extract a matching value' => [
                 'key' => 'test',
+                'required' => true,
                 'inputValue' => '321',
                 'expectedValue' => 321,
                 'dataType' => 'int',
@@ -71,6 +60,7 @@ class FileParameterTest extends TestCase
             ],
             'it should set a float value and extract a matching value' => [
                 'key' => 'test',
+                'required' => true,
                 'inputValue' => '1.23',
                 'expectedValue' => 1.23,
                 'dataType' => 'float',
@@ -78,6 +68,7 @@ class FileParameterTest extends TestCase
             ],
             'it should set a bool value and extract a matching value' => [
                 'key' => 'test',
+                'required' => true,
                 'inputValue' => '1',
                 'expectedValue' => true,
                 'dataType' => 'bool',
@@ -85,6 +76,7 @@ class FileParameterTest extends TestCase
             ],
             'it should set the a string value and extract a numeric value' => [
                 'key' => 'test',
+                'required' => true,
                 'inputValue' => '123test',
                 'expectedValue' => 123,
                 'dataType' => 'int',

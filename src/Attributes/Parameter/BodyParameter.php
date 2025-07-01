@@ -11,10 +11,11 @@ use willitscale\Streetlamp\Exceptions\Parameters\MissingRequireBodyException;
 class BodyParameter extends Parameter
 {
     public function __construct(
+        bool $required = false,
         array $validators = [],
         private readonly string $resourceIdentifier = 'php://input'
     ) {
-        parent::__construct(null, $validators);
+        parent::__construct(null, $required, $validators);
     }
 
     /**

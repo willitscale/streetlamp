@@ -36,7 +36,7 @@ readonly class RouteBuilder
         private LoggerInterface $logger = new NullLogger()
     ) {
         if (!isset($routerConfig)) {
-            $this->routerConfig = (new RouterConfigBuilder())
+            $this->routerConfig = new RouterConfigBuilder()
                 ->setConfigFile('router.conf.json')
                 ->build();
         } else {
@@ -49,12 +49,6 @@ readonly class RouteBuilder
         return $this->routerConfig;
     }
 
-    /**
-     * @throws ComposerFileDoesNotExistException
-     * @throws ComposerFileInvalidFormatException
-     * @throws ReflectionException
-     * @throws InvalidParameterAlreadyBoundException
-     */
     public function getRoutes(): array
     {
         try {
@@ -66,11 +60,6 @@ readonly class RouteBuilder
         return $this->loadConfig();
     }
 
-    /**
-     * @return array
-     * @throws CacheFileDoesNotExistException
-     * @throws CacheFileInvalidFormatException
-     */
     private function loadCachedConfig(): array
     {
         $routerCacheHandler = $this->routerConfig->getRouteCacheHandler();
@@ -88,13 +77,6 @@ readonly class RouteBuilder
         return $routerCacheHandler->deserialize($routerSerializedFile);
     }
 
-    /**
-     * @return array
-     * @throws ComposerFileDoesNotExistException
-     * @throws ComposerFileInvalidFormatException
-     * @throws InvalidParameterAlreadyBoundException
-     * @throws ReflectionException
-     */
     private function loadConfig(): array
     {
         if (!file_exists($this->routerConfig->getComposerFile())) {
@@ -236,10 +218,6 @@ readonly class RouteBuilder
         return $routes;
     }
 
-    /**
-     * @throws Exceptions\Attributes\InvalidParameterAlreadyBoundException
-     * @throws NoMethodRouteFoundException
-     */
     private function buildMethodRoutes(Controller $controller, ReflectionMethod $method): Route
     {
         if (0 === stripos('__', $method->getName())) {
@@ -286,10 +264,6 @@ readonly class RouteBuilder
         return $route;
     }
 
-    /**
-     * @throws InvalidParameterAlreadyBoundException
-     * @throws MethodParameterNotMappedException
-     */
     private function buildMethodParameters(Route $route, ReflectionParameter $parameter): void
     {
         $attributes = $parameter->getAttributes();

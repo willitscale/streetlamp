@@ -4,13 +4,15 @@ declare(strict_types=1);
 
 namespace willitscale\StreetlampTests;
 
+use PHPUnit\Framework\Attributes\Test;
 use willitscale\Streetlamp\Enums\MediaType;
 use willitscale\StreetlampTest\RouteTestCase;
 
 class CacheRouterTest extends RouteTestCase
 {
-    const TEST_BODY_FILE = __DIR__ . DIRECTORY_SEPARATOR . 'TestApp' . DIRECTORY_SEPARATOR . 'test.dat';
-    const COMPOSER_TEST_FILE = __DIR__ . DIRECTORY_SEPARATOR . 'TestApp' . DIRECTORY_SEPARATOR . 'composer.test.json';
+    public const string TEST_BODY_FILE = __DIR__ . DIRECTORY_SEPARATOR . 'TestApp' . DIRECTORY_SEPARATOR . 'test.dat';
+    public const string COMPOSER_TEST_FILE = __DIR__ . DIRECTORY_SEPARATOR . 'TestApp' . DIRECTORY_SEPARATOR .
+        'composer.test.json';
 
     public function setUp(): void
     {
@@ -30,6 +32,7 @@ class CacheRouterTest extends RouteTestCase
         }
     }
 
+    #[Test]
     public function testRouterCacheAlwaysReturnsTheInitialCachedValue(): void
     {
         $expectedCacheValue = 99;
@@ -43,7 +46,7 @@ class CacheRouterTest extends RouteTestCase
             self::COMPOSER_TEST_FILE
         );
 
-        $router->route(true);
+        $router->route();
 
         $router = $this->setupRouter(
             'GET',
@@ -53,11 +56,12 @@ class CacheRouterTest extends RouteTestCase
             self::COMPOSER_TEST_FILE
         );
 
-        $response = $router->route(true);
+        $response = $router->route()->getBody()->getContents();
 
         $this->assertEquals($expectedCacheValue, $response);
     }
 
+    #[Test]
     public function testRouterCacheAlwaysReturnsTheParameterCachedValue(): void
     {
         $firstCachedValue = 99;
@@ -71,7 +75,7 @@ class CacheRouterTest extends RouteTestCase
             self::COMPOSER_TEST_FILE
         );
 
-        $response = $router->route(true);
+        $response = $router->route()->getBody()->getContents();
 
         $this->assertEquals($firstCachedValue, $response);
 
@@ -83,7 +87,7 @@ class CacheRouterTest extends RouteTestCase
             self::COMPOSER_TEST_FILE
         );
 
-        $response = $router->route(true);
+        $response = $router->route()->getBody()->getContents();
 
         $this->assertEquals($secondCachedValue, $response);
     }

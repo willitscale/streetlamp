@@ -18,8 +18,8 @@ Although the way it works is inspired from the aforementioned Java libraries, it
 
 ## 2. Prerequisites
 
-To keep up with modern standards this library was built using PHP 8.2 and therefore will only run in said environment or greater. 
-If there is enough demand I may be willing to retrofit back to PHP 8, but as it's built with attributes it can't go back any further.
+To keep up with modern standards this library was built using PHP 8.4 and therefore will only run in said environment or greater. 
+Due to the speed of which PHP is evolving, it is recommended to always use the latest stable version of PHP.
 Finally, this project requires composer and the [PSR-4 Autoload standard](https://www.php-fig.org/psr/psr-4/).
 
 ## 3. Setup
@@ -81,6 +81,7 @@ Here's what that would look like in code:
 
 namespace Example;
 
+use Psr\Http\Message\ResponseInterface;
 use willitscale\Streetlamp\Attributes\Controller\RouteController;
 use willitscale\Streetlamp\Attributes\Path;
 use willitscale\Streetlamp\Attributes\Route\Method;
@@ -93,18 +94,19 @@ class MyRouteClass
 {
     #[Path('/hello')]
     #[Method(HttpMethod::GET)]
-    public function simpleGet(): ResponseBuilder
+    public function simpleGet(): ResponseInterface
     {
         return (new ResponseBuilder())
             ->setData('world')
-            ->setHttpStatusCode(HttpStatusCode::HTTP_OK);
+            ->setHttpStatusCode(HttpStatusCode::HTTP_OK)
+            ->build();
     }
 }
 ```
 
-We could have also applied the `#[Path('/hello')]` to the `RouteController` and then all routes defined within the controller have that path prefixed to them so you would not need to apply a path to them individually.
+You could also apply the `#[Path('/hello')]` attribute to the `RouteController` class itself. In this case, all routes defined within the controller will have that path prefixed automatically, so you do not need to apply a path to each method individually.
 
-## 4. Futher Reading
+## 4. Further Reading
 - [Routing Attributes](docs/ROUTING_ATTRIBUTES.MD)
 - [Input Attributes](docs/INPUT_ATTRIBUTES.MD)
 - [Data Mapping](docs/DATA_MAPPING.MD)

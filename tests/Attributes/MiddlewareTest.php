@@ -4,60 +4,54 @@ declare(strict_types=1);
 
 namespace willitscale\StreetlampTests\Attributes;
 
-use willitscale\Streetlamp\Attributes\PostFlight;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
+use willitscale\Streetlamp\Attributes\Middleware;
 use willitscale\Streetlamp\Models\Controller;
 use willitscale\Streetlamp\Models\Route;
 use PHPUnit\Framework\TestCase;
 
-class PostFlightTest extends TestCase
+class MiddlewareTest extends TestCase
 {
-    /**
-     * @test
-     * @param array $expectedClasses
-     * @return void
-     * @dataProvider validAnnotations
-     */
+    #[Test]
+    #[DataProvider('validAnnotations')]
     public function testProcessRouteAnnotationCorrectlyAndExtractThePostFlightClass(
         array $expectedClasses
     ): void {
         $route = new Route('Test', 'test');
 
         foreach ($expectedClasses as $expectedClass) {
-            $postFlight = new PostFlight($expectedClass);
-            $postFlight->applyToRoute($route);
+            $middleware = new Middleware($expectedClass);
+            $middleware->applyToRoute($route);
         }
 
-        $postFlights = $route->getPostFlight();
+        $middleware = $route->getMiddleware();
 
-        $this->assertCount(count($expectedClasses), $postFlights);
+        $this->assertCount(count($expectedClasses), $middleware);
 
         for ($i = 0; $i < count($expectedClasses); $i++) {
-            $this->assertEquals($expectedClasses[$i], $postFlights[$i]);
+            $this->assertEquals($expectedClasses[$i], $middleware[$i]);
         }
     }
 
-    /**
-     * @test
-     * @param array $expectedClasses
-     * @return void
-     * @dataProvider validAnnotations
-     */
+    #[Test]
+    #[DataProvider('validAnnotations')]
     public function testProcessControllerAnnotationCorrectlyAndExtractThePostFlightClass(
         array $expectedClasses
     ): void {
         $controller = new Controller('Test', 'test');
 
         foreach ($expectedClasses as $expectedClass) {
-            $postFlight = new PostFlight($expectedClass);
-            $postFlight->applyToController($controller);
+            $middleware = new Middleware($expectedClass);
+            $middleware->applyToController($controller);
         }
 
-        $postFlights = $controller->getPostFlight();
+        $middleware = $controller->getMiddleware();
 
-        $this->assertCount(count($expectedClasses), $postFlights);
+        $this->assertCount(count($expectedClasses), $middleware);
 
         for ($i = 0; $i < count($expectedClasses); $i++) {
-            $this->assertEquals($expectedClasses[$i], $postFlights[$i]);
+            $this->assertEquals($expectedClasses[$i], $middleware[$i]);
         }
     }
 

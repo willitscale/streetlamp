@@ -54,7 +54,7 @@ class JsonRouterTest extends RouteTestCase
             self::COMPOSER_TEST_FILE
         );
 
-        $response = $router->route(true);
+        $response = $router->route()->getBody()->getContents();
         $this->assertEquals($testData, json_decode($response, true));
     }
 
@@ -114,7 +114,7 @@ class JsonRouterTest extends RouteTestCase
             self::COMPOSER_TEST_FILE
         );
 
-        $response = $router->route(true);
+        $response = $router->route()->getBody()->getContents();
         $this->assertEquals($testData, json_decode($response, true));
     }
 

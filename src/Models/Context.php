@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace willitscale\Streetlamp\Models;
 
-use Psr\Http\Server\MiddlewareInterface;
 use willitscale\Streetlamp\Enums\MediaType;
 
 abstract class Context
@@ -71,7 +70,7 @@ abstract class Context
         $this->middleware = $middleware;
     }
 
-    public function addMiddleware(MiddlewareInterface $middleware): self
+    public function addMiddleware(string $middleware): self
     {
         if (!in_array($middleware, $this->middleware)) {
             $this->middleware [] = $middleware;
@@ -79,7 +78,7 @@ abstract class Context
         return $this;
     }
 
-    public function popMiddleware(): MiddlewareInterface
+    public function popMiddleware(): string
     {
         return array_shift($this->middleware);
     }

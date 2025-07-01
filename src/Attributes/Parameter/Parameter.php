@@ -21,7 +21,7 @@ abstract class Parameter
 
     public function __construct(
         protected readonly ?string $key,
-        protected readonly bool $required,
+        protected readonly bool $required = false,
         protected array $validators = []
     ) {
     }

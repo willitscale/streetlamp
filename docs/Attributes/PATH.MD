@@ -34,13 +34,14 @@ class MyClass {
     public function pathExample(
         #[PathParameter('resourceId')] int $resourceId, 
         #[PathParameter('subresourceId')] string $subresourceId
-    ): ResponseBuilder {
+    ): ResponseInterface {
         return (new ResponseBuilder())
             ->setData([
                 'resource' => $resourceId, 
                 'subresource' => $subresourceId
             ])
-            ->setHttpStatusCode(HttpStatusCode::HTTP_OK);
+            ->setHttpStatusCode(HttpStatusCode::HTTP_OK)
+            ->build();
     }
 }
 ```

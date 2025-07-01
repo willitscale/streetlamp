@@ -16,6 +16,8 @@ abstract class CacheHandler
 
     abstract public function exists(string $key): bool;
 
+    abstract public function delete(string $key): void;
+
     public function serializeAndStore(string $key, mixed $data, bool $forceWrite = false, int $ttl = 0): void
     {
         if ($forceWrite || !$this->exists($key)) {

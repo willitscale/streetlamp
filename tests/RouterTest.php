@@ -4,13 +4,15 @@ declare(strict_types=1);
 
 namespace willitscale\StreetlampTests;
 
+use PHPUnit\Framework\Attributes\Test;
 use willitscale\Streetlamp\Enums\MediaType;
 use willitscale\StreetlampTest\RouteTestCase;
 
 class RouterTest extends RouteTestCase
 {
-    const TEST_BODY_FILE = __DIR__ . DIRECTORY_SEPARATOR . 'TestApp' . DIRECTORY_SEPARATOR . 'test.dat';
-    const COMPOSER_TEST_FILE = __DIR__ . DIRECTORY_SEPARATOR . 'TestApp' . DIRECTORY_SEPARATOR . 'composer.test.json';
+    public const string TEST_BODY_FILE = __DIR__ . DIRECTORY_SEPARATOR . 'TestApp' . DIRECTORY_SEPARATOR . 'test.dat';
+    public const string COMPOSER_TEST_FILE = __DIR__ . DIRECTORY_SEPARATOR . 'TestApp' . DIRECTORY_SEPARATOR .
+        'composer.test.json';
 
     public function setUp(): void
     {
@@ -30,6 +32,7 @@ class RouterTest extends RouteTestCase
         }
     }
 
+    #[Test]
     public function testRouterGetMethodWithNoParameters(): void
     {
         $router = $this->setupRouter(
@@ -39,10 +42,12 @@ class RouterTest extends RouteTestCase
             __DIR__,
             self::COMPOSER_TEST_FILE
         );
-        $response = $router->route(true);
+
+        $response = $router->route()->getBody()->getContents();
         $this->assertEquals('test', $response);
     }
 
+    #[Test]
     public function testRouterGetMethodWithContentTypeJsonAndNoParameters(): void
     {
         $expectedResponse = [
@@ -55,10 +60,11 @@ class RouterTest extends RouteTestCase
             __DIR__,
             self::COMPOSER_TEST_FILE
         );
-        $response = $router->route(true);
+        $response = $router->route()->getBody()->getContents();
         $this->assertEquals(json_encode($expectedResponse), $response);
     }
 
+    #[Test]
     public function testRouterPostMethodWithPostParameter(): void
     {
         $data = 'post';
@@ -70,11 +76,12 @@ class RouterTest extends RouteTestCase
             __DIR__,
             self::COMPOSER_TEST_FILE
         );
-        $response = $router->route(true);
+        $response = $router->route()->getBody()->getContents();
         unset($_POST['test']);
         $this->assertEquals($data, $response);
     }
 
+    #[Test]
     public function testRouterPutMethodWithPathParameter(): void
     {
         $data = 'put';
@@ -85,10 +92,11 @@ class RouterTest extends RouteTestCase
             __DIR__,
             self::COMPOSER_TEST_FILE
         );
-        $response = $router->route(true);
+        $response = $router->route()->getBody()->getContents();
         $this->assertEquals($data, $response);
     }
 
+    #[Test]
     public function testRouterDeleteMethodWithQueryStringParameter(): void
     {
         $data = '123';
@@ -100,7 +108,7 @@ class RouterTest extends RouteTestCase
             __DIR__,
             self::COMPOSER_TEST_FILE
         );
-        $response = $router->route(true);
+        $response = $router->route()->getBody()->getContents();
         unset($_GET['test']);
         $this->assertEquals($data, $response);
     }
@@ -116,7 +124,7 @@ class RouterTest extends RouteTestCase
             __DIR__,
             self::COMPOSER_TEST_FILE
         );
-        $response = $router->route(true);
+        $response = $router->route()->getBody()->getContents();
         $this->assertEquals($data, $response);
     }
 }

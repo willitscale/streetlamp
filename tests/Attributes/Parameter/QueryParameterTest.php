@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace willitscale\StreetlampTests\Attributes\Parameter;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use willitscale\Streetlamp\Attributes\Parameter\QueryParameter;
 use willitscale\Streetlamp\Attributes\Validators\FilterVarsValidator;
 use willitscale\Streetlamp\Attributes\Validators\ValidatorInterface;
@@ -14,26 +16,18 @@ use PHPUnit\Framework\TestCase;
 
 class QueryParameterTest extends TestCase
 {
-    /**
-     * @param string $key
-     * @param string $inputValue
-     * @param bool|int|float|string $expectedValue
-     * @param string $dataType
-     * @param ValidatorInterface[] $validators
-     * @return void
-     * @throws InvalidParameterTypeException
-     * @throws InvalidParameterFailedToPassFilterValidation
-     * @dataProvider validValues
-     */
+    #[Test]
+    #[DataProvider('validValues')]
     public function testAValueIsExtractedCorrectlyFromPost(
         string $key,
+        bool $required,
         string $inputValue,
         bool|int|float|string $expectedValue,
         string $dataType,
         array $validators
     ): void {
         $_GET[$key] = $inputValue;
-        $queryArgument = new QueryParameter($key, $validators);
+        $queryArgument = new QueryParameter($key, $required, $validators);
         $queryArgument->setType($dataType);
         $returnedValue = $queryArgument->getValue([
             $key => $inputValue
@@ -42,11 +36,7 @@ class QueryParameterTest extends TestCase
         unset($_GET[$key]);
     }
 
-    /**
-     * @return void
-     * @throws InvalidParameterFailedToPassFilterValidation
-     * @throws InvalidParameterTypeException
-     */
+    #[Test]
     public function testThatAnExceptionIsThrownWhenAMissingPostIsSpecified(): void
     {
         $this->expectException(MissingRequireQueryException::class);
@@ -59,6 +49,7 @@ class QueryParameterTest extends TestCase
         return [
             'it should set a string value and extract a matching value' => [
                 'key' => 'test',
+                'required' => true,
                 'inputValue' => 'test',
                 'expectedValue' => 'test',
                 'dataType' => 'string',
@@ -66,6 +57,7 @@ class QueryParameterTest extends TestCase
             ],
             'it should set an int value and extract a matching value' => [
                 'key' => 'test',
+                'required' => true,
                 'inputValue' => '321',
                 'expectedValue' => 321,
                 'dataType' => 'int',
@@ -73,6 +65,7 @@ class QueryParameterTest extends TestCase
             ],
             'it should set a float value and extract a matching value' => [
                 'key' => 'test',
+                'required' => true,
                 'inputValue' => '1.23',
                 'expectedValue' => 1.23,
                 'dataType' => 'float',
@@ -80,6 +73,7 @@ class QueryParameterTest extends TestCase
             ],
             'it should set a bool value and extract a matching value' => [
                 'key' => 'test',
+                'required' => true,
                 'inputValue' => '1',
                 'expectedValue' => true,
                 'dataType' => 'bool',
@@ -87,6 +81,7 @@ class QueryParameterTest extends TestCase
             ],
             'it should set the a string value and extract a numeric value' => [
                 'key' => 'test',
+                'required' => true,
                 'inputValue' => '123test',
                 'expectedValue' => 123,
                 'dataType' => 'int',

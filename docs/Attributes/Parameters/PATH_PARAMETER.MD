@@ -4,10 +4,11 @@ The path parameter attribute binds a method parameter to a variable defined in t
 
 ## Definition
 ```php
-#[PathParameter(readonly string|null $key, readonly ValidatorInterface[] $validators = [])]
+#[PathParameter(readonly string|null $key, bool $required = false, readonly ValidatorInterface[] $validators = [])]
 ```
 
 - `key` referrers to the path variable identifier
+- `required` indicates whether the parameter is mandatory or not.
 - `validators` is an array of classes which implement `ValidatorInterface` and are used to validate and sanitize inputs.
 
 ## Targets
@@ -22,10 +23,11 @@ Code:
     #[Path('/path/{paramId}')]
     public function pathParameter(
         #[FileParameter('paramId')] int $paramId
-    ): ResponseBuilder {
+    ): ResponseInterface {
         return (new ResponseBuilder())
             ->setData($paramId)
-            ->setHttpStatusCode(HttpStatusCode::HTTP_OK);
+            ->setHttpStatusCode(HttpStatusCode::HTTP_OK)
+            ->build();
     }
 ```
 

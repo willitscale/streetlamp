@@ -4,30 +4,23 @@ declare(strict_types=1);
 
 namespace willitscale\StreetlampTests\Attributes\Parameter;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use willitscale\Streetlamp\Attributes\Parameter\BodyParameter;
-use willitscale\Streetlamp\Exceptions\InvalidParameterTypeException;
 use willitscale\Streetlamp\Exceptions\Parameters\MissingRequireBodyException;
-use willitscale\Streetlamp\Exceptions\Validators\InvalidParameterFailedToPassFilterValidation;
 use PHPUnit\Framework\TestCase;
 
 class BodyParameterTest extends TestCase
 {
-    /**
-     * @param bool|int|float|string $expectedValue
-     * @param string $dataType
-     * @param string $resourceIdentifier
-     * @return void
-     * @throws InvalidParameterTypeException
-     * @throws InvalidParameterFailedToPassFilterValidation
-     * @dataProvider validValues
-     */
+    #[Test]
+    #[DataProvider('validValues')]
     public function testAValueIsExtractedCorrectlyFromTheBody(
         bool|int|float|string $expectedValue,
         string $dataType,
         string $resourceIdentifier
     ): void {
         file_put_contents($resourceIdentifier, $expectedValue);
-        $bodyArgument = new BodyParameter([], $resourceIdentifier);
+        $bodyArgument = new BodyParameter(false, [], $resourceIdentifier);
         $bodyArgument->setType($dataType);
         $returnedValue = $bodyArgument->getValue([]);
         $this->assertEquals($expectedValue, $returnedValue);
@@ -36,11 +29,7 @@ class BodyParameterTest extends TestCase
         }
     }
 
-    /**
-     * @return void
-     * @throws InvalidParameterFailedToPassFilterValidation
-     * @throws InvalidParameterTypeException
-     */
+    #[Test]
     public function testThatAnExceptionIsThrownWhenThereIsNoOrAnEmptyBody(): void
     {
         $this->expectException(MissingRequireBodyException::class);

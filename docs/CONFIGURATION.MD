@@ -24,10 +24,8 @@ The structure of the config file follows these constraints:
     "request":             ?string    // Full namespace to a class that implements `RequestInterface`
     "routeCacheHandler":   ?string,   // Full namespace to a class that extends `CacheHandler` for routes
     "cacheHandler":        ?string,   // Full namespace to a class that extends `CacheHandler` for responses
-    "globalPreFlights":    ?string[], // Array of namespaces and classes that implement `Flight` to 
-                                      // be applied to all routes as pre-flights
-    "globalPostFlights":   ?string[]  // Array of namespaces and classes that implement `Flight` to 
-                                      // be applied to all routes as post-flights
+    "globalMiddleware":    ?string[], // Array of namespaces and classes that implement `Middleware` to 
+                                      // be applied to all routes
 }
 ```
 
@@ -45,8 +43,7 @@ The config can also be set programmatically too using the `RouterConfigBuilder` 
             ->setRequest(new CommandLineRequest('test', '/', 'text/html'))
             ->setRouteCacheHandler(new NullCacheHandler())
             ->setCacheHandler(new NullCacheHandler())
-            ->setGlobalPreFlights([Logger::class])
-            ->setGlobalPostFlights([PerformanceAnalyser::class])
+            ->setGlobalMiddleware([Logger::class])
             ->build();
 
         $routeBuilder = new RouteBuilder(
@@ -79,35 +76,30 @@ Streetlamp by default catches and handles the expected internal errors, but if y
 
 ### Excluded Directories
 
-Excluded directories is an array of directories you don't want the `RouteBuilder` to scan when building routes.
-It's important to note that these are paths appended onto the end of the root directory so you need to specify relative paths e.g. `tests`.
+Excluded directories is an array of directories you do not want the `RouteBuilder` to scan when building routes.
+It is important to note that these are paths appended to the root directory, so you need to specify relative paths, e.g., `tests`.
 
 ### Request
 
-Request is an override to the request object being used.
-By default, the `HttpRequest` is used, but if this does not fulfil your needs or you want to do a command line version then this will need to be replaced.
-There is a built in `CommandLineRequest` available, but you can define your own as long as it implements the `RequestInterface`.
+Request is an override for the request object being used.
+By default, the `HttpRequest` is used, but if this does not fulfill your needs or you want to use a command line version, then this will need to be replaced.
+There is a built-in `CommandLineRequest` available, but you can define your own as long as it implements the `RequestInterface`.
 
 ### Route Cache Handler
 
 The route cache handler allows you to override how the route maps are cached by the `RouteBuilder`.
-By default, this uses the `FileCacheHandler` which writes the cache to your system's temporary directory.
-There is a built in `NullCacheHandler` if you want to completely disable all caching.
-Similar to the `Request` this can be completely customised by implementing your own as long as it extends the `RouteHandler` abstract class.
+By default, this uses the `FileCacheHandler`, which writes the cache to your system's temporary directory.
+There is a built-in `NullCacheHandler` if you want to completely disable all caching.
+Similar to the `Request`, this can be fully customized by implementing your own as long as it extends the `RouteHandler` abstract class.
 
 ### Cache Handler
 
 The cache handler allows you to define how responses from routes are cached.
-By default, this uses the `FileCacheHandler` which writes the cache to your system's temporary directory.
-There is a built in `NullCacheHandler` if you want to completely disable all caching.
-Similar to the `Request` this can be completely customised by implementing your own as long as it extends the `RouteHandler` abstract class.
+By default, this uses the `FileCacheHandler`, which writes the cache to your system's temporary directory.
+There is a built-in `NullCacheHandler` if you want to completely disable all caching.
+Similar to the `Request`, this can be fully customized by implementing your own as long as it extends the `RouteHandler` abstract class.
 
-### Global Pre-Flights
+### Global Middleware
 
-Global pre-flights are pre-flight actions to be executed on every single route.
-All pre-flight classes defined must implement the `Flight` interface.
-
-### Global Post-Flights
-
-Global post-flights are post-flight actions to be executed on every single route.
-All post-flight classes defined must implement the `Flight` interface.
+Global middleware are actions to be executed on every single route.
+All middleware classes defined must implement the `MiddlewareInterface` interface.

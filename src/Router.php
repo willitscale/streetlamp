@@ -7,12 +7,8 @@ namespace willitscale\Streetlamp;
 use DI\Container;
 use DI\DependencyException;
 use DI\NotFoundException;
-use Exception;
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\MiddlewareInterface;
-use Psr\Http\Server\RequestHandlerInterface;
-use willitscale\Streetlamp\Builders\ResponseBuilder;
+use Psr\Http\Message\ResponseInterface;
+use Throwable;
 use willitscale\Streetlamp\Enums\HttpStatusCode;
 use willitscale\Streetlamp\Exceptions\ComposerFileDoesNotExistException;
 use willitscale\Streetlamp\Exceptions\ComposerFileInvalidFormatException;
@@ -20,10 +16,12 @@ use willitscale\Streetlamp\Exceptions\InvalidContentTypeException;
 use willitscale\Streetlamp\Exceptions\InvalidRouteResponseException;
 use willitscale\Streetlamp\Exceptions\NoValidRouteException;
 use willitscale\Streetlamp\Exceptions\StreetLampRequestException;
-use willitscale\Streetlamp\Models\Route;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use ReflectionException;
+use willitscale\Streetlamp\Requests\Stream;
+use willitscale\Streetlamp\Responses\Response;
+use willitscale\Streetlamp\Responses\ResponseHandler;
 
 readonly class Router
 {
@@ -40,8 +38,6 @@ readonly class Router
     }
 
     /**
-     * @param bool $return
-     * @return string|null
      * @throws ComposerFileDoesNotExistException
      * @throws ComposerFileInvalidFormatException
      * @throws DependencyException
@@ -51,12 +47,13 @@ readonly class Router
      * @throws NotFoundException
      * @throws ReflectionException
      * @throws StreetLampRequestException
+     * @throws Throwable
      */
-    public function route(bool $return = false): null|string
+    public function route(): ResponseInterface
     {
         $pathMatched = false;
-
         $request = $this->routeBuilder->getRouterConfig()->getRequest();
+        $stream = new Stream('php://temp', 'rw+');
 
         try {
             foreach ($this->routeBuilder->getRoutes() as $route) {
@@ -72,60 +69,14 @@ readonly class Router
                     continue;
                 }
 
-                // TODO: PART 1 Recursively call this with the response build as the final call
-                $this->middleware($route, $request);
-
-                $args = [];
-                foreach ($route->getParameters() as $key => $parameter) {
-                    $args[$key] = $parameter->getValue($matches);
-                }
-
-                $cacheRule = $route->getCacheRule();
-                $cacheHandler = $this->routeBuilder->getRouterConfig()->getCacheHandler();
-
-                if ($cacheRule) {
-                    $key = $cacheRule->getKey($route, $args);
-                    if ($cacheHandler->exists($key)) {
-                        $response = $cacheHandler->retrieveAndDeserialize($key);
-                        // TODO: PART 2 Callback maybe?
-                        return $response->build($return);
-                    }
-                }
-
-                $requestArgument = [
-                    'request' => $request
-                ];
-
-                $application = $this->container->make(
-                    $route->getClass(),
-                    $requestArgument
+                $responseHandler = new ResponseHandler(
+                    $route,
+                    $this->routeBuilder,
+                    $this->container,
+                    $matches
                 );
 
-                $response = $this->container->call(
-                    [
-                        $application,
-                        $route->getFunction()
-                    ],
-                    array_merge($requestArgument, $args)
-                );
-
-                if (!isset($response) || !($response instanceof ResponseBuilder)) {
-                    throw new InvalidRouteResponseException(
-                        'R001',
-                        'Call to ' . $route->getClass() . '::' .
-                        $route->getFunction() . ' did not return a Response object.'
-                    );
-                }
-
-                if ($cacheRule) {
-                    $key = $cacheRule->getKey($route, $args);
-                    $ttl = $cacheRule->getCacheTtl();
-                    $cacheHandler->serializeAndStore($key, $response, false, $ttl);
-                }
-
-                $this->postFlight($route, $response);
-
-                return $response->build($return);
+                return $responseHandler->handle($request);
             }
 
             if ($pathMatched) {
@@ -140,27 +91,33 @@ readonly class Router
             if ($this->routeBuilder->getRouterConfig()->isRethrowExceptions()) {
                 throw $StreetLampRequestException;
             } else {
-                http_response_code($StreetLampRequestException->getHttpStatusCode()->value);
+                $statusCode = $StreetLampRequestException->getHttpStatusCode();
                 $this->logger->error($StreetLampRequestException->getMessage());
+                $stream->write($StreetLampRequestException->getMessage());
             }
-        } catch (Exception $exception) {
+        } catch (Throwable $exception) {
             if ($this->routeBuilder->getRouterConfig()->isRethrowExceptions()) {
                 throw $exception;
             } else {
-                http_response_code(HttpStatusCode::HTTP_INTERNAL_SERVER_ERROR->value);
+                $statusCode = HttpStatusCode::HTTP_INTERNAL_SERVER_ERROR;
                 $this->logger->error($exception->getMessage());
+                $stream->write($exception->getMessage());
             }
         }
 
-        return null;
+        return new Response(
+            $stream,
+            $statusCode->value
+        );
     }
 
-    private function middleware(
-        Route $route,
-        ServerRequestInterface $request,
-        RequestHandlerInterface $requestHandler
-    ): void {
-        $middleware = $route->popMiddleware();
-        $middleware->process($request, $requestHandler);
+    public function renderRoute(): void
+    {
+        $response = $this->route();
+        http_response_code($response->getStatusCode());
+        foreach ($response->getHeaders() as $name => $value) {
+            header("{$name}: {$value}");
+        }
+        echo $response->getBody();
     }
 }

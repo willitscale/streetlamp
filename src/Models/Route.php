@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace willitscale\Streetlamp\Models;
 
-use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use willitscale\Streetlamp\Attributes\Parameter\Parameter;
 use willitscale\Streetlamp\CacheRules\CacheRule;
 use willitscale\Streetlamp\Enums\HttpMethod;
@@ -81,19 +81,19 @@ class Route extends Context
         $this->parameters [$parameterName] = $parameter;
     }
 
-    public function matchesRoute(RequestInterface $request, array &$matches): bool
+    public function matchesRoute(ServerRequestInterface $request, array &$matches): bool
     {
         $matchesRoute = preg_match_all(
             '#^' . $this->path . '/?$#i',
-            $request->getPath(),
+            $request->getUri()->getPath(),
             $matches
         );
 
         return $matchesRoute && $request->getMethod() === $this->getMethod();
     }
 
-    public function matchesContentType(RequestInterface $request): bool
+    public function matchesContentType(ServerRequestInterface $request): bool
     {
-        return !isset($this->accepts) || $request->getContentType() === $this->accepts;
+        return !isset($this->accepts) || $request->getHeaderLine('Content-Type') === $this->accepts;
     }
 }
