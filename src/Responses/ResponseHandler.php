@@ -3,8 +3,6 @@
 namespace willitscale\Streetlamp\Responses;
 
 use DI\Container;
-use DI\DependencyException;
-use DI\NotFoundException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;

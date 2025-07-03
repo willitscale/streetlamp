@@ -1,10 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace willitscale\Streetlamp\Requests;
 
 use Psr\Http\Message\StreamInterface;
+use Throwable;
+use willitscale\Streetlamp\Exceptions\Request\StreamResourceException;
 
-// TODO: Better exception handling
 class Stream implements StreamInterface
 {
     private $stream;
@@ -16,7 +19,7 @@ class Stream implements StreamInterface
     ) {
         $this->stream = is_resource($stream) ? $stream : fopen($stream, $mode);
         if (!is_resource($this->stream)) {
-            throw new \RuntimeException('Invalid stream resource');
+            throw new StreamResourceException('ST001', 'Invalid stream resource');
         }
         $stats = fstat($this->stream);
         $this->size = $stats['size'] ?? null;
@@ -27,7 +30,7 @@ class Stream implements StreamInterface
         try {
             $this->rewind();
             return stream_get_contents($this->stream);
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             return '';
         }
     }
@@ -55,8 +58,8 @@ class Stream implements StreamInterface
     public function tell(): int
     {
         $result = ftell($this->stream);
-        if ($result === false) {
-            throw new \RuntimeException('Unable to determine stream position');
+        if (false === $result) {
+            throw new StreamResourceException('ST002', 'Unable to determine stream position');
         }
         return $result;
     }
@@ -75,7 +78,7 @@ class Stream implements StreamInterface
     public function seek(int $offset, int $whence = SEEK_SET): void
     {
         if (!$this->isSeekable() || fseek($this->stream, $offset, $whence) !== 0) {
-            throw new \RuntimeException('Unable to seek in stream');
+            throw new StreamResourceException('ST003', 'Unable to seek in stream');
         }
     }
 
@@ -94,12 +97,15 @@ class Stream implements StreamInterface
     public function write(string $string): int
     {
         if (!$this->isWritable()) {
-            throw new \RuntimeException('Stream is not writable');
+            throw new StreamResourceException('ST004', 'Stream is not writable');
         }
+
         $result = fwrite($this->stream, $string);
+
         if ($result === false) {
-            throw new \RuntimeException('Unable to write to stream');
+            throw new StreamResourceException('ST005', 'Unable to write to stream');
         }
+
         return $result;
     }
 
@@ -113,11 +119,11 @@ class Stream implements StreamInterface
     public function read(int $length): string
     {
         if (!$this->isReadable()) {
-            throw new \RuntimeException('Stream is not readable');
+            throw new StreamResourceException('ST006', 'Stream is not readable');
         }
         $result = fread($this->stream, $length);
         if ($result === false) {
-            throw new \RuntimeException('Unable to read from stream');
+            throw new StreamResourceException('ST007', 'Unable to read from stream');
         }
         return $result;
     }
@@ -127,7 +133,7 @@ class Stream implements StreamInterface
         $this->rewind();
         $result = stream_get_contents($this->stream);
         if ($result === false) {
-            throw new \RuntimeException('Unable to get contents of stream');
+            throw new StreamResourceException('ST008', 'Unable to get contents of stream');
         }
         return $result;
     }

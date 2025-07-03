@@ -1,8 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace willitscale\Streetlamp\Requests;
 
 use Psr\Http\Message\UriInterface;
+use willitscale\Streetlamp\Exceptions\Request\UriException;
 
 class Uri implements UriInterface
 {
@@ -16,43 +19,54 @@ class Uri implements UriInterface
 
     public function __construct(string $uri = '')
     {
-        if ($uri === '') {
-            // Build URI parts directly from $_SERVER, considering proxy headers
-            $this->scheme = (!empty($_SERVER['HTTP_X_FORWARDED_PROTO']))
-                ? $_SERVER['HTTP_X_FORWARDED_PROTO']
-                : ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http');
-            $this->host = $_SERVER['HTTP_X_FORWARDED_HOST']
-                ?? $_SERVER['HTTP_HOST']
-                ?? ($_SERVER['SERVER_NAME'] ?? '');
-            $this->port = isset($_SERVER['HTTP_X_FORWARDED_PORT'])
-                ? (int)$_SERVER['HTTP_X_FORWARDED_PORT']
-                : (isset($_SERVER['SERVER_PORT']) ? (int)$_SERVER['SERVER_PORT'] : null);
-            $requestUri = $_SERVER['REQUEST_URI'] ?? '/';
-            $queryString = $_SERVER['QUERY_STRING'] ?? '';
-            if ($queryString !== '' && str_contains($requestUri, '?' . $queryString)) {
-                $this->path = substr($requestUri, 0, -strlen('?' . $queryString));
-            } else {
-                $this->path = $requestUri;
-            }
-            $this->query = $queryString;
-            $this->fragment = '';
-            $this->userInfo = '';
+        if (empty($uri)) {
+            $this->load();
         } else {
-            $parts = parse_url($uri);
-            if ($parts === false) {
-                throw new \InvalidArgumentException('Invalid URI');
-            }
-            $this->scheme = $parts['scheme'] ?? '';
-            $this->userInfo = isset($parts['user']) ? $parts['user'] : '';
-            if (isset($parts['pass'])) {
-                $this->userInfo .= ':' . $parts['pass'];
-            }
-            $this->host = $parts['host'] ?? '';
-            $this->port = $parts['port'] ?? null;
-            $this->path = $parts['path'] ?? '';
-            $this->query = $parts['query'] ?? '';
-            $this->fragment = $parts['fragment'] ?? '';
+            $this->parse($uri);
         }
+    }
+
+    // Not sure if I'm the biggest fan of this
+    private function load(): void
+    {
+        $this->scheme = (!empty($_SERVER['HTTP_X_FORWARDED_PROTO']))
+            ? $_SERVER['HTTP_X_FORWARDED_PROTO']
+            : ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http');
+        $this->host = $_SERVER['HTTP_X_FORWARDED_HOST']
+            ?? $_SERVER['HTTP_HOST']
+            ?? ($_SERVER['SERVER_NAME'] ?? '');
+        $this->port = isset($_SERVER['HTTP_X_FORWARDED_PORT'])
+            ? (int)$_SERVER['HTTP_X_FORWARDED_PORT']
+            : (isset($_SERVER['SERVER_PORT']) ? (int)$_SERVER['SERVER_PORT'] : null);
+        $requestUri = $_SERVER['REQUEST_URI'] ?? '/';
+        $queryString = $_SERVER['QUERY_STRING'] ?? '';
+        if ($queryString !== '' && str_contains($requestUri, '?' . $queryString)) {
+            $this->path = substr($requestUri, 0, -strlen('?' . $queryString));
+        } else {
+            $this->path = $requestUri;
+        }
+        $this->query = $queryString;
+        $this->fragment = '';
+        $this->userInfo = '';
+    }
+
+    // Not sure if I'm the biggest fan of this either
+    private function parse(string $uri): void
+    {
+        $parts = parse_url($uri);
+        if ($parts === false) {
+            throw new UriException('RI001', 'Invalid URI');
+        }
+        $this->scheme = $parts['scheme'] ?? '';
+        $this->userInfo = $parts['user'] ?? '';
+        if (isset($parts['pass'])) {
+            $this->userInfo .= ':' . $parts['pass'];
+        }
+        $this->host = $parts['host'] ?? '';
+        $this->port = $parts['port'] ?? null;
+        $this->path = $parts['path'] ?? '';
+        $this->query = $parts['query'] ?? '';
+        $this->fragment = $parts['fragment'] ?? '';
     }
 
     public function getScheme(): string
@@ -157,19 +171,24 @@ class Uri implements UriInterface
     public function __toString(): string
     {
         $uri = '';
+
         if ($this->scheme !== '') {
             $uri .= $this->scheme . ':';
         }
+
         if ($authority = $this->getAuthority()) {
             $uri .= '//' . $authority;
         }
+
         $uri .= $this->path;
         if ($this->query !== '') {
             $uri .= '?' . $this->query;
         }
+
         if ($this->fragment !== '') {
             $uri .= '#' . $this->fragment;
         }
+
         return $uri;
     }
 }

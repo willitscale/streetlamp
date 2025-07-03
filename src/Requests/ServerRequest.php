@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace willitscale\Streetlamp\Requests;
 
 use Psr\Http\Message\ServerRequestInterface;
@@ -54,12 +56,15 @@ class ServerRequest implements ServerRequestInterface
             return $this->requestTarget;
         }
         $target = $this->uri->getPath();
-        if ($target === '') {
-            $target = '/';
+
+        if (empty($target)) {
+            return '/';
         }
-        if ($this->uri->getQuery() !== '') {
+
+        if (!empty($this->uri->getQuery())) {
             $target .= '?' . $this->uri->getQuery();
         }
+
         return $target;
     }
 

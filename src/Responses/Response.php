@@ -4,6 +4,7 @@ namespace willitscale\Streetlamp\Responses;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
+use willitscale\Streetlamp\Enums\HttpStatusCode;
 use willitscale\Streetlamp\Requests\Stream;
 
 class Response implements ResponseInterface
@@ -22,7 +23,7 @@ class Response implements ResponseInterface
         return $this->protocolVersion;
     }
 
-    public function withProtocolVersion($version): ResponseInterface
+    public function withProtocolVersion(string $version): ResponseInterface
     {
         $clone = clone $this;
         $clone->protocolVersion = $version;
@@ -34,29 +35,29 @@ class Response implements ResponseInterface
         return $this->headers;
     }
 
-    public function hasHeader($name): bool
+    public function hasHeader(string $name): bool
     {
         return isset($this->headers[$name]);
     }
 
-    public function getHeader($name): array
+    public function getHeader(string $name): array
     {
         return $this->headers[$name] ?? [];
     }
 
-    public function getHeaderLine($name): string
+    public function getHeaderLine(string $name): string
     {
         return isset($this->headers[$name]) ? implode(", ", $this->headers[$name]) : '';
     }
 
-    public function withHeader($name, $value): ResponseInterface
+    public function withHeader(string $name, mixed $value): ResponseInterface
     {
         $clone = clone $this;
         $clone->headers[$name] = is_array($value) ? $value : [$value];
         return $clone;
     }
 
-    public function withAddedHeader($name, $value): ResponseInterface
+    public function withAddedHeader(string $name, mixed $value): ResponseInterface
     {
         $clone = clone $this;
         $values = is_array($value) ? $value : [$value];
@@ -68,7 +69,7 @@ class Response implements ResponseInterface
         return $clone;
     }
 
-    public function withoutHeader($name): ResponseInterface
+    public function withoutHeader(string $name): ResponseInterface
     {
         $clone = clone $this;
         unset($clone->headers[$name]);
@@ -80,7 +81,7 @@ class Response implements ResponseInterface
         return $this->body;
     }
 
-    public function withBody($body): ResponseInterface
+    public function withBody(mixed $body): ResponseInterface
     {
         $stream = $body;
         if (!$body instanceof StreamInterface) {
@@ -105,7 +106,7 @@ class Response implements ResponseInterface
         return $this->statusCode;
     }
 
-    public function withStatus($code, $reasonPhrase = ''): ResponseInterface
+    public function withStatus(int $code, string $reasonPhrase = ''): ResponseInterface
     {
         $clone = clone $this;
         $clone->statusCode = $code;
@@ -118,17 +119,19 @@ class Response implements ResponseInterface
         if ($this->reasonPhrase !== '') {
             return $this->reasonPhrase;
         }
-        // Optionally, provide default reason phrases for common status codes
+
+        // Move this to an enum?
         $phrases = [
-            200 => 'OK',
-            201 => 'Created',
-            204 => 'No Content',
-            400 => 'Bad Request',
-            401 => 'Unauthorized',
-            403 => 'Forbidden',
-            404 => 'Not Found',
-            500 => 'Internal Server Error',
+            HttpStatusCode::HTTP_OK->value => 'OK',
+            HttpStatusCode::HTTP_CREATED->value => 'Created',
+            HttpStatusCode::HTTP_NO_CONTENT->value => 'No Content',
+            HttpStatusCode::HTTP_BAD_REQUEST->value => 'Bad Request',
+            HttpStatusCode::HTTP_UNAUTHORIZED->value => 'Unauthorized',
+            HttpStatusCode::HTTP_FORBIDDEN->value => 'Forbidden',
+            HttpStatusCode::HTTP_NOT_FOUND->value => 'Not Found',
+            HttpStatusCode::HTTP_INTERNAL_SERVER_ERROR->value => 'Internal Server Error',
         ];
+
         return $phrases[$this->statusCode] ?? '';
     }
 }
