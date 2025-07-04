@@ -30,7 +30,8 @@ class NullCacheHandler extends CacheHandler
         return false;
     }
 
-    public function delete(string $key): void
+    public function delete(string $key): bool
     {
+        return true;
     }
 }

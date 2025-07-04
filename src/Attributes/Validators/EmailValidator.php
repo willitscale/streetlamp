@@ -11,7 +11,7 @@ class EmailValidator implements ValidatorInterface
 {
     public function validate(mixed $value): bool
     {
-        return filter_var($value, FILTER_VALIDATE_EMAIL);
+        return false !== filter_var($value, FILTER_VALIDATE_EMAIL);
     }
 
     public function sanitize(mixed $value): mixed

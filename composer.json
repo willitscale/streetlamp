@@ -27,7 +27,7 @@
         }
     },
     "bin": [
-
+        "streetlamp"
     ],
     "require-dev": {
         "phpunit/phpunit": "^12.2",

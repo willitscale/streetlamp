@@ -1,0 +1,29 @@
+server {
+  listen 80;
+
+  error_log /dev/stderr;
+  access_log /dev/stdout main;
+
+  root /app;
+  index index.php;
+
+  location ~* \.(js|ico|gif|jpg|png|svg|css|jpeg|eot|woff|ttf)$ {
+  }
+
+  location ~* ^/(?!(index\.php)) {
+    rewrite ^ /index.php;
+  }
+
+  location ~ \.php$ {
+    include fastcgi_params;
+
+    fastcgi_connect_timeout 10s;
+    fastcgi_read_timeout 10s;
+
+    fastcgi_buffers 16 16k;
+    fastcgi_buffer_size 32k;
+
+    fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+    fastcgi_pass php:9000;
+  }
+}

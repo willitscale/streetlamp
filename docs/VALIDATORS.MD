@@ -28,7 +28,7 @@ FilterVarsValidator(int $filter, int|array $options = 0);
     #[Method(HttpMethod::GET)]
     #[Path('/validator/{validatorId}')]
     public function simpleGetWithPathParameterAndValidator(
-        #[PathParameter('validatorId'] 
+        #[PathParameter('validatorId')] 
         #[MustBeDivisibleByThreeValidator] int $validatorId
     ): ResponseInterface {
         return (new ResponseBuilder())

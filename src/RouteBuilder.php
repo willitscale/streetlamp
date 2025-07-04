@@ -14,6 +14,7 @@ use willitscale\Streetlamp\Exceptions\CacheFileDoesNotExistException;
 use willitscale\Streetlamp\Exceptions\CacheFileInvalidFormatException;
 use willitscale\Streetlamp\Exceptions\ComposerFileDoesNotExistException;
 use willitscale\Streetlamp\Exceptions\ComposerFileInvalidFormatException;
+use willitscale\Streetlamp\Exceptions\InvalidApplicationDirectoryException;
 use willitscale\Streetlamp\Exceptions\MethodParameterNotMappedException;
 use willitscale\Streetlamp\Exceptions\NoMethodRouteFoundException;
 use willitscale\Streetlamp\Exceptions\StreetLampException;
@@ -29,6 +30,8 @@ use ReflectionParameter;
 
 readonly class RouteBuilder
 {
+    public const string ROUTER_DATA_KEY = 'router.data';
+
     private RouterConfig|null $routerConfig;
 
     public function __construct(
@@ -64,11 +67,11 @@ readonly class RouteBuilder
     {
         $routerCacheHandler = $this->routerConfig->getRouteCacheHandler();
 
-        if (!$this->routerConfig->isRouteCached() || !$routerCacheHandler->exists('router.data')) {
+        if (!$this->routerConfig->isRouteCached() || !$routerCacheHandler->exists(self::ROUTER_DATA_KEY)) {
             throw new CacheFileDoesNotExistException('Cannot load cached config');
         }
 
-        $routerSerializedFile = $routerCacheHandler->retrieve('router.data');
+        $routerSerializedFile = $routerCacheHandler->retrieve(self::ROUTER_DATA_KEY);
 
         if (!$routerSerializedFile) {
             throw new CacheFileInvalidFormatException('Cannot load cached config');
@@ -77,20 +80,38 @@ readonly class RouteBuilder
         return $routerCacheHandler->deserialize($routerSerializedFile);
     }
 
+    public function clearCachedConfig(): bool
+    {
+        return $this->routerConfig->getRouteCacheHandler()->clear(self::ROUTER_DATA_KEY);
+    }
+
     private function loadConfig(): array
     {
-        if (!file_exists($this->routerConfig->getComposerFile())) {
-            throw new ComposerFileDoesNotExistException("RTB001", "Cannot locate the composer.json file.");
+        $composerJsonFilePath = $this->routerConfig->getComposerFile();
+
+        if (!file_exists($composerJsonFilePath)) {
+            throw new ComposerFileDoesNotExistException(
+                "RTB001",
+                "Cannot locate the composer file {$composerJsonFilePath}."
+            );
         }
 
-        $composerJsonFile = file_get_contents($this->routerConfig->getComposerFile());
+        if (is_dir($composerJsonFilePath)) {
+            throw new ComposerFileDoesNotExistException(
+                "RTB002",
+                "Path specified {$composerJsonFilePath} is a directory not a composer file."
+            );
+        }
+
+
+        $composerJsonFile = file_get_contents($composerJsonFilePath);
 
         $json = json_decode($composerJsonFile, true);
 
         if (empty($json['autoload']['psr-4'])) {
             throw new ComposerFileInvalidFormatException(
-                "RTB002",
-                "composer.json is invalid or missing psr-4 configuration."
+                "RTB003",
+                "Composer file specified is invalid or missing psr-4 configuration."
             );
         }
 
@@ -110,7 +131,7 @@ readonly class RouteBuilder
         }
 
         $this->routerConfig->getRouteCacheHandler()->serializeAndStore(
-            'router.data',
+            self::ROUTER_DATA_KEY,
             $routes,
             !$this->getRouterConfig()->isRouteCached()
         );
@@ -136,6 +157,13 @@ readonly class RouteBuilder
 
     private function getDirectoryContents(string $directory, array &$results = array()): array
     {
+        if (!is_dir($directory)) {
+            throw new InvalidApplicationDirectoryException(
+                "RTB004",
+                "{$directory} is not a valid application directory."
+            );
+        }
+
         $files = scandir($directory);
 
         foreach ($files as $value) {

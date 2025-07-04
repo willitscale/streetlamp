@@ -21,12 +21,10 @@ use willitscale\StreetlampTests\TestApp\Validators\DataValidator;
 #[RouteController]
 class ValidatorTestController
 {
-    public const string DATA_DIR = __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'test.dat';
-
     #[Method(HttpMethod::GET)]
     #[Path('/validator/{validatorId}')]
     public function simpleGetWithPathParameterAndValidator(
-        #[PathParameter('validatorId')] #[IntValidator(100)] int $validatorId
+        #[PathParameter('validatorId')] #[IntValidator(0, 100)] int $validatorId
     ): ResponseInterface {
         return new ResponseBuilder()
             ->setData($validatorId)
@@ -39,7 +37,7 @@ class ValidatorTestController
     #[Method(HttpMethod::POST)]
     #[Path('/validator/validation')]
     public function validateSingleInput(
-        #[BodyParameter(true, [], self::DATA_DIR)] DataType $dataType
+        #[BodyParameter(true, [])] DataType $dataType
     ): ResponseInterface {
         return new ResponseBuilder()
             ->setData($dataType)
@@ -51,7 +49,7 @@ class ValidatorTestController
     #[Method(HttpMethod::POST)]
     #[Path('/validator/validations')]
     public function validateMultipleInputs(
-        #[BodyParameter(true, [new DataValidator()], self::DATA_DIR)] array $dataTypes
+        #[BodyParameter(true, [new DataValidator()])] array $dataTypes
     ): ResponseInterface {
         return new ResponseBuilder()
             ->setData($dataTypes)
