@@ -6,31 +6,28 @@ namespace willitscale\Streetlamp\Attributes\Parameter;
 
 use Attribute;
 use willitscale\Streetlamp\Exceptions\Parameters\MissingRequireBodyException;
+use willitscale\Streetlamp\Requests\ServerRequest;
 
 #[Attribute(Attribute::TARGET_PARAMETER)]
 class BodyParameter extends Parameter
 {
     public function __construct(
         bool $required = false,
-        array $validators = [],
-        private readonly string $resourceIdentifier = 'php://input'
+        array $validators = []
     ) {
         parent::__construct(null, $required, $validators);
     }
 
-    /**
-     * @param array $pathMatches
-     * @return string|int|bool|float|array
-     * @throws MissingRequireBodyException
-     */
-    public function value(array $pathMatches): string|int|bool|float|array
+    public function value(array $pathMatches, ServerRequest $request): string|int|bool|float|array
     {
-        $streamValue = file_get_contents($this->resourceIdentifier);
+        $stream = $request->getBody();
+        $value = $stream->getContents();
+        $stream->rewind();
 
-        if (empty($streamValue)) {
+        if (empty($value)) {
             throw new MissingRequireBodyException("BP001", "BodyParameter missing or blank");
         }
 
-        return $streamValue;
+        return $value;
     }
 }

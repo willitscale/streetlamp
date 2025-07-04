@@ -8,13 +8,9 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use willitscale\Streetlamp\Attributes\Parameter\PathParameter;
 use willitscale\Streetlamp\Attributes\Validators\FilterVarsValidator;
-use willitscale\Streetlamp\Attributes\Validators\ValidatorInterface;
-use willitscale\Streetlamp\Exceptions\InvalidParameterTypeException;
 use willitscale\Streetlamp\Exceptions\Parameters\MissingRequiredPathException;
-use willitscale\Streetlamp\Exceptions\Validators\InvalidParameterFailedToPassFilterValidation;
-use PHPUnit\Framework\TestCase;
 
-class PathParameterTest extends TestCase
+class PathParameterTest extends ParameterTestCase
 {
     #[Test]
     #[DataProvider('validValues')]
@@ -26,20 +22,22 @@ class PathParameterTest extends TestCase
         string $dataType,
         array $validators
     ): void {
+        $request = $this->createServerRequest();
         $pathArgument = new PathParameter($key, $required, $validators);
         $pathArgument->setType($dataType);
         $returnedValue = $pathArgument->getValue([
             $key => [$inputValue]
-        ]);
+        ], $request);
         $this->assertEquals($expectedValue, $returnedValue);
     }
 
     #[Test]
     public function testThatAnExceptionIsThrownWhenAMissingPathParameterIsSpecified(): void
     {
+        $request = $this->createServerRequest();
         $this->expectException(MissingRequiredPathException::class);
         $pathArgument = new PathParameter('string', true, []);
-        $pathArgument->getValue([]);
+        $pathArgument->getValue([], $request);
     }
 
     public static function validValues(): array

@@ -39,14 +39,26 @@ class ServerRequest implements ServerRequestInterface
         $this->method = $method ?? $_SERVER['REQUEST_METHOD'];
         $this->uri = $uri ?? new Uri();
         $this->body = $body ?? new Stream();
-        $this->headers = $headers ?? $_SERVER;
+        $this->headers = $headers ?? $this->extractHeadersFromServer();
         $this->protocolVersion = $protocolVersion ?? $_SERVER['SERVER_PROTOCOL'] ?? '1.1';
         $this->serverParams = $serverParams ?? $_SERVER;
         $this->cookieParams = $cookieParams ?? $_COOKIE;
         $this->queryParams = $queryParams ?? $_GET;
         $this->uploadedFiles = $uploadedFiles ?? $_FILES;
-        $this->parsedBody = $parsedBody;
+        $this->parsedBody = $parsedBody ?? $_POST;
         $this->attributes = $attributes;
+    }
+
+    public function extractHeadersFromServer(): array
+    {
+        $headers = [];
+        foreach ($_SERVER as $name => $value) {
+            if (0 === stripos($name, 'HTTP_')) {
+                $key = strtolower(substr($name, 5));
+                $headers[$key] = [$value];
+            }
+        }
+        return $headers;
     }
 
     // PSR-7 RequestInterface methods

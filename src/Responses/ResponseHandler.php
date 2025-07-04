@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace willitscale\Streetlamp\Responses;
 
 use DI\Container;
@@ -42,9 +44,19 @@ readonly class ResponseHandler implements RequestHandlerInterface
 
     public function response(ServerRequestInterface $request): ResponseInterface
     {
-        $args = array_map(function ($parameter) {
-            return $parameter->getValue($this->matches);
+        $args = array_map(function ($parameter) use ($request) {
+            try {
+                return $parameter->getValue($this->matches, $request);
+            } catch (Throwable $e) {
+                if ($parameter->getRequired()) {
+                    throw $e;
+                }
+            }
         }, $this->route->getParameters());
+
+        $args = array_filter($args, function ($value) {;
+            return !is_null($value);
+        });
 
         try {
             return $this->restoreResponse($args);

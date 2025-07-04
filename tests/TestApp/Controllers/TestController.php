@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace willitscale\StreetlampTests\TestApp\Controllers;
 
-use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use willitscale\Streetlamp\Attributes\Accepts;
 use willitscale\Streetlamp\Attributes\Controller\RouteController;

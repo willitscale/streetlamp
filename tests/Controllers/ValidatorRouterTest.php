@@ -2,36 +2,16 @@
 
 declare(strict_types=1);
 
-namespace willitscale\StreetlampTests;
+namespace willitscale\StreetlampTests\Controllers;
 
+use PHPUnit\Framework\Attributes\Test;
 use willitscale\Streetlamp\Enums\MediaType;
 use willitscale\Streetlamp\Exceptions\InvalidParameterTypeException;
 use willitscale\Streetlamp\Exceptions\Validators\InvalidParameterFailedToPassFilterValidation;
-use willitscale\StreetlampTest\RouteTestCase;
 
-class ValidatorRouterTest extends RouteTestCase
+class ValidatorRouterTest extends ControllerTestCase
 {
-    const TEST_BODY_FILE = __DIR__ . DIRECTORY_SEPARATOR . 'TestApp' . DIRECTORY_SEPARATOR . 'test.dat';
-    const COMPOSER_TEST_FILE = __DIR__ . DIRECTORY_SEPARATOR . 'TestApp' . DIRECTORY_SEPARATOR . 'composer.test.json';
-
-    public function setUp(): void
-    {
-        parent::setUp();
-
-        if (file_exists(self::TEST_BODY_FILE)) {
-            unlink(self::TEST_BODY_FILE);
-        }
-    }
-
-    protected function tearDown(): void
-    {
-        parent::tearDown();
-
-        if (file_exists(self::TEST_BODY_FILE)) {
-            unlink(self::TEST_BODY_FILE);
-        }
-    }
-
+    #[Test]
     public function testRouterGetMethodWithPathParameterThatValidatesInput(): void
     {
         $expectedResponse = 99;
@@ -39,14 +19,16 @@ class ValidatorRouterTest extends RouteTestCase
         $router = $this->setupRouter(
             'GET',
             '/validator/' . $expectedResponse,
-            MediaType::TEXT_HTML->value,
-            __DIR__,
-            self::COMPOSER_TEST_FILE
+            $this->getTestRoot(),
+            $this->getComposerTestFile(),
+            null,
+            ['Content-Type' => MediaType::TEXT_HTML->value]
         );
         $response = $router->route()->getBody()->getContents();
         $this->assertEquals($expectedResponse, $response);
     }
 
+    #[Test]
     public function testRouterDataMappingCorrectlyCreatesAnObject(): void
     {
         $testData = [
@@ -54,42 +36,41 @@ class ValidatorRouterTest extends RouteTestCase
             'age' => 123
         ];
 
-        file_put_contents(self::TEST_BODY_FILE, json_encode($testData));
-
         $router = $this->setupRouter(
             'POST',
             '/validator/validation',
-            MediaType::APPLICATION_JSON->value,
-            __DIR__,
-            self::COMPOSER_TEST_FILE
+            $this->getTestRoot(),
+            $this->getComposerTestFile(),
+            $this->createStreamWithContents(json_encode($testData)),
+            ['Content-Type' => MediaType::APPLICATION_JSON->value]
         );
 
-        $response = $router->route(true)->getBody()->getContents();
+        $response = $router->route()->getBody()->getContents();
 
         $this->assertEquals($testData, json_decode($response, true));
     }
 
+    #[Test]
     public function testRouterDataMappingWithIncorrectDataFailsToCreateObject(): void
     {
         $testData = [
             'name' => 'Test'
         ];
 
-        $testFile =
-            file_put_contents(self::TEST_BODY_FILE, json_encode($testData));
-
         $router = $this->setupRouter(
             'POST',
             '/validator/validation',
-            MediaType::APPLICATION_JSON->value,
-            __DIR__,
-            self::COMPOSER_TEST_FILE
+            $this->getTestRoot(),
+            $this->getComposerTestFile(),
+            $this->createStreamWithContents(json_encode($testData)),
+            ['Content-Type' => MediaType::APPLICATION_JSON->value]
         );
 
         $this->expectException(InvalidParameterTypeException::class);
-        $router->route(true);
+        $router->route();
     }
 
+    #[Test]
     public function testRouterDataMappingCorrectlyCreatesAnArrayOfObjects(): void
     {
         $testData = [
@@ -103,20 +84,20 @@ class ValidatorRouterTest extends RouteTestCase
             ]
         ];
 
-        file_put_contents(self::TEST_BODY_FILE, json_encode($testData));
-
         $router = $this->setupRouter(
             'POST',
             '/validator/validations',
-            MediaType::APPLICATION_JSON->value,
-            __DIR__,
-            self::COMPOSER_TEST_FILE
+            $this->getTestRoot(),
+            $this->getComposerTestFile(),
+            $this->createStreamWithContents(json_encode($testData)),
+            ['Content-Type' => MediaType::APPLICATION_JSON->value]
         );
 
         $response = $router->route()->getBody()->getContents();
         $this->assertEquals($testData, json_decode($response, true));
     }
 
+    #[Test]
     public function testRouterDataMappingWithIncorrectDataFailsToCreateAnArrayOfObjects(): void
     {
         $testData = [
@@ -129,17 +110,16 @@ class ValidatorRouterTest extends RouteTestCase
             ]
         ];
 
-        file_put_contents(self::TEST_BODY_FILE, json_encode($testData));
-
         $router = $this->setupRouter(
             'POST',
             '/validator/validations',
-            MediaType::APPLICATION_JSON->value,
-            __DIR__,
-            self::COMPOSER_TEST_FILE
+            $this->getTestRoot(),
+            $this->getComposerTestFile(),
+            $this->createStreamWithContents(json_encode($testData)),
+            ['Content-Type' => MediaType::APPLICATION_JSON->value]
         );
 
         $this->expectException(InvalidParameterFailedToPassFilterValidation::class);
-        $router->route(true);
+        $router->route();
     }
 }

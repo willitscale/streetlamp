@@ -2,35 +2,15 @@
 
 declare(strict_types=1);
 
-namespace willitscale\StreetlampTests;
+namespace willitscale\StreetlampTests\Controllers;
 
+use PHPUnit\Framework\Attributes\Test;
 use willitscale\Streetlamp\Enums\MediaType;
 use willitscale\Streetlamp\Exceptions\InvalidParameterTypeException;
-use willitscale\StreetlampTest\RouteTestCase;
 
-class JsonRouterTest extends RouteTestCase
+class JsonRouterTest extends ControllerTestCase
 {
-    const TEST_BODY_FILE = __DIR__ . DIRECTORY_SEPARATOR . 'TestApp' . DIRECTORY_SEPARATOR . 'json.test.dat';
-    const COMPOSER_TEST_FILE = __DIR__ . DIRECTORY_SEPARATOR . 'TestApp' . DIRECTORY_SEPARATOR . 'composer.test.json';
-
-    public function setUp(): void
-    {
-        parent::setUp();
-
-        if (file_exists(self::TEST_BODY_FILE)) {
-            unlink(self::TEST_BODY_FILE);
-        }
-    }
-
-    protected function tearDown(): void
-    {
-        parent::tearDown();
-
-        if (file_exists(self::TEST_BODY_FILE)) {
-            unlink(self::TEST_BODY_FILE);
-        }
-    }
-
+    #[Test]
     public function testJsonArrayCorrectlyMapsJsonBodyToJsonObjectInArray(): void
     {
         $testData = [
@@ -44,20 +24,20 @@ class JsonRouterTest extends RouteTestCase
             ]
         ];
 
-        file_put_contents(self::TEST_BODY_FILE, json_encode($testData));
-
         $router = $this->setupRouter(
             'POST',
             '/json/array',
-            MediaType::APPLICATION_JSON->value,
-            __DIR__,
-            self::COMPOSER_TEST_FILE
+            $this->getTestRoot(),
+            $this->getComposerTestFile(),
+            $this->createStreamWithContents(json_encode($testData)),
+            ['Content-Type' => MediaType::APPLICATION_JSON->value]
         );
 
         $response = $router->route()->getBody()->getContents();
         $this->assertEquals($testData, json_decode($response, true));
     }
 
+    #[Test]
     public function testJsonArrayThrowsExceptionWhenMissingARequiredParameter(): void
     {
         $testData = [
@@ -70,20 +50,20 @@ class JsonRouterTest extends RouteTestCase
             ]
         ];
 
-        file_put_contents(self::TEST_BODY_FILE, json_encode($testData));
-
         $router = $this->setupRouter(
             'POST',
             '/json/array',
-            MediaType::APPLICATION_JSON->value,
-            __DIR__,
-            self::COMPOSER_TEST_FILE
+            $this->getTestRoot(),
+            $this->getComposerTestFile(),
+            $this->createStreamWithContents(json_encode($testData)),
+            ['Content-Type' => MediaType::APPLICATION_JSON->value]
         );
 
         $this->expectException(InvalidParameterTypeException::class);
-        $router->route(true);
+        $router->route();
     }
 
+    #[Test]
     public function testJsonObjectWithNestedArrayMapsCorrectlyToBody(): void
     {
         $testData = [
@@ -104,20 +84,20 @@ class JsonRouterTest extends RouteTestCase
             ]
         ];
 
-        file_put_contents(self::TEST_BODY_FILE, json_encode($testData));
-
         $router = $this->setupRouter(
             'POST',
             '/json/nested',
-            MediaType::APPLICATION_JSON->value,
-            __DIR__,
-            self::COMPOSER_TEST_FILE
+            $this->getTestRoot(),
+            $this->getComposerTestFile(),
+            $this->createStreamWithContents(json_encode($testData)),
+            ['Content-Type' => MediaType::APPLICATION_JSON->value]
         );
 
         $response = $router->route()->getBody()->getContents();
         $this->assertEquals($testData, json_decode($response, true));
     }
 
+    #[Test]
     public function testJsonObjectWithNestedArrayThrowsExceptionForMissingNestedProperty(): void
     {
         $testData = [
@@ -137,17 +117,16 @@ class JsonRouterTest extends RouteTestCase
             ]
         ];
 
-        file_put_contents(self::TEST_BODY_FILE, json_encode($testData));
-
         $router = $this->setupRouter(
             'POST',
             '/json/nested',
-            MediaType::APPLICATION_JSON->value,
-            __DIR__,
-            self::COMPOSER_TEST_FILE
+            $this->getTestRoot(),
+            $this->getComposerTestFile(),
+            $this->createStreamWithContents(json_encode($testData)),
+            ['Content-Type' => MediaType::APPLICATION_JSON->value]
         );
 
         $this->expectException(InvalidParameterTypeException::class);
-        $router->route(true);
+        $router->route();
     }
 }

@@ -6,21 +6,18 @@ namespace willitscale\Streetlamp\Attributes\Parameter;
 
 use Attribute;
 use willitscale\Streetlamp\Exceptions\Parameters\MissingRequiredPostException;
+use willitscale\Streetlamp\Requests\ServerRequest;
 
 #[Attribute(Attribute::TARGET_PARAMETER)]
 class PostParameter extends Parameter
 {
-    /**
-     * @param array $pathMatches
-     * @return string|int|bool|float|array
-     * @throws MissingRequiredPostException
-     */
-    public function value(array $pathMatches): string|int|bool|float|array
+    public function value(array $pathMatches, ServerRequest $request): string|int|bool|float|array
     {
-        if (empty($_POST[$this->key])) {
+        $params = $request->getParsedBody();
+        if (empty($params[$this->key])) {
             throw new MissingRequiredPostException("PDP001", "Post missing expected value for " . $this->key);
         }
 
-        return $_POST[$this->key];
+        return $params[$this->key];
     }
 }

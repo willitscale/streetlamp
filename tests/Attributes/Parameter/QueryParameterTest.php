@@ -8,13 +8,9 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use willitscale\Streetlamp\Attributes\Parameter\QueryParameter;
 use willitscale\Streetlamp\Attributes\Validators\FilterVarsValidator;
-use willitscale\Streetlamp\Attributes\Validators\ValidatorInterface;
-use willitscale\Streetlamp\Exceptions\InvalidParameterTypeException;
 use willitscale\Streetlamp\Exceptions\Parameters\MissingRequireQueryException;
-use willitscale\Streetlamp\Exceptions\Validators\InvalidParameterFailedToPassFilterValidation;
-use PHPUnit\Framework\TestCase;
 
-class QueryParameterTest extends TestCase
+class QueryParameterTest extends ParameterTestCase
 {
     #[Test]
     #[DataProvider('validValues')]
@@ -26,22 +22,28 @@ class QueryParameterTest extends TestCase
         string $dataType,
         array $validators
     ): void {
-        $_GET[$key] = $inputValue;
+        $request = $this->createServerRequest(
+            null,
+            [],
+            [
+                $key => $inputValue
+            ]
+        );
         $queryArgument = new QueryParameter($key, $required, $validators);
         $queryArgument->setType($dataType);
         $returnedValue = $queryArgument->getValue([
             $key => $inputValue
-        ]);
+        ], $request);
         $this->assertEquals($expectedValue, $returnedValue);
-        unset($_GET[$key]);
     }
 
     #[Test]
     public function testThatAnExceptionIsThrownWhenAMissingPostIsSpecified(): void
     {
+        $request = $this->createServerRequest();
         $this->expectException(MissingRequireQueryException::class);
         $queryArgument = new QueryParameter('test');
-        $queryArgument->getValue([]);
+        $queryArgument->getValue([], $request);
     }
 
     public static function validValues(): array

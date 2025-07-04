@@ -13,6 +13,7 @@ use willitscale\Streetlamp\Exceptions\InvalidParameterTypeDefinitionException;
 use willitscale\Streetlamp\Exceptions\InvalidParameterTypeException;
 use willitscale\Streetlamp\Exceptions\Validators\InvalidParameterFailedToPassFilterValidation;
 use ReflectionClass;
+use willitscale\Streetlamp\Requests\ServerRequest;
 
 abstract class Parameter
 {
@@ -41,9 +42,9 @@ abstract class Parameter
         return $this->required;
     }
 
-    public function getValue(array $pathMatches): mixed
+    public function getValue(array $pathMatches, ServerRequest $request): mixed
     {
-        return $this->castAndValidateValue($this->value($pathMatches));
+        return $this->castAndValidateValue($this->value($pathMatches, $request));
     }
 
     public function setType(string $type): void
@@ -66,7 +67,7 @@ abstract class Parameter
         $this->validators[] = $validator;
     }
 
-    abstract public function value(array $pathMatches): string|int|bool|float|array;
+    abstract public function value(array $pathMatches, ServerRequest $request): string|int|bool|float|array;
 
     protected function castAndValidateValue(mixed $value): mixed
     {

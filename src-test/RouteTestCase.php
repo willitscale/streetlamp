@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace willitscale\StreetlampTest;
 
-use Exception;
 use PHPUnit\Framework\TestCase;
+use Psr\Http\Message\StreamInterface;
 use willitscale\Streetlamp\Builders\RouterConfigBuilder;
 use willitscale\Streetlamp\CacheHandlers\CacheHandler;
 use willitscale\Streetlamp\CacheHandlers\NullCacheHandler;
@@ -19,10 +19,17 @@ class RouteTestCase extends TestCase
     public function setupRouter(
         string $method,
         string $path,
-        string $contentType,
         string $rootDirectory,
         string $composerFile,
-        CacheHandler $routeCacheHandler = new NullCacheHandler()
+        ?StreamInterface $body = null,
+        array $headers = [],
+        array $serverParams = [],
+        array $cookieParams = [],
+        array $queryParams = [],
+        array $postParams = [],
+        array $filesParams = [],
+        string $protocolVersion = '1.1',
+        CacheHandler $routeCacheHandler = new NullCacheHandler(),
     ): Router {
         $routerConfig = new RouterConfigBuilder()
             ->setComposerFile($composerFile)
@@ -30,7 +37,18 @@ class RouteTestCase extends TestCase
             ->setRootDirectory($rootDirectory)
             ->setRethrowExceptions(true)
             ->setRouteCacheHandler($routeCacheHandler)
-            ->setRequest(new ServerRequest($method, new Uri($path), null, ['Content-Type' => $contentType]))
+            ->setRequest(new ServerRequest(
+                $method,
+                new Uri($path),
+                $body,
+                $headers,
+                $protocolVersion,
+                $serverParams,
+                $cookieParams,
+                $queryParams,
+                $filesParams,
+                $postParams
+            ))
             ->build();
 
         $routeBuilder = new RouteBuilder(

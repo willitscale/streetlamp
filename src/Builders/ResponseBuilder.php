@@ -11,7 +11,6 @@ use willitscale\Streetlamp\Enums\HttpStatusCode;
 use willitscale\Streetlamp\Enums\MediaType;
 use willitscale\Streetlamp\Exceptions\InvalidResponseReturnedToClientException;
 use ReflectionClass;
-use ReflectionException;
 use willitscale\Streetlamp\Requests\Stream;
 use willitscale\Streetlamp\Responses\Response;
 

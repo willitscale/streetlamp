@@ -6,23 +6,18 @@ namespace willitscale\Streetlamp\Attributes\Parameter;
 
 use Attribute;
 use willitscale\Streetlamp\Exceptions\Parameters\MissingRequiredHeaderException;
+use willitscale\Streetlamp\Requests\ServerRequest;
 
 #[Attribute(Attribute::TARGET_PARAMETER)]
 class HeaderParameter extends Parameter
 {
-    /**
-     * @param array $pathMatches
-     * @return string|int|bool|float
-     * @throws MissingRequiredHeaderException
-     */
-    public function value(array $pathMatches): string|int|bool|float
+    public function value(array $pathMatches, ServerRequest $request): string|int|bool|float
     {
-        $headerServerKey = 'HTTP_' . strtoupper($this->key);
-
-        if (empty($_SERVER[$headerServerKey])) {
+        $header = $request->getHeaderLine($this->key);
+        if (empty($header)) {
             throw new MissingRequiredHeaderException("HP001", "HeaderParameter missing expected value " . $this->key);
         }
 
-        return $_SERVER[$headerServerKey];
+        return $header;
     }
 }

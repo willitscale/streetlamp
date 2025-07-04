@@ -8,13 +8,9 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use willitscale\Streetlamp\Attributes\Parameter\HeaderParameter;
 use willitscale\Streetlamp\Attributes\Validators\FilterVarsValidator;
-use willitscale\Streetlamp\Attributes\Validators\ValidatorInterface;
-use willitscale\Streetlamp\Exceptions\InvalidParameterTypeException;
 use willitscale\Streetlamp\Exceptions\Parameters\MissingRequiredHeaderException;
-use willitscale\Streetlamp\Exceptions\Validators\InvalidParameterFailedToPassFilterValidation;
-use PHPUnit\Framework\TestCase;
 
-class HeaderParameterTest extends TestCase
+class HeaderParameterTest extends ParameterTestCase
 {
     #[Test]
     #[DataProvider('validValues')]
@@ -26,21 +22,25 @@ class HeaderParameterTest extends TestCase
         string $dataType,
         array $validators
     ): void {
-        $serverKey = 'HTTP_' . strtoupper($key);
-        $_SERVER[$serverKey] = $inputValue;
+        $request = $this->createServerRequest(
+            null,
+            [
+                $key => $inputValue
+            ]
+        );
         $headerArgument = new HeaderParameter($key, $required, $validators);
         $headerArgument->setType($dataType);
-        $returnedValue = $headerArgument->getValue([]);
+        $returnedValue = $headerArgument->getValue([], $request);
         $this->assertEquals($expectedValue, $returnedValue);
-        unset($_SERVER[$serverKey]);
     }
 
     #[Test]
     public function testThatAnExceptionIsThrownWhenAMissingHeaderIsSpecified(): void
     {
+        $request = $this->createServerRequest();
         $this->expectException(MissingRequiredHeaderException::class);
         $headerArgument = new HeaderParameter('string', true, []);
-        $headerArgument->getValue([]);
+        $headerArgument->getValue([], $request);
     }
 
     public static function validValues(): array

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace willitscale\Streetlamp;
 
 use willitscale\Streetlamp\Builders\RouterConfigBuilder;
-use willitscale\Streetlamp\Models\RouterConfig;
 
 final readonly class Streetlamp
 {

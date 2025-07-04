@@ -8,13 +8,9 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use willitscale\Streetlamp\Attributes\Parameter\PostParameter;
 use willitscale\Streetlamp\Attributes\Validators\FilterVarsValidator;
-use willitscale\Streetlamp\Attributes\Validators\ValidatorInterface;
-use willitscale\Streetlamp\Exceptions\InvalidParameterTypeException;
 use willitscale\Streetlamp\Exceptions\Parameters\MissingRequiredPostException;
-use willitscale\Streetlamp\Exceptions\Validators\InvalidParameterFailedToPassFilterValidation;
-use PHPUnit\Framework\TestCase;
 
-class PostParameterTest extends TestCase
+class PostParameterTest extends ParameterTestCase
 {
     #[Test]
     #[DataProvider('validValues')]
@@ -26,12 +22,22 @@ class PostParameterTest extends TestCase
         string $dataType,
         array $validators
     ): void {
-        $_POST[$key] = $inputValue;
+        $request = $this->createServerRequest(
+            null,
+            [],
+            [],
+            [],
+            [],
+            [],
+            [
+                $key => $inputValue
+            ]
+        );
         $postArgument = new PostParameter($key, $required, $validators);
         $postArgument->setType($dataType);
         $returnedValue = $postArgument->getValue([
             $key => $inputValue
-        ]);
+        ], $request);
         $this->assertEquals($expectedValue, $returnedValue);
         unset($_POST[$key]);
     }
@@ -39,9 +45,10 @@ class PostParameterTest extends TestCase
     #[Test]
     public function testThatAnExceptionIsThrownWhenAMissingPostIsSpecified(): void
     {
+        $request = $this->createServerRequest();
         $this->expectException(MissingRequiredPostException::class);
         $postArgument = new PostParameter('string', true, []);
-        $postArgument->getValue([]);
+        $postArgument->getValue([], $request);
     }
 
     public static function validValues(): array
