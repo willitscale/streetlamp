@@ -27,12 +27,12 @@ class ServerRequest implements ServerRequestInterface
         ?string $method = null,
         ?UriInterface $uri = null,
         ?StreamInterface $body = null,
-        array $headers = [],
-        string $protocolVersion = '1.1',
-        array $serverParams = [],
-        array $cookieParams = [],
-        array $queryParams = [],
-        array $uploadedFiles = [],
+        ?array $headers = null,
+        ?string $protocolVersion = '1.1',
+        ?array $serverParams = null,
+        ?array $cookieParams = null,
+        ?array $queryParams = null,
+        ?array $uploadedFiles = null,
         $parsedBody = null,
         array $attributes = []
     ) {
@@ -54,7 +54,10 @@ class ServerRequest implements ServerRequestInterface
         $headers = [];
         foreach ($_SERVER as $name => $value) {
             if (0 === stripos($name, 'HTTP_')) {
-                $key = strtolower(substr($name, 5));
+                // The only issue with this is that if a header contains underscores, they will be
+                // replaced with dashes and lowercase first letter will be replaced with uppercase.
+                $key = ucwords(str_replace('_', ' ', strtolower(substr($name, 5))));
+                $key = str_replace(' ', '-', $key);
                 $headers[$key] = [$value];
             }
         }
@@ -146,7 +149,15 @@ class ServerRequest implements ServerRequestInterface
 
     public function getHeaderLine($name): string
     {
-        return $this->headers[$name] ?? '';
+        if (empty($this->headers[$name])) {
+            return '';
+        }
+
+        if (is_array($this->headers[$name])) {
+            return implode(', ', $this->headers[$name]);
+        }
+
+        return $this->headers[$name];
     }
 
     public function withHeader($name, $value): ServerRequestInterface

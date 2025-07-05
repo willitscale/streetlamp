@@ -35,6 +35,9 @@ class Uri implements UriInterface
         $this->host = $_SERVER['HTTP_X_FORWARDED_HOST']
             ?? $_SERVER['HTTP_HOST']
             ?? ($_SERVER['SERVER_NAME'] ?? '');
+        if (false !== stripos($this->host, ':')) {
+            $this->host = explode(':', $this->host, 2)[0];
+        }
         $this->port = isset($_SERVER['HTTP_X_FORWARDED_PORT'])
             ? (int)$_SERVER['HTTP_X_FORWARDED_PORT']
             : (isset($_SERVER['SERVER_PORT']) ? (int)$_SERVER['SERVER_PORT'] : null);
@@ -77,6 +80,7 @@ class Uri implements UriInterface
     public function getAuthority(): string
     {
         $authority = $this->host;
+
         if ($this->userInfo !== '') {
             $authority = $this->userInfo . '@' . $authority;
         }

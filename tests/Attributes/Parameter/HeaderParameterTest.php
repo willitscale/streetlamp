@@ -47,7 +47,7 @@ class HeaderParameterTest extends ParameterTestCase
     {
         return [
             'it should set a string value and extract a matching value' => [
-                'key' => 'test',
+                'key' => 'Test',
                 'required' => true,
                 'inputValue' => 'test',
                 'expectedValue' => 'test',
@@ -55,7 +55,7 @@ class HeaderParameterTest extends ParameterTestCase
                 'validators' => []
             ],
             'it should set an int value and extract a matching value' => [
-                'key' => 'test',
+                'key' => 'Test',
                 'required' => true,
                 'inputValue' => '321',
                 'expectedValue' => 321,
@@ -63,7 +63,7 @@ class HeaderParameterTest extends ParameterTestCase
                 'validators' => []
             ],
             'it should set a float value and extract a matching value' => [
-                'key' => 'test',
+                'key' => 'Test',
                 'required' => true,
                 'inputValue' => '1.23',
                 'expectedValue' => 1.23,
@@ -71,7 +71,7 @@ class HeaderParameterTest extends ParameterTestCase
                 'validators' => []
             ],
             'it should set a bool value and extract a matching value' => [
-                'key' => 'test',
+                'key' => 'Test',
                 'required' => true,
                 'inputValue' => '1',
                 'expectedValue' => true,
@@ -79,7 +79,7 @@ class HeaderParameterTest extends ParameterTestCase
                 'validators' => []
             ],
             'it should set the a string value and extract a numeric value' => [
-                'key' => 'test',
+                'key' => 'Test',
                 'required' => true,
                 'inputValue' => '123test',
                 'expectedValue' => 123,
