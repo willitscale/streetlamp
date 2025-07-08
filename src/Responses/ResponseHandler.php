@@ -52,6 +52,7 @@ readonly class ResponseHandler implements RequestHandlerInterface
                     throw $e;
                 }
             }
+            return null;
         }, $this->route->getParameters());
 
         $args = array_filter($args, function ($value) {

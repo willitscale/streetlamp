@@ -22,7 +22,7 @@ Code:
     #[Method(HttpMethod::POST)]
     #[Path('/file')]
     public function fileParameter(
-        #[FileParameter('file')] string $file
+        #[FileParameter('file')] File $file
     ): ResponseInterface {
         return (new ResponseBuilder())
             ->setHttpStatusCode(HttpStatusCode::HTTP_ACCEPTED)

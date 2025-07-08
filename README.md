@@ -9,6 +9,12 @@
 - [1. Introduction](#1-introduction)
 - [2. Prerequisites](#2-prerequisites)
 - [3. Setup](#3-setup)
+- [3.1. Installing the library](#31-installing-the-library)
+- [3.2. Application Wrapper](#32-application-wrapper)
+- [3.3 Creating a Controller](#33-creating-a-controller)
+- [3.4. Creating a Route](#34-creating-a-route)
+- [4. PSR Compliance](#4-psr-compliance)
+- [5. Further Reading](#5-further-reading)
 
 ## 1. Introduction
 
@@ -112,7 +118,26 @@ class MyRouteClass
 
 You could also apply the `#[Path('/hello')]` attribute to the `RouteController` class itself. In this case, all routes defined within the controller will have that path prefixed automatically, so you do not need to apply a path to each method individually.
 
-## 4. Further Reading
+## 4. PSR Compliance
+
+| PSR Standard | Description                 | Streetlamp Compliance |
+|--------------|-----------------------------|-----------------------|
+| [PSR-1](https://www.php-fig.org/psr/psr-1/)        | Basic Coding Standard       | Yes                   |
+| [PSR-3](https://www.php-fig.org/psr/psr-3/)        | Logger Interface            | Yes                   |
+| [PSR-4](https://www.php-fig.org/psr/psr-4/)        | Autoloading Standard        | Yes                   |
+| [PSR-6](https://www.php-fig.org/psr/psr-6/)        | Caching Interface           | TODO                  |
+| [PSR-7](https://www.php-fig.org/psr/psr-7/)        | HTTP Message Interface      | Yes                   |
+| [PSR-11](https://www.php-fig.org/psr/psr-11/)      | Container Interface         | No                    |
+| [PSR-12](https://www.php-fig.org/psr/psr-12/)      | Extended Coding Style Guide | Yes                   |
+| [PSR-13](https://www.php-fig.org/psr/psr-13/)      | Hypermedia Links            | No                    |
+| [PSR-14](https://www.php-fig.org/psr/psr-14/)      | Event Dispatcher            | No                    |
+| [PSR-15](https://www.php-fig.org/psr/psr-15/)      | HTTP Handlers               | Yes                   |
+| [PSR-16](https://www.php-fig.org/psr/psr-16/)      | Simple Caching              | TODO                  |
+| [PSR-17](https://www.php-fig.org/psr/psr-17/)      | HTTP Factories              | No                    |
+| [PSR-18](https://www.php-fig.org/psr/psr-18/)      | HTTP Client                 | No                    |
+
+
+## 5. Further Reading
 - [Routing Attributes](docs/ROUTING_ATTRIBUTES.MD)
 - [Input Attributes](docs/INPUT_ATTRIBUTES.MD)
 - [Data Mapping](docs/DATA_MAPPING.MD)

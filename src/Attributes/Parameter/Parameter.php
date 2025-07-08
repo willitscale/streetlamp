@@ -13,6 +13,7 @@ use willitscale\Streetlamp\Exceptions\InvalidParameterTypeDefinitionException;
 use willitscale\Streetlamp\Exceptions\InvalidParameterTypeException;
 use willitscale\Streetlamp\Exceptions\Validators\InvalidParameterFailedToPassFilterValidation;
 use ReflectionClass;
+use willitscale\Streetlamp\Models\File;
 use willitscale\Streetlamp\Requests\ServerRequest;
 
 abstract class Parameter
@@ -67,11 +68,11 @@ abstract class Parameter
         $this->validators[] = $validator;
     }
 
-    abstract public function value(array $pathMatches, ServerRequest $request): string|int|bool|float|array;
+    abstract public function value(array $pathMatches, ServerRequest $request): string|int|bool|float|array|File;
 
     protected function castAndValidateValue(mixed $value): mixed
     {
-        if (!is_string($value) && !is_array($value)) {
+        if (!is_string($value) && !is_array($value) && !$value instanceof File) {
             throw new InvalidParameterTypeException(
                 "PR001",
                 "Parameter $this->key is not a string or array"
@@ -97,6 +98,7 @@ abstract class Parameter
         }
 
         return match ($this->type) {
+            File::class => $value,
             'int' => (int)$value,
             'float' => (float)$value,
             'bool' => (bool)$value,
