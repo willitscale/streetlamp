@@ -7,6 +7,7 @@ namespace willitscale\StreetlampTests\Attributes\Parameter;
 use PHPUnit\Framework\Attributes\Test;
 use willitscale\Streetlamp\Attributes\Parameter\FileParameter;
 use willitscale\Streetlamp\Exceptions\Parameters\MissingRequiredFilesException;
+use willitscale\Streetlamp\Models\File;
 
 class FileParameterTest extends ParameterTestCase
 {
@@ -16,6 +17,7 @@ class FileParameterTest extends ParameterTestCase
         $key = 'test_file.png';
         $data = [
             'name' => $key,
+            'path' => '/tmp/' . hash('sha1', $key),
             'type' => 'text/plain',
             'tmp_name' => '/tmp/' . hash('sha1', $key),
             'error' => 0,
@@ -34,9 +36,9 @@ class FileParameterTest extends ParameterTestCase
         );
 
         $fileArgument = new FileParameter($key);
-        $fileArgument->setType('array');
+        $fileArgument->setType(File::class);
         $returnedValue = $fileArgument->getValue([], $request);
-        $this->assertEquals($data, $returnedValue);
+        $this->assertEquals(json_encode($data), json_encode($returnedValue));
     }
 
     #[Test]

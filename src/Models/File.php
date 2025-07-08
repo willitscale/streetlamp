@@ -52,7 +52,7 @@ readonly class File implements JsonSerializable
             'name' => $this->name,
             'path' => $this->path,
             'type' => $this->type,
-            'tmpName' => $this->tmpName,
+            'tmp_name' => $this->tmpName,
             'error' => $this->error,
             'size' => $this->size
         ];
