@@ -4,19 +4,20 @@ declare(strict_types=1);
 
 namespace willitscale\Streetlamp\Builders;
 
-use JsonSerializable;
+use Psr\Http\Message\ResponseInterface;
 use willitscale\Streetlamp\Attributes\DataBindings\DataBindingObjectInterface;
 use willitscale\Streetlamp\Attributes\DataBindings\Json\JsonObject;
 use willitscale\Streetlamp\Enums\HttpStatusCode;
 use willitscale\Streetlamp\Enums\MediaType;
 use willitscale\Streetlamp\Exceptions\InvalidResponseReturnedToClientException;
 use ReflectionClass;
-use ReflectionException;
+use willitscale\Streetlamp\Requests\Stream;
+use willitscale\Streetlamp\Responses\Response;
 
-class ResponseBuilder implements JsonSerializable
+class ResponseBuilder
 {
     private HttpStatusCode $httpStatusCode;
-    private MediaType|string $contentType;
+    private MediaType|string $contentType = MediaType::TEXT_PLAIN;
     private mixed $data;
     private array $headers = [];
 
@@ -60,53 +61,29 @@ class ResponseBuilder implements JsonSerializable
         return $this;
     }
 
-    /**
-     * @return HttpStatusCode
-     */
     public function getHttpStatusCode(): HttpStatusCode
     {
         return $this->httpStatusCode;
     }
 
-    /**
-     * @return MediaType|string
-     */
     public function getContentType(): MediaType|string
     {
         return $this->contentType;
     }
 
-    /**
-     * @return mixed
-     */
     public function getData(): mixed
     {
         return $this->data;
     }
 
-    /**
-     * @param bool $return
-     * @return string|null
-     * @throws InvalidResponseReturnedToClientException
-     * @throws ReflectionException
-     */
-    public function build(bool $return = false): null|string
+    public function build(): ResponseInterface
     {
-        if (!$return && !empty($this->httpStatusCode)) {
-            http_response_code($this->httpStatusCode->value);
-        }
-
         $isJson = false;
+        $stream = new Stream('php://temp', 'rw+');
 
         if (!empty($this->contentType)) {
-            $this->addHeader('Content-Type', $this->contentType);
+            $this->addHeader('Content-Type', $this->contentType->value ?? $this->contentType);
             $isJson = ($this->contentType === MediaType::APPLICATION_JSON->value);
-        }
-
-        if (!$return) {
-            foreach ($this->headers as $key => $value) {
-                header($key . ': ' . $value);
-            }
         }
 
         if (isset($this->data)) {
@@ -123,29 +100,25 @@ class ResponseBuilder implements JsonSerializable
             }
 
             if ($isJson) {
-                $this->data = json_encode($this->data);
+                $this->data = json_encode($this->data, JSON_THROW_ON_ERROR);
             }
+
+            $stream->write((string) $this->data);
 
             if (!is_string($this->data) && !is_int($this->data) && !is_float($this->data) && !is_bool($this->data)) {
-                throw new InvalidResponseReturnedToClientException("RB001", "Response to client must be a primitive");
+                throw new InvalidResponseReturnedToClientException(
+                    "RB001",
+                    "Response to client must be a primitive, received: " . gettype($this->data)
+                );
             }
-
-            if ($return) {
-                return (string)$this->data;
-            }
-
-            echo $this->data;
         }
 
-        return null;
-    }
-
-    public function jsonSerialize(): array
-    {
-        return [
-            'httpStatusCode' => $this->httpStatusCode->value ?? HttpStatusCode::HTTP_OK->value,
-            'contentType' => $this->contentType->value ?? $this->contentType ?? '',
-            'data' => $this->data
-        ];
+        return new Response(
+            $stream,
+            $this->httpStatusCode->value,
+            $this->headers,
+            $_SERVER["SERVER_PROTOCOL"] ?? 'HTTP/1.1',
+            $this->contentType instanceof MediaType ? $this->contentType->value : $this->contentType
+        );
     }
 }

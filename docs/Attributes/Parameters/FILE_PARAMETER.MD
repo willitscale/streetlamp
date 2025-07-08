@@ -4,10 +4,11 @@ The file parameter attribute binds a method parameter to a specified file input 
 
 ## Definition
 ```php
-#[FileParameter(readonly string|null $key, readonly ValidatorInterface[] $validators = [])]
+#[FileParameter(readonly string|null $key, bool $required = false, readonly ValidatorInterface[] $validators = [])]
 ```
 
 - `key` referrers to the file input identifier
+- `required` indicates whether the parameter is mandatory or not.
 - `validators` is an array of classes which implement `ValidatorInterface` and are used to validate and sanitize inputs.
 
 ## Targets
@@ -21,10 +22,11 @@ Code:
     #[Method(HttpMethod::POST)]
     #[Path('/file')]
     public function fileParameter(
-        #[FileParameter('file')] string $file
-    ): ResponseBuilder {
+        #[FileParameter('file')] File $file
+    ): ResponseInterface {
         return (new ResponseBuilder())
-            ->setHttpStatusCode(HttpStatusCode::HTTP_ACCEPTED);
+            ->setHttpStatusCode(HttpStatusCode::HTTP_ACCEPTED)
+            ->build();
     }
 ```
 

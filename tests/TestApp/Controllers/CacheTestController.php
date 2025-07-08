@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace willitscale\StreetlampTests\TestApp\Controllers;
 
+use Psr\Http\Message\ResponseInterface;
 use willitscale\Streetlamp\Attributes\Cache\Cache;
 use willitscale\Streetlamp\Attributes\Controller\RouteController;
 use willitscale\Streetlamp\Attributes\Parameter\PathParameter;
@@ -24,11 +25,12 @@ class CacheTestController
     #[Cache(new CacheRule())]
     public function simpleGetWithCacheRule(
         #[PathParameter('cacheId')] int $cacheId
-    ): ResponseBuilder {
-        return (new ResponseBuilder())
+    ): ResponseInterface {
+        return new ResponseBuilder()
             ->setData($cacheId)
             ->setContentType(MediaType::APPLICATION_JSON)
-            ->setHttpStatusCode(HttpStatusCode::HTTP_OK);
+            ->setHttpStatusCode(HttpStatusCode::HTTP_OK)
+            ->build();
     }
 
     #[Method(HttpMethod::GET)]
@@ -36,10 +38,11 @@ class CacheTestController
     #[Cache(new ParameterCacheRule("__{cacheId}__"))]
     public function simpleGetWithParameterCacheRule(
         #[PathParameter('cacheId')] int $cacheId
-    ): ResponseBuilder {
-        return (new ResponseBuilder())
+    ): ResponseInterface {
+        return new ResponseBuilder()
             ->setData($cacheId)
             ->setContentType(MediaType::APPLICATION_JSON)
-            ->setHttpStatusCode(HttpStatusCode::HTTP_OK);
+            ->setHttpStatusCode(HttpStatusCode::HTTP_OK)
+            ->build();
     }
 }

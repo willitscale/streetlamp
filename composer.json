@@ -15,20 +15,22 @@
             "name": "willitscale"
         }
     ],
-    "require-dev": {
-        "squizlabs/php_codesniffer": "*",
-        "phpunit/phpunit": "^11.0"
-    },
     "require": {
         "psr/log": "^3.0",
-        "php-di/php-di": "^6.4"
+        "psr/http-message": "^2.0",
+        "psr/http-server-middleware": "^1.0",
+        "php-di/php-di": "^7.0"
     },
     "config": {
         "platform": {
-            "php": "8.2.0"
+            "php": "8.4.0"
         }
     },
     "bin": [
         "streetlamp"
-    ]
+    ],
+    "require-dev": {
+        "phpunit/phpunit": "^12.2",
+        "squizlabs/php_codesniffer": "^3.13"
+    }
 }

@@ -9,7 +9,6 @@ use willitscale\Streetlamp\Attributes\DataBindings\ArrayMapInterface;
 use willitscale\Streetlamp\Attributes\Parameter\Parameter;
 use willitscale\Streetlamp\Attributes\Validators\ValidatorInterface;
 use willitscale\Streetlamp\Builders\RouterConfigBuilder;
-use willitscale\Streetlamp\Enums\HttpStatusCode;
 use willitscale\Streetlamp\Exceptions\Attributes\InvalidParameterAlreadyBoundException;
 use willitscale\Streetlamp\Exceptions\CacheFileDoesNotExistException;
 use willitscale\Streetlamp\Exceptions\CacheFileInvalidFormatException;
@@ -31,20 +30,16 @@ use ReflectionParameter;
 
 readonly class RouteBuilder
 {
-    const ROUTER_DATA_KEY = 'router.data';
+    public const string ROUTER_DATA_KEY = 'router.data';
 
     private RouterConfig|null $routerConfig;
 
-    /**
-     * @param RouterConfig|null $routerConfig
-     * @param LoggerInterface $logger
-     */
     public function __construct(
         RouterConfig|null $routerConfig = null,
         private LoggerInterface $logger = new NullLogger()
     ) {
         if (!isset($routerConfig)) {
-            $this->routerConfig = (new RouterConfigBuilder())
+            $this->routerConfig = new RouterConfigBuilder()
                 ->setConfigFile('router.conf.json')
                 ->build();
         } else {
@@ -52,21 +47,11 @@ readonly class RouteBuilder
         }
     }
 
-    /**
-     * @return RouterConfig
-     */
     public function getRouterConfig(): RouterConfig
     {
         return $this->routerConfig;
     }
 
-    /**
-     * @return Route[]
-     * @throws ComposerFileDoesNotExistException
-     * @throws ComposerFileInvalidFormatException
-     * @throws ReflectionException
-     * @throws InvalidParameterAlreadyBoundException
-     */
     public function getRoutes(): array
     {
         try {
@@ -78,11 +63,6 @@ readonly class RouteBuilder
         return $this->loadConfig();
     }
 
-    /**
-     * @return array
-     * @throws CacheFileDoesNotExistException
-     * @throws CacheFileInvalidFormatException
-     */
     private function loadCachedConfig(): array
     {
         $routerCacheHandler = $this->routerConfig->getRouteCacheHandler();
@@ -100,21 +80,11 @@ readonly class RouteBuilder
         return $routerCacheHandler->deserialize($routerSerializedFile);
     }
 
-    /**
-     * @return bool
-     */
     public function clearCachedConfig(): bool
     {
         return $this->routerConfig->getRouteCacheHandler()->clear(self::ROUTER_DATA_KEY);
     }
 
-    /**
-     * @return array
-     * @throws ComposerFileDoesNotExistException
-     * @throws ComposerFileInvalidFormatException
-     * @throws InvalidParameterAlreadyBoundException
-     * @throws ReflectionException
-     */
     private function loadConfig(): array
     {
         $composerJsonFilePath = $this->routerConfig->getComposerFile();
@@ -169,10 +139,6 @@ readonly class RouteBuilder
         return $routes;
     }
 
-    /**
-     * @param string $path
-     * @return bool
-     */
     private function isInExcludedDirectory(string $path): bool
     {
         $rootDirectory = $this->routerConfig->getRootDirectory() . DIRECTORY_SEPARATOR;
@@ -189,12 +155,6 @@ readonly class RouteBuilder
         return false;
     }
 
-    /**
-     * @param string $directory
-     * @param array $results
-     * @return array
-     * @throws InvalidApplicationDirectoryException
-     */
     private function getDirectoryContents(string $directory, array &$results = array()): array
     {
         if (!is_dir($directory)) {
@@ -220,9 +180,6 @@ readonly class RouteBuilder
     }
 
     /**
-     * @param string $root
-     * @param string $namespace
-     * @return array
      * @throws InvalidParameterAlreadyBoundException
      * @throws ReflectionException
      */
@@ -262,12 +219,8 @@ readonly class RouteBuilder
 
             $this->logger->debug($class . ' is being scanned ');
 
-            if (!empty($this->routerConfig->getGlobalPreFlights())) {
-                $controller->setPreFlight($this->routerConfig->getGlobalPreFlights());
-            }
-
-            if (!empty($this->routerConfig->getGlobalPostFlights())) {
-                $controller->setPostFlight($this->routerConfig->getGlobalPostFlights());
+            if (!empty($this->routerConfig->getGlobalMiddleware())) {
+                $controller->setMiddleware($this->routerConfig->getGlobalMiddleware());
             }
 
             foreach ($attributes as $attribute) {
@@ -293,13 +246,6 @@ readonly class RouteBuilder
         return $routes;
     }
 
-    /**
-     * @param Controller $controller
-     * @param ReflectionMethod $method
-     * @return Route
-     * @throws Exceptions\Attributes\InvalidParameterAlreadyBoundException
-     * @throws NoMethodRouteFoundException
-     */
     private function buildMethodRoutes(Controller $controller, ReflectionMethod $method): Route
     {
         if (0 === stripos('__', $method->getName())) {
@@ -322,12 +268,8 @@ readonly class RouteBuilder
             $route->setAccepts($controller->getAccepts());
         }
 
-        if (!empty($controller->getPreFlight())) {
-            $route->setPreFlight($controller->getPreFlight());
-        }
-
-        if (!empty($controller->getPostFlight())) {
-            $route->setPostFlight($controller->getPostFlight());
+        if (!empty($controller->getMiddleware())) {
+            $route->setMiddleware($controller->getMiddleware());
         }
 
         foreach ($attributes as $attribute) {
@@ -350,13 +292,6 @@ readonly class RouteBuilder
         return $route;
     }
 
-    /**
-     * @param Route $route
-     * @param ReflectionParameter $parameter
-     * @return void
-     * @throws InvalidParameterAlreadyBoundException
-     * @throws MethodParameterNotMappedException
-     */
     private function buildMethodParameters(Route $route, ReflectionParameter $parameter): void
     {
         $attributes = $parameter->getAttributes();

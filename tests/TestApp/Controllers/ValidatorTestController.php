@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace willitscale\StreetlampTests\TestApp\Controllers;
 
+use Psr\Http\Message\ResponseInterface;
 use willitscale\Streetlamp\Attributes\Controller\RouteController;
 use willitscale\Streetlamp\Attributes\Parameter\BodyParameter;
 use willitscale\Streetlamp\Attributes\Parameter\PathParameter;
@@ -20,39 +21,40 @@ use willitscale\StreetlampTests\TestApp\Validators\DataValidator;
 #[RouteController]
 class ValidatorTestController
 {
-    const DATA_DIR = __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'test.dat';
-
     #[Method(HttpMethod::GET)]
     #[Path('/validator/{validatorId}')]
     public function simpleGetWithPathParameterAndValidator(
         #[PathParameter('validatorId')] #[IntValidator(0, 100)] int $validatorId
-    ): ResponseBuilder {
-        return (new ResponseBuilder())
+    ): ResponseInterface {
+        return new ResponseBuilder()
             ->setData($validatorId)
             ->setContentType(MediaType::APPLICATION_JSON)
-            ->setHttpStatusCode(HttpStatusCode::HTTP_OK);
+            ->setHttpStatusCode(HttpStatusCode::HTTP_OK)
+            ->build();
     }
 
 
     #[Method(HttpMethod::POST)]
     #[Path('/validator/validation')]
     public function validateSingleInput(
-        #[BodyParameter([], self::DATA_DIR)] DataType $dataType
-    ): ResponseBuilder {
-        return (new ResponseBuilder())
+        #[BodyParameter(true, [])] DataType $dataType
+    ): ResponseInterface {
+        return new ResponseBuilder()
             ->setData($dataType)
             ->setContentType(MediaType::APPLICATION_JSON)
-            ->setHttpStatusCode(HttpStatusCode::HTTP_OK);
+            ->setHttpStatusCode(HttpStatusCode::HTTP_OK)
+            ->build();
     }
 
     #[Method(HttpMethod::POST)]
     #[Path('/validator/validations')]
     public function validateMultipleInputs(
-        #[BodyParameter([new DataValidator()], self::DATA_DIR)] array $dataTypes
-    ): ResponseBuilder {
-        return (new ResponseBuilder())
+        #[BodyParameter(true, [new DataValidator()])] array $dataTypes
+    ): ResponseInterface {
+        return new ResponseBuilder()
             ->setData($dataTypes)
             ->setContentType(MediaType::APPLICATION_JSON)
-            ->setHttpStatusCode(HttpStatusCode::HTTP_OK);
+            ->setHttpStatusCode(HttpStatusCode::HTTP_OK)
+            ->build();
     }
 }

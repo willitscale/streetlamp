@@ -1,4 +1,3 @@
-
 # Data Mapping
 
 Streetlamp supports object mapping with the help of the `DataBindingObjectInterface`.
@@ -33,12 +32,13 @@ class Person
     #[Accepts(MediaType::APPLICATION_JSON)]
     public function createPerson(
         #[BodyParameter] PersonModel $personModel
-    ): ResponseBuilder
+    ): ResponseInterface
     {
         return (new ResponseBuilder())
             ->setData($personModel)
             ->setHttpStatusCode(HttpStatusCode::HTTP_OK)
-            ->setContentType(MediaType::APPLICATION_JSON);
+            ->setContentType(MediaType::APPLICATION_JSON)
+            ->build();
     }
 }
 
@@ -96,15 +96,16 @@ This is done using the `JsonArray` attribute which can be applied to input param
     public function mapJsonArray(
         #[BodyParameter]
         #[JsonArray(DataType::class)] array $dataTypes
-    ): ResponseBuilder {
+    ): ResponseInterface {
         return (new ResponseBuilder())
             ->setData($dataTypes)
             ->setContentType(MediaType::APPLICATION_JSON)
-            ->setHttpStatusCode(HttpStatusCode::HTTP_OK);
+            ->setHttpStatusCode(HttpStatusCode::HTTP_OK)
+            ->build();
     }
 ```
 
-The `JsonArray` object defined must be a `JsonObject` and each object will apply the validation rules where applicable too.
+The `JsonArray` attribute must be used on a property that is also a `JsonObject`. Each object in the array will have validation rules applied where applicable.
 
 ### Model
 
@@ -113,11 +114,11 @@ The `JsonArray` object defined must be a `JsonObject` and each object will apply
 readonly class NestedDataType
 {
     public function __construct(
-      #[JsonArray(DataType::class, true)] public array $dataTypeArray,
-      #[JsonProperty(true)] public array $nativeArray
+        #[JsonArray(DataType::class, true)] public array $dataTypeArray,
+        #[JsonProperty(true)] public array $nativeArray
     ) {
     }
 }
 ```
 
-Only one of either the `JsonArray` or `JsonProperty` can be applied to a property with the `JsonArray` taking priority.
+Only one of either the `JsonArray` or `JsonProperty` attributes can be applied to a property. If both are present, `JsonArray` takes priority.

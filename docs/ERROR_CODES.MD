@@ -1,13 +1,14 @@
 # Error Codes
 
-There's a number of exceptions thrown within Streetlamp due to improper use. 
-This will highlight those exceptions and help you remedy them.
-All error codes and corresponding exceptions documented extend the exception `StreetLampRequestException` which is typically designed to trigger a failure to the client.
+There are a number of exceptions thrown within Streetlamp due to improper use.
+This document highlights those exceptions and helps you remedy them.
+All error codes and corresponding exceptions documented extend the exception `StreetLampRequestException`, which is
+typically designed to trigger a failure response to the client.
 
 | Code   | Thrown By         | Exception                                      | HTTP Status | Description                                                                                                                                                                                                        |
 |--------|-------------------|------------------------------------------------|-------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| RTB001 | `RouteBuilder`    | `ComposerFileDoesNotExistException`            | 500         | Cannot find the referenced composer file.                                                                                                                                                                          |
-| RTB002 | `RouteBuilder`    | `ComposerFileInvalidFormatException`           | 500         | Composer file specified is a directory and not a file.                                                                                                                                                             |
+| RTB001 | `RouteBuilder`    | `ComposerFileDoesNotExistException`            | 503         | Cannot find the referenced composer file.                                                                                                                                                                          |
+| RTB002 | `RouteBuilder`    | `ComposerFileInvalidFormatException`           | 503         | The composer file specified is invalid [JSON](https://www.json.org/json-en.html) or does not have a [PSR-4](https://www.php-fig.org/psr/psr-4/) configuration.                                                     |
 | RTB003 | `RouteBuilder`    | `ComposerFileInvalidFormatException`           | 500         | The composer file specified is invalid [JSON](https://www.json.org/json-en.html) or does not have a [PSR-4](https://www.php-fig.org/psr/psr-4/) configuration.                                                     |
 | RTB004 | `RouteBuilder`    | `InvalidApplicationDirectoryException`         | 500         | Application path specified is not a directory.                                                                                                                                                                     |
 | R001   | `Router`          | `InvalidRouteResponseException`                | 500         | The route method did not return a valid `ResponseBuilder` object.                                                                                                                                                  |
@@ -28,7 +29,15 @@ All error codes and corresponding exceptions documented extend the exception `St
 | PDP001 | `PostParameter`   | `MissingRequiredPostException`                 | 400         | Request is missing the expected post data.                                                                                                                                                                         |
 | QP001  | `QueryParameter`  | `MissingRequireQueryException`                 | 400         | Request is missing the expected query string parameter.                                                                                                                                                            |
 | MTD001 | `Method`          | `InvalidAttributeContextException`             | 500         | Method attribute bound to something other than a class method.                                                                                                                                                     |
-
+| ST001  | `Stream`          | `StreamResourceException`                      | 500         | Invalid stream resource. This could be due to a permission issue or the stream being closed.                                                                                                                       |
+| ST002  | `Stream`          | `StreamResourceException`                      | 500         | Unable to determine the position of the stream. This is likely because the resource does not support this capability.                                                                                              |
+| ST003  | `Stream`          | `StreamResourceException`                      | 500         | Unable to seek in the stream. This is likely because the resource does not support this capability.                                                                                                                |
+| ST004  | `Stream`          | `StreamResourceException`                      | 500         | The stream is not writable. This may occur if the stream was opened in read-only mode or the underlying resource does not support writing.                                                                         |
+| ST005  | `Stream`          | `StreamResourceException`                      | 500         | Unable to write to the stream. This may be due to a resource error or a write failure.                                                                                                                             |
+| ST006  | `Stream`          | `StreamResourceException`                      | 500         | The stream is not readable. This may occur if the stream was opened in write-only mode or the underlying resource does not support reading.                                                                        |
+| ST007  | `Stream`          | `StreamResourceException`                      | 500         | Unable to read from the stream. This may be due to a resource error or a read failure.                                                                                                                             |
+| ST008  | `Stream`          | `StreamResourceException`                      | 500         | Unable to get the contents of the stream. This may be due to a resource error or the stream being closed.                                                                                                          |
+| RI001  | `Uri`             | `UriException`                                 | 400         | Invalid URI provided                                                                                                                                                                                               |
 
 
 

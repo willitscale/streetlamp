@@ -6,21 +6,29 @@ namespace willitscale\Streetlamp\Attributes\Parameter;
 
 use Attribute;
 use willitscale\Streetlamp\Exceptions\Parameters\MissingRequiredFilesException;
+use willitscale\Streetlamp\Models\File;
+use willitscale\Streetlamp\Requests\ServerRequest;
 
 #[Attribute(Attribute::TARGET_PARAMETER)]
 class FileParameter extends Parameter
 {
-    /**
-     * @param array $pathMatches
-     * @return string|int|bool|float
-     * @throws MissingRequiredFilesException
-     */
-    public function value(array $pathMatches): string|int|bool|float
+    public function value(array $pathMatches, ServerRequest $request): File
     {
-        if (empty($_FILES[$this->key])) {
+        $files = $request->getUploadedFiles();
+
+        if (empty($files[$this->key])) {
             throw new MissingRequiredFilesException("FP001", "FileParameter missing expected value for " . $this->key);
         }
 
-        return $_FILES[$this->key];
+        $file = $files[$this->key];
+
+        return new File(
+            $file['name'] ?? '',
+            $file['path'] ?? '',
+            $file['type'] ?? '',
+            $file['tmp_name'] ?? '',
+            $file['error'] ?? UPLOAD_ERR_OK,
+            $file['size'] ?? 0
+        );
     }
 }

@@ -32,6 +32,10 @@ readonly class JsonProperty implements JsonAttribute
             );
         }
 
+        if (!isset($jsonValue->{$key})) {
+            return;
+        }
+
         $value = $jsonValue->{$key};
 
         $attributes = $property->getAttributes();

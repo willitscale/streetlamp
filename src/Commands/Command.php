@@ -6,6 +6,8 @@ namespace willitscale\Streetlamp\Commands;
 
 use Exception;
 use willitscale\Streetlamp\Builders\RouterConfigBuilder;
+use willitscale\Streetlamp\Requests\ServerRequest;
+use willitscale\Streetlamp\Requests\Uri;
 use willitscale\Streetlamp\RouteBuilder;
 
 abstract class Command
@@ -51,7 +53,17 @@ abstract class Command
 
     protected function buildRouteBuilderFromArguments(?array $arguments = []): RouteBuilder
     {
-        $routerConfig = new RouterConfigBuilder();
+        $request = new ServerRequest(
+            'GET',
+            new Uri('/'),
+            null,
+            [],
+            '1.1',
+            []
+        );
+
+        $routerConfig = new RouterConfigBuilder()
+            ->setRequest($request);
 
         if (0 < count($arguments)) {
             $routerConfig->setRootDirectory(array_shift($arguments));

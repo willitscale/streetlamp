@@ -38,6 +38,12 @@ class FileCacheHandler extends CacheHandler
 
     public function delete(string $key): bool
     {
-        return unlink($this->path . $key);
+        $filePath = $this->path . $key;
+        if (file_exists($filePath)) {
+            unlink($filePath);
+            return true;
+        }
+
+        return false;
     }
 }

@@ -6,16 +6,12 @@ namespace willitscale\Streetlamp\Attributes\Parameter;
 
 use Attribute;
 use willitscale\Streetlamp\Exceptions\Parameters\MissingRequiredPathException;
+use willitscale\Streetlamp\Requests\ServerRequest;
 
 #[Attribute(Attribute::TARGET_PARAMETER)]
 class PathParameter extends Parameter
 {
-    /**
-     * @param array $pathMatches
-     * @return string|int|bool|float
-     * @throws MissingRequiredPathException
-     */
-    public function value(array $pathMatches): string|int|bool|float
+    public function value(array $pathMatches, ServerRequest $request): string|int|bool|float
     {
         if (empty($pathMatches[$this->key])) {
             throw new MissingRequiredPathException("PP001", "Missing path parameter of $this->key");

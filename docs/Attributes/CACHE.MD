@@ -22,11 +22,12 @@ Code:
     #[Cache(new CacheRule())]
     public function simpleGetWithCacheRule(
         #[PathParameter('cacheId')] int $cacheId
-    ): ResponseBuilder {
+    ): ResponseInterface {
         return (new ResponseBuilder())
             ->setData($cacheId)
             ->setContentType(MediaType::APPLICATION_JSON)
-            ->setHttpStatusCode(HttpStatusCode::HTTP_OK);
+            ->setHttpStatusCode(HttpStatusCode::HTTP_OK)
+            ->build();
     }
 ```
 

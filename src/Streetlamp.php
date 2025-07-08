@@ -11,9 +11,9 @@ use willitscale\Streetlamp\Commands\Routes;
 
 class Streetlamp extends Command implements CommandInterface
 {
-    private const ERROR_MESSAGE = "Expected at least 1 argument in the form of COMMAND ...";
+    private const string ERROR_MESSAGE = "Expected at least 1 argument in the form of COMMAND ...";
 
-    private const AVAILABLE_COMMANDS = [
+    private const array AVAILABLE_COMMANDS = [
         'init' => 'Initialise a resource.',
         'routes' => 'List all available routes for the application.'
     ];

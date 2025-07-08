@@ -24,12 +24,13 @@ Code:
     #[Method(HttpMethod::GET)]
     #[Path('/example')]
     #[Accepts(MediaType::APPLICATION_JSON)]
-    public function acceptsExample(): ResponseBuilder
+    public function acceptsExample(): ResponseInterface
     {
         return (new ResponseBuilder())
             ->setData('accepted')
             ->setContentType(MediaType::APPLICATION_JSON)
-            ->setHttpStatusCode(HttpStatusCode::HTTP_OK);
+            ->setHttpStatusCode(HttpStatusCode::HTTP_OK)
+            ->build();
     }
 ```
 

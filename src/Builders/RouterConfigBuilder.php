@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace willitscale\Streetlamp\Builders;
 
+use Psr\Http\Message\ServerRequestInterface;
 use willitscale\Streetlamp\CacheHandlers\CacheHandler;
 use willitscale\Streetlamp\CacheHandlers\FileCacheHandler;
 use willitscale\Streetlamp\Models\RouterConfig;
-use willitscale\Streetlamp\Requests\HttpRequest;
-use willitscale\Streetlamp\Requests\RequestInterface;
+use willitscale\Streetlamp\Requests\ServerRequest;
 
 class RouterConfigBuilder
 {
@@ -19,9 +19,8 @@ class RouterConfigBuilder
     private array $excludedDirectories = ['tests'];
     private CacheHandler $routeCacheHandler;
     private CacheHandler $cacheHandler;
-    private RequestInterface $request;
-    private array $globalPreFlights;
-    private array $globalPostFlights;
+    private ServerRequestInterface $request;
+    private array $globalMiddleware;
 
     public function setConfigFile(string $configFile): RouterConfigBuilder
     {
@@ -89,21 +88,15 @@ class RouterConfigBuilder
         return $this;
     }
 
-    public function setRequest(RequestInterface $request): RouterConfigBuilder
+    public function setRequest(ServerRequestInterface $request): RouterConfigBuilder
     {
         $this->request = $request;
         return $this;
     }
 
-    public function setGlobalPreFlights(array $globalPreFlights): RouterConfigBuilder
+    public function setGlobalMiddleware(array $globalMiddleware): RouterConfigBuilder
     {
-        $this->globalPreFlights = $globalPreFlights;
-        return $this;
-    }
-
-    public function setGlobalPostFlights(array $globalPostFlights): RouterConfigBuilder
-    {
-        $this->globalPostFlights = $globalPostFlights;
+        $this->globalMiddleware = $globalMiddleware;
         return $this;
     }
 
@@ -118,11 +111,10 @@ class RouterConfigBuilder
             $this->routeCached,
             $this->rethrowExceptions,
             $this->excludedDirectories,
-            $this->request ?? new HttpRequest(),
+            $this->request ?? new ServerRequest(),
             $this->routeCacheHandler ?? new FileCacheHandler(),
             $this->cacheHandler ?? new FileCacheHandler(),
-            $this->globalPreFlights ?? [],
-            $this->globalPostFlights ?? []
+            $this->globalMiddleware ?? []
         );
     }
 }

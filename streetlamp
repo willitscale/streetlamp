@@ -8,7 +8,7 @@ use willitscale\Streetlamp\Streetlamp;
 
 try {
     array_shift($argv);
-    (new Container())
+    new Container()
         ->make(Streetlamp::class)
         ->command($argv);
 } catch (Exception $e) {

@@ -5,30 +5,20 @@ declare(strict_types=1);
 namespace willitscale\Streetlamp;
 
 use DI\Container;
-use DI\DependencyException;
-use DI\NotFoundException;
-use Exception;
-use willitscale\Streetlamp\Builders\ResponseBuilder;
+use Psr\Http\Message\ResponseInterface;
+use Throwable;
 use willitscale\Streetlamp\Enums\HttpStatusCode;
-use willitscale\Streetlamp\Exceptions\ComposerFileDoesNotExistException;
-use willitscale\Streetlamp\Exceptions\ComposerFileInvalidFormatException;
 use willitscale\Streetlamp\Exceptions\InvalidContentTypeException;
-use willitscale\Streetlamp\Exceptions\InvalidRouteResponseException;
 use willitscale\Streetlamp\Exceptions\NoValidRouteException;
 use willitscale\Streetlamp\Exceptions\StreetLampRequestException;
-use willitscale\Streetlamp\Models\Route;
-use willitscale\Streetlamp\Requests\RequestInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
-use ReflectionException;
+use willitscale\Streetlamp\Requests\Stream;
+use willitscale\Streetlamp\Responses\Response;
+use willitscale\Streetlamp\Responses\ResponseHandler;
 
 readonly class Router
 {
-    /**
-     * @param RouteBuilder $routeBuilder
-     * @param Container $container
-     * @param LoggerInterface $logger
-     */
     public function __construct(
         private RouteBuilder $routeBuilder = new RouteBuilder(),
         private Container $container = new Container(),
@@ -36,24 +26,11 @@ readonly class Router
     ) {
     }
 
-    /**
-     * @param bool $return
-     * @return string|null
-     * @throws ComposerFileDoesNotExistException
-     * @throws ComposerFileInvalidFormatException
-     * @throws DependencyException
-     * @throws InvalidContentTypeException
-     * @throws InvalidRouteResponseException
-     * @throws NoValidRouteException
-     * @throws NotFoundException
-     * @throws ReflectionException
-     * @throws StreetLampRequestException
-     */
-    public function route(bool $return = false): null|string
+    public function route(): ResponseInterface
     {
         $pathMatched = false;
-
         $request = $this->routeBuilder->getRouterConfig()->getRequest();
+        $stream = new Stream('php://temp', 'rw+');
 
         try {
             foreach ($this->routeBuilder->getRoutes() as $route) {
@@ -69,59 +46,14 @@ readonly class Router
                     continue;
                 }
 
-                $this->preFlight($route, $request);
-
-                $args = [];
-                foreach ($route->getParameters() as $key => $parameter) {
-                    $args[$key] = $parameter->getValue($matches);
-                }
-
-                $cacheRule = $route->getCacheRule();
-                $cacheHandler = $this->routeBuilder->getRouterConfig()->getCacheHandler();
-
-                if ($cacheRule) {
-                    $key = $cacheRule->getKey($route, $args);
-                    if ($cacheHandler->exists($key)) {
-                        $response = $cacheHandler->retrieveAndDeserialize($key);
-                        $this->postFlight($route, $response);
-                        return $response->build($return);
-                    }
-                }
-
-                $requestArgument = [
-                    'request' => $request
-                ];
-
-                $application = $this->container->make(
-                    $route->getClass(),
-                    $requestArgument
+                $responseHandler = new ResponseHandler(
+                    $route,
+                    $this->routeBuilder,
+                    $this->container,
+                    $matches
                 );
 
-                $response = $this->container->call(
-                    [
-                        $application,
-                        $route->getFunction()
-                    ],
-                    array_merge($requestArgument, $args)
-                );
-
-                if (!isset($response) || !($response instanceof ResponseBuilder)) {
-                    throw new InvalidRouteResponseException(
-                        'R001',
-                        'Call to ' . $route->getClass() . '::' .
-                        $route->getFunction() . ' did not return a Response object.'
-                    );
-                }
-
-                if ($cacheRule) {
-                    $key = $cacheRule->getKey($route, $args);
-                    $ttl = $cacheRule->getCacheTtl();
-                    $cacheHandler->serializeAndStore($key, $response, false, $ttl);
-                }
-
-                $this->postFlight($route, $response);
-
-                return $response->build($return);
+                return $responseHandler->handle($request);
             }
 
             if ($pathMatched) {
@@ -131,57 +63,38 @@ readonly class Router
                 );
             }
 
-            throw new NoValidRouteException('R003', 'No valid route found for ' . $request->getPath() . '.');
+            throw new NoValidRouteException('R003', 'No valid route found for ' . $request->getUri() . '.');
         } catch (StreetLampRequestException $StreetLampRequestException) {
             if ($this->routeBuilder->getRouterConfig()->isRethrowExceptions()) {
                 throw $StreetLampRequestException;
             } else {
-                http_response_code($StreetLampRequestException->getHttpStatusCode()->value);
+                $statusCode = $StreetLampRequestException->getHttpStatusCode();
                 $this->logger->error($StreetLampRequestException->getMessage());
+                $stream->write($StreetLampRequestException->getMessage());
             }
-        } catch (Exception $exception) {
+        } catch (Throwable $exception) {
             if ($this->routeBuilder->getRouterConfig()->isRethrowExceptions()) {
                 throw $exception;
             } else {
-                http_response_code(HttpStatusCode::HTTP_INTERNAL_SERVER_ERROR->value);
+                $statusCode = HttpStatusCode::HTTP_INTERNAL_SERVER_ERROR;
                 $this->logger->error($exception->getMessage());
+                $stream->write($exception->getMessage());
             }
         }
 
-        return null;
+        return new Response(
+            $stream,
+            $statusCode->value
+        );
     }
 
-    /**
-     * @param Route $route
-     * @param RequestInterface $request
-     * @return void
-     * @throws DependencyException
-     * @throws NotFoundException
-     */
-    private function preFlight(Route $route, RequestInterface $request): void
+    public function renderRoute(): void
     {
-        foreach ($route->getPreFlight() as $preFlight) {
-            $flight = $this->container->get($preFlight);
-            if ($flight instanceof Flight) {
-                $flight->pre($request);
-            }
+        $response = $this->route();
+        http_response_code($response->getStatusCode());
+        foreach ($response->getHeaders() as $name => $value) {
+            header("{$name}: {$value}");
         }
-    }
-
-    /**
-     * @param Route $route
-     * @param ResponseBuilder $response
-     * @return void
-     * @throws DependencyException
-     * @throws NotFoundException
-     */
-    private function postFlight(Route $route, ResponseBuilder $response): void
-    {
-        foreach ($route->getPostFlight() as $postFlight) {
-            $flight = $this->container->get($postFlight);
-            if ($flight instanceof Flight) {
-                $flight->post($response);
-            }
-        }
+        echo $response->getBody();
     }
 }

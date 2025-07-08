@@ -5,36 +5,50 @@ declare(strict_types=1);
 namespace willitscale\StreetlampTests\Attributes\Parameter;
 
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use willitscale\Streetlamp\Attributes\Parameter\PostParameter;
 use willitscale\Streetlamp\Attributes\Validators\FilterVarsValidator;
 use willitscale\Streetlamp\Exceptions\Parameters\MissingRequiredPostException;
-use PHPUnit\Framework\TestCase;
 
-class PostParameterTest extends TestCase
+class PostParameterTest extends ParameterTestCase
 {
+    #[Test]
     #[DataProvider('validValues')]
     public function testAValueIsExtractedCorrectlyFromPost(
         string $key,
+        bool $required,
         string $inputValue,
         bool|int|float|string $expectedValue,
         string $dataType,
         array $validators
     ): void {
-        $_POST[$key] = $inputValue;
-        $postArgument = new PostParameter($key, $validators);
+        $request = $this->createServerRequest(
+            null,
+            [],
+            [],
+            [],
+            [],
+            [],
+            [
+                $key => $inputValue
+            ]
+        );
+        $postArgument = new PostParameter($key, $required, $validators);
         $postArgument->setType($dataType);
         $returnedValue = $postArgument->getValue([
             $key => $inputValue
-        ]);
+        ], $request);
         $this->assertEquals($expectedValue, $returnedValue);
         unset($_POST[$key]);
     }
 
+    #[Test]
     public function testThatAnExceptionIsThrownWhenAMissingPostIsSpecified(): void
     {
+        $request = $this->createServerRequest();
         $this->expectException(MissingRequiredPostException::class);
-        $postArgument = new PostParameter('string', []);
-        $postArgument->getValue([]);
+        $postArgument = new PostParameter('string', true, []);
+        $postArgument->getValue([], $request);
     }
 
     public static function validValues(): array
@@ -42,6 +56,7 @@ class PostParameterTest extends TestCase
         return [
             'it should set a string value and extract a matching value' => [
                 'key' => 'test',
+                'required' => true,
                 'inputValue' => 'test',
                 'expectedValue' => 'test',
                 'dataType' => 'string',
@@ -49,6 +64,7 @@ class PostParameterTest extends TestCase
             ],
             'it should set an int value and extract a matching value' => [
                 'key' => 'test',
+                'required' => true,
                 'inputValue' => '321',
                 'expectedValue' => 321,
                 'dataType' => 'int',
@@ -56,6 +72,7 @@ class PostParameterTest extends TestCase
             ],
             'it should set a float value and extract a matching value' => [
                 'key' => 'test',
+                'required' => true,
                 'inputValue' => '1.23',
                 'expectedValue' => 1.23,
                 'dataType' => 'float',
@@ -63,6 +80,7 @@ class PostParameterTest extends TestCase
             ],
             'it should set a bool value and extract a matching value' => [
                 'key' => 'test',
+                'required' => true,
                 'inputValue' => '1',
                 'expectedValue' => true,
                 'dataType' => 'bool',
@@ -70,6 +88,7 @@ class PostParameterTest extends TestCase
             ],
             'it should set the a string value and extract a numeric value' => [
                 'key' => 'test',
+                'required' => true,
                 'inputValue' => '123test',
                 'expectedValue' => 123,
                 'dataType' => 'int',

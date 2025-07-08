@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace willitscale\Streetlamp\Models;
 
 use willitscale\Streetlamp\Enums\MediaType;
-use willitscale\Streetlamp\Flight;
 
 abstract class Context
 {
@@ -13,39 +12,27 @@ abstract class Context
         protected string $class,
         protected string|null $path = null,
         protected string|null $accepts = null,
-        protected array $preFlight = [],
-        protected array $postFlight = []
+        protected array $middleware = []
     ) {
     }
 
-    /**
-     * @return string
-     */
     public function getClass(): string
     {
         return $this->class;
     }
 
-    /**
-     * @param string $class
-     */
-    public function setClass(string $class): void
+    public function setClass(string $class): self
     {
         $this->class = $class;
+        return $this;
     }
 
-    /**
-     * @return string|null
-     */
     public function getPath(): ?string
     {
         return $this->path;
     }
 
-    /**
-     * @param string $path
-     */
-    public function setPath(string $path): void
+    public function setPath(string $path): self
     {
         $this->path = str_replace('//', '/', $path);
         $this->path = preg_replace(
@@ -53,82 +40,46 @@ abstract class Context
             '(?<\1>[^/]+)',
             $this->path
         );
+        return $this;
     }
 
-    /**
-     * @param string $path
-     * @return void
-     */
-    public function appendPath(string $path): void
+    public function appendPath(string $path): self
     {
         $this->setPath($this->path . $path);
+        return $this;
     }
 
-    /**
-     * @return string|null
-     */
     public function getAccepts(): ?string
     {
         return $this->accepts;
     }
 
-    /**
-     * @param string|MediaType $accepts
-     */
-    public function setAccepts(string|MediaType $accepts): void
+    public function setAccepts(string|MediaType $accepts): self
     {
         $this->accepts = ($accepts instanceof MediaType) ? $accepts->value : $accepts;
+        return $this;
     }
 
-    /**
-     * @return array
-     */
-    public function getPreFlight(): array
+    public function getMiddleware(): array
     {
-        return $this->preFlight;
+        return $this->middleware;
     }
 
-    /**
-     * @param array $preFlight
-     */
-    public function setPreFlight(array $preFlight): void
+    public function setMiddleware(array $middleware): void
     {
-        $this->preFlight = $preFlight;
+        $this->middleware = $middleware;
     }
 
-    /**
-     * @param string $flight
-     */
-    public function addPreFlight(string $flight): void
+    public function addMiddleware(string $middleware): self
     {
-        if (!in_array($flight, $this->preFlight)) {
-            $this->preFlight [] = $flight;
+        if (!in_array($middleware, $this->middleware)) {
+            $this->middleware [] = $middleware;
         }
+        return $this;
     }
 
-    /**
-     * @return array
-     */
-    public function getPostFlight(): array
+    public function popMiddleware(): string
     {
-        return $this->postFlight;
-    }
-
-    /**
-     * @param array $postFlight
-     */
-    public function setPostFlight(array $postFlight): void
-    {
-        $this->postFlight = $postFlight;
-    }
-
-    /**
-     * @param string $flight
-     */
-    public function addPostFlight(string $flight): void
-    {
-        if (!in_array($flight, $this->postFlight)) {
-            $this->postFlight [] = $flight;
-        }
+        return array_shift($this->middleware);
     }
 }
