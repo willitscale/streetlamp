@@ -67,17 +67,17 @@ readonly class RouteBuilder
     {
         $routerCacheHandler = $this->routerConfig->getRouteCacheHandler();
 
-        if (!$this->routerConfig->isRouteCached() || !$routerCacheHandler->exists(self::ROUTER_DATA_KEY)) {
+        if (!$this->routerConfig->isRouteCached() || !$routerCacheHandler->has(self::ROUTER_DATA_KEY)) {
             throw new CacheFileDoesNotExistException('Cannot load cached config');
         }
 
-        $routerSerializedFile = $routerCacheHandler->retrieve(self::ROUTER_DATA_KEY);
+        $routerSerializedFile = $routerCacheHandler->get(self::ROUTER_DATA_KEY);
 
         if (!$routerSerializedFile) {
             throw new CacheFileInvalidFormatException('Cannot load cached config');
         }
 
-        return $routerCacheHandler->deserialize($routerSerializedFile);
+        return $routerSerializedFile;
     }
 
     public function clearCachedConfig(): bool
@@ -130,10 +130,9 @@ readonly class RouteBuilder
             );
         }
 
-        $this->routerConfig->getRouteCacheHandler()->serializeAndStore(
+        $this->routerConfig->getRouteCacheHandler()->set(
             self::ROUTER_DATA_KEY,
-            $routes,
-            !$this->getRouterConfig()->isRouteCached()
+            $routes
         );
 
         return $routes;
@@ -179,10 +178,6 @@ readonly class RouteBuilder
         return $results;
     }
 
-    /**
-     * @throws InvalidParameterAlreadyBoundException
-     * @throws ReflectionException
-     */
     private function buildRoutes(string $root, string $namespace): array
     {
         $structure = [];

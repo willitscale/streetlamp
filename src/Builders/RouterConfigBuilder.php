@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace willitscale\Streetlamp\Builders;
 
 use Psr\Http\Message\ServerRequestInterface;
-use willitscale\Streetlamp\CacheHandlers\CacheHandler;
+use Psr\SimpleCache\CacheInterface;
 use willitscale\Streetlamp\CacheHandlers\FileCacheHandler;
 use willitscale\Streetlamp\Models\RouterConfig;
 use willitscale\Streetlamp\Requests\ServerRequest;
@@ -17,8 +17,8 @@ class RouterConfigBuilder
     private bool $routeCached = false;
     private bool $rethrowExceptions = false;
     private array $excludedDirectories = ['tests'];
-    private CacheHandler $routeCacheHandler;
-    private CacheHandler $cacheHandler;
+    private CacheInterface $routeCacheHandler;
+    private CacheInterface $cacheHandler;
     private ServerRequestInterface $request;
     private array $globalMiddleware;
 
@@ -76,13 +76,13 @@ class RouterConfigBuilder
         return $this;
     }
 
-    public function setRouteCacheHandler(CacheHandler $routeCacheHandler): RouterConfigBuilder
+    public function setRouteCacheHandler(CacheInterface $routeCacheHandler): RouterConfigBuilder
     {
         $this->routeCacheHandler = $routeCacheHandler;
         return $this;
     }
 
-    public function setCacheHandler($cacheHandler): RouterConfigBuilder
+    public function setCacheHandler(CacheInterface $cacheHandler): RouterConfigBuilder
     {
         $this->routeCacheHandler = $cacheHandler;
         return $this;

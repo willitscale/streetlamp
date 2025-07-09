@@ -52,7 +52,7 @@ require_once 'vendor/autoload.php';
 
 use willitscale\Streetlamp\Router;
 
-(new Router())->route();
+new Router()->route();
 ```
 
 This will use a simple out of the box configuration, if you require any customisation this can be achieved with the `RouterConfig`.
@@ -108,7 +108,7 @@ class MyRouteClass
     #[Method(HttpMethod::GET)]
     public function simpleGet(): ResponseInterface
     {
-        return (new ResponseBuilder())
+        return new ResponseBuilder()
             ->setData('world')
             ->setHttpStatusCode(HttpStatusCode::HTTP_OK)
             ->build();
@@ -122,19 +122,19 @@ You could also apply the `#[Path('/hello')]` attribute to the `RouteController` 
 
 | PSR Standard | Description                 | Streetlamp Compliance |
 |--------------|-----------------------------|-----------------------|
-| [PSR-1](https://www.php-fig.org/psr/psr-1/)        | Basic Coding Standard       | Yes                   |
-| [PSR-3](https://www.php-fig.org/psr/psr-3/)        | Logger Interface            | Yes                   |
-| [PSR-4](https://www.php-fig.org/psr/psr-4/)        | Autoloading Standard        | Yes                   |
-| [PSR-6](https://www.php-fig.org/psr/psr-6/)        | Caching Interface           | TODO                  |
-| [PSR-7](https://www.php-fig.org/psr/psr-7/)        | HTTP Message Interface      | Yes                   |
-| [PSR-11](https://www.php-fig.org/psr/psr-11/)      | Container Interface         | No                    |
-| [PSR-12](https://www.php-fig.org/psr/psr-12/)      | Extended Coding Style Guide | Yes                   |
-| [PSR-13](https://www.php-fig.org/psr/psr-13/)      | Hypermedia Links            | No                    |
-| [PSR-14](https://www.php-fig.org/psr/psr-14/)      | Event Dispatcher            | No                    |
-| [PSR-15](https://www.php-fig.org/psr/psr-15/)      | HTTP Handlers               | Yes                   |
-| [PSR-16](https://www.php-fig.org/psr/psr-16/)      | Simple Caching              | TODO                  |
-| [PSR-17](https://www.php-fig.org/psr/psr-17/)      | HTTP Factories              | No                    |
-| [PSR-18](https://www.php-fig.org/psr/psr-18/)      | HTTP Client                 | No                    |
+| [PSR-1](https://www.php-fig.org/psr/psr-1/)        | Basic Coding Standard       | ✅                   |
+| [PSR-3](https://www.php-fig.org/psr/psr-3/)        | Logger Interface            | ✅                   |
+| [PSR-4](https://www.php-fig.org/psr/psr-4/)        | Autoloading Standard        | ✅                   |
+| [PSR-6](https://www.php-fig.org/psr/psr-6/)        | Caching Interface           | ❌                  |
+| [PSR-7](https://www.php-fig.org/psr/psr-7/)        | HTTP Message Interface      | ✅                   |
+| [PSR-11](https://www.php-fig.org/psr/psr-11/)      | Container Interface         | ❌                    |
+| [PSR-12](https://www.php-fig.org/psr/psr-12/)      | Extended Coding Style Guide | ✅                   |
+| [PSR-13](https://www.php-fig.org/psr/psr-13/)      | Hypermedia Links            | ❌                    |
+| [PSR-14](https://www.php-fig.org/psr/psr-14/)      | Event Dispatcher            | ❌                    |
+| [PSR-15](https://www.php-fig.org/psr/psr-15/)      | HTTP Handlers               | ✅                   |
+| [PSR-16](https://www.php-fig.org/psr/psr-16/)      | Simple Caching              | ✅                  |
+| [PSR-17](https://www.php-fig.org/psr/psr-17/)      | HTTP Factories              | ❌                    |
+| [PSR-18](https://www.php-fig.org/psr/psr-18/)      | HTTP Client                 | ❌                    |
 
 
 ## 5. Further Reading

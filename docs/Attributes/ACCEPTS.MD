@@ -26,7 +26,7 @@ Code:
     #[Accepts(MediaType::APPLICATION_JSON)]
     public function acceptsExample(): ResponseInterface
     {
-        return (new ResponseBuilder())
+        return new ResponseBuilder()
             ->setData('accepted')
             ->setContentType(MediaType::APPLICATION_JSON)
             ->setHttpStatusCode(HttpStatusCode::HTTP_OK)

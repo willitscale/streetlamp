@@ -34,7 +34,7 @@ class Person
         #[BodyParameter] PersonModel $personModel
     ): ResponseInterface
     {
-        return (new ResponseBuilder())
+        return new ResponseBuilder()
             ->setData($personModel)
             ->setHttpStatusCode(HttpStatusCode::HTTP_OK)
             ->setContentType(MediaType::APPLICATION_JSON)
@@ -97,7 +97,7 @@ This is done using the `JsonArray` attribute which can be applied to input param
         #[BodyParameter]
         #[JsonArray(DataType::class)] array $dataTypes
     ): ResponseInterface {
-        return (new ResponseBuilder())
+        return new ResponseBuilder()
             ->setData($dataTypes)
             ->setContentType(MediaType::APPLICATION_JSON)
             ->setHttpStatusCode(HttpStatusCode::HTTP_OK)

@@ -34,7 +34,7 @@ The config can also be set programmatically too using the `RouterConfigBuilder` 
 ### RouterConfigBuilder
 
 ```php
-        $routerConfig = (new RouterConfigBuilder())
+        $routerConfig = new RouterConfigBuilder()
             ->setRootDirectory(__DIR__)
             ->setComposerFile(__DIR__ . DIRECTORY_SEPARATOR . 'composer.json')
             ->setRouteCached(false)

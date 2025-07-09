@@ -24,7 +24,7 @@ Code:
     public function postParameter(
         #[FileParameter('name')] string $name
     ): ResponseInterface {
-        return (new ResponseBuilder())
+        return new ResponseBuilder()
             ->setData($name)
             ->setHttpStatusCode(HttpStatusCode::HTTP_CREATED)
             ->build();

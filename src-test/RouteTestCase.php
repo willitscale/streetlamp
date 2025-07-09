@@ -6,8 +6,8 @@ namespace willitscale\StreetlampTest;
 
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\StreamInterface;
+use Psr\SimpleCache\CacheInterface;
 use willitscale\Streetlamp\Builders\RouterConfigBuilder;
-use willitscale\Streetlamp\CacheHandlers\CacheHandler;
 use willitscale\Streetlamp\CacheHandlers\NullCacheHandler;
 use willitscale\Streetlamp\Requests\ServerRequest;
 use willitscale\Streetlamp\Requests\Uri;
@@ -29,7 +29,7 @@ class RouteTestCase extends TestCase
         array $postParams = [],
         array $filesParams = [],
         string $protocolVersion = '1.1',
-        CacheHandler $routeCacheHandler = new NullCacheHandler(),
+        CacheInterface $routeCacheHandler = new NullCacheHandler(),
     ): Router {
         $routerConfig = new RouterConfigBuilder()
             ->setComposerFile($composerFile)

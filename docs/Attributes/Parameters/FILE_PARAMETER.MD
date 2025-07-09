@@ -24,7 +24,7 @@ Code:
     public function fileParameter(
         #[FileParameter('file')] File $file
     ): ResponseInterface {
-        return (new ResponseBuilder())
+        return new ResponseBuilder()
             ->setHttpStatusCode(HttpStatusCode::HTTP_ACCEPTED)
             ->build();
     }

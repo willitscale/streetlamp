@@ -24,7 +24,7 @@ Code:
     public function headerParameter(
         #[FileParameter('header')] string $header
     ): ResponseInterface {
-        return (new ResponseBuilder())
+        return new ResponseBuilder()
             ->setHttpStatusCode(HttpStatusCode::HTTP_ACCEPTED)
             ->build();
     }
