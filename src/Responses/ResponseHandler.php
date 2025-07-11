@@ -114,12 +114,21 @@ readonly class ResponseHandler implements RequestHandlerInterface
 
         $key = $cacheRule->getKey($this->route, $args);
 
-        if (!$cacheHandler->exists($key)) {
+        if (!$cacheHandler->has($key)) {
             // TODO: this should be a custom exception
             throw new Exception('Cache key does not exist: ' . $key);
         }
 
         $data = $cacheHandler->get($key);
+
+        // Instance of check here
+        if (!isset($data['response']) || !($data['response'] instanceof ResponseInterface)) {
+            unset($data['response']);
+            throw new InvalidRouteResponseException(
+                'R004',
+                'Cached response for key ' . $key . ' is not a valid Response object.'
+            );
+        }
 
         $stream = new Stream('php://temp', 'rw+');
         $stream->write($data['contents']);

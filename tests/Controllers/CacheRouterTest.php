@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace willitscale\StreetlampTests\Controllers;
 
 use PHPUnit\Framework\Attributes\Test;
+use willitscale\Streetlamp\CacheHandlers\FileCacheHandler;
 use willitscale\Streetlamp\Enums\MediaType;
 
 class CacheRouterTest extends ControllerTestCase
@@ -15,16 +16,25 @@ class CacheRouterTest extends ControllerTestCase
         $expectedCacheValue = 99;
         $unexpectedCacheValue = 23;
 
+        $cacheHandler = new FileCacheHandler();
+
         $router = $this->setupRouter(
             'GET',
             '/cache/' . $expectedCacheValue,
             $this->getTestRoot(),
             $this->getComposerTestFile(),
             null,
-            ['Content-Type' => MediaType::TEXT_HTML->value]
+            ['Content-Type' => MediaType::TEXT_HTML->value],
+            [],
+            [],
+            [],
+            [],
+            [],
+            '1.1',
+            $cacheHandler
         );
 
-        $router->route();
+        $response = $router->route();
 
         $router = $this->setupRouter(
             'GET',
@@ -32,7 +42,14 @@ class CacheRouterTest extends ControllerTestCase
             $this->getTestRoot(),
             $this->getComposerTestFile(),
             null,
-            ['Content-Type' => MediaType::TEXT_HTML->value]
+            ['Content-Type' => MediaType::TEXT_HTML->value],
+            [],
+            [],
+            [],
+            [],
+            [],
+            '1.1',
+            $cacheHandler
         );
 
         $response = $router->route()->getBody()->getContents();
