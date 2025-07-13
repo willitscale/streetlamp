@@ -11,7 +11,7 @@ use willitscale\Streetlamp\Requests\ServerRequest;
 
 readonly class RouterConfig
 {
-    public const APPLICATION_DIRECTORY = '.' . DIRECTORY_SEPARATOR;
+    public const string APPLICATION_DIRECTORY = '.' . DIRECTORY_SEPARATOR;
 
     public function __construct(
         private string $rootDirectory = self::APPLICATION_DIRECTORY,

@@ -71,13 +71,13 @@ readonly class RouteBuilder
             throw new CacheFileDoesNotExistException('Cannot load cached config');
         }
 
-        $routerSerializedFile = $routerCacheHandler->get(self::ROUTER_DATA_KEY);
+        $routerFile = $routerCacheHandler->get(self::ROUTER_DATA_KEY);
 
-        if (!$routerSerializedFile) {
+        if (!$routerFile) {
             throw new CacheFileInvalidFormatException('Cannot load cached config');
         }
 
-        return $routerSerializedFile;
+        return $routerFile;
     }
 
     public function clearCachedConfig(): bool
