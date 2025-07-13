@@ -10,8 +10,8 @@ use willitscale\Streetlamp\Commands\Routes\Cache\Clear;
 
 class Cache extends Command implements CommandInterface
 {
-    private const ERROR_MESSAGE = "Missing operation for cache action:";
-    private const AVAILABLE_COMMANDS = [
+    private const string ERROR_MESSAGE = "Missing operation for cache action:";
+    private const array AVAILABLE_COMMANDS = [
         'clear' => 'Clear the route cache.'
     ];
 

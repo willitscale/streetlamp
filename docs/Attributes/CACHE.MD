@@ -23,7 +23,7 @@ Code:
     public function simpleGetWithCacheRule(
         #[PathParameter('cacheId')] int $cacheId
     ): ResponseInterface {
-        return (new ResponseBuilder())
+        return new ResponseBuilder()
             ->setData($cacheId)
             ->setContentType(MediaType::APPLICATION_JSON)
             ->setHttpStatusCode(HttpStatusCode::HTTP_OK)

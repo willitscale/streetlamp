@@ -9,9 +9,9 @@ use willitscale\Streetlamp\Commands\Routes\Lists;
 
 class Routes extends Command implements CommandInterface
 {
-    private const ERROR_MESSAGE = "Missing action for routes command:";
+    private const string ERROR_MESSAGE = "Missing action for routes command:";
 
-    private const AVAILABLE_COMMANDS = [
+    private const array AVAILABLE_COMMANDS = [
         'lists' => 'Lists all available routes.',
         'cache' => 'Route cache operations.'
     ];

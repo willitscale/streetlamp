@@ -8,7 +8,7 @@ use willitscale\Streetlamp\Commands\CommandInterface;
 
 class Apache implements CommandInterface
 {
-    const ROOT_DIR = __DIR__ . '/../../../../';
+    public const string ROOT_DIR = __DIR__ . '/../../../../';
 
     public function command(?array $arguments = []): void
     {

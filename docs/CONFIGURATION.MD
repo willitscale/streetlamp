@@ -34,7 +34,7 @@ The config can also be set programmatically too using the `RouterConfigBuilder` 
 ### RouterConfigBuilder
 
 ```php
-        $routerConfig = (new RouterConfigBuilder())
+        $routerConfig = new RouterConfigBuilder()
             ->setRootDirectory(__DIR__)
             ->setComposerFile(__DIR__ . DIRECTORY_SEPARATOR . 'composer.json')
             ->setRouteCached(false)
@@ -97,9 +97,9 @@ Similar to the `Request`, this can be fully customized by implementing your own 
 The cache handler allows you to define how responses from routes are cached.
 By default, this uses the `FileCacheHandler`, which writes the cache to your system's temporary directory.
 There is a built-in `NullCacheHandler` if you want to completely disable all caching.
-Similar to the `Request`, this can be fully customized by implementing your own as long as it extends the `RouteHandler` abstract class.
+Similar to the `Request`, this can be fully customized by implementing your own as long as it implements the [PSR-16 Simple Cache](https://www.php-fig.org/psr/psr-16/) interface.
 
 ### Global Middleware
 
 Global middleware are actions to be executed on every single route.
-All middleware classes defined must implement the `MiddlewareInterface` interface.
+All middleware classes defined must implement the [PSR-15 MiddlewareInterface](https://www.php-fig.org/psr/psr-15/) standard.

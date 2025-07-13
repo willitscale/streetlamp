@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace willitscale\Streetlamp\Responses;
 
 use DI\Container;
+use Exception;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -36,7 +37,7 @@ readonly class ResponseHandler implements RequestHandlerInterface
 
         // TODO: Custom exception for this
         if (!($middleware instanceof MiddlewareInterface)) {
-            throw new \Exception("Middleware must implement Psr\Http\Server\MiddlewareInterface");
+            throw new Exception("Middleware must implement Psr\Http\Server\MiddlewareInterface");
         }
 
         return $middleware->process($request, $this);
@@ -106,19 +107,28 @@ readonly class ResponseHandler implements RequestHandlerInterface
 
         if (is_null($cacheRule)) {
             // TODO: this should be a custom exception
-            throw new \Exception('No cache rule enabled');
+            throw new Exception('No cache rule enabled');
         }
 
         $cacheHandler = $this->routeBuilder->getRouterConfig()->getCacheHandler();
 
         $key = $cacheRule->getKey($this->route, $args);
 
-        if (!$cacheHandler->exists($key)) {
+        if (!$cacheHandler->has($key)) {
             // TODO: this should be a custom exception
-            throw new \Exception('Cache key does not exist: ' . $key);
+            throw new Exception('Cache key does not exist: ' . $key);
         }
 
-        $data = $cacheHandler->retrieveAndDeserialize($key);
+        $data = $cacheHandler->get($key);
+
+        // Instance of check here
+        if (!isset($data['response']) || !($data['response'] instanceof ResponseInterface)) {
+            unset($data['response']);
+            throw new InvalidRouteResponseException(
+                'R004',
+                'Cached response for key ' . $key . ' is not a valid Response object.'
+            );
+        }
 
         $stream = new Stream('php://temp', 'rw+');
         $stream->write($data['contents']);
@@ -132,7 +142,7 @@ readonly class ResponseHandler implements RequestHandlerInterface
 
         if (is_null($cacheRule)) {
             // TODO: this should be a custom exception
-            throw new \Exception('No cache rule enabled');
+            throw new Exception('No cache rule enabled');
         }
 
         $cacheHandler = $this->routeBuilder->getRouterConfig()->getCacheHandler();
@@ -145,6 +155,6 @@ readonly class ResponseHandler implements RequestHandlerInterface
             'contents' => $response->getBody()->getContents(),
         ];
 
-        $cacheHandler->serializeAndStore($key, $data, false, $ttl);
+        $cacheHandler->set($key, $data, $ttl);
     }
 }

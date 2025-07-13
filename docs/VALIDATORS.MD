@@ -31,7 +31,7 @@ FilterVarsValidator(int $filter, int|array $options = 0);
         #[PathParameter('validatorId')] 
         #[MustBeDivisibleByThreeValidator] int $validatorId
     ): ResponseInterface {
-        return (new ResponseBuilder())
+        return new ResponseBuilder()
             ->setData($validatorId)
             ->setHttpStatusCode(HttpStatusCode::HTTP_OK)
             ->build();

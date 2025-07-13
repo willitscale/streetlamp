@@ -24,7 +24,7 @@ Code:
     public function queryParameter(
         #[FileParameter('age')] int $age
     ): ResponseInterface {
-        return (new ResponseBuilder())
+        return new ResponseBuilder()
             ->setData($age)
             ->setHttpStatusCode(HttpStatusCode::HTTP_OK)
             ->build();

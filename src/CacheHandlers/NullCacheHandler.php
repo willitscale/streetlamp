@@ -4,30 +4,46 @@ declare(strict_types=1);
 
 namespace willitscale\Streetlamp\CacheHandlers;
 
-class NullCacheHandler extends CacheHandler
+use DateInterval;
+use Psr\SimpleCache\CacheInterface;
+
+class NullCacheHandler implements CacheInterface
 {
-    public function serialize(mixed $data): null
+    public function get(string $key, mixed $default = null): mixed
     {
         return null;
     }
 
-    public function deserialize(string $data): mixed
+    public function set(string $key, mixed $value, DateInterval|int|null $ttl = null): bool
     {
-        return [];
+        return true;
     }
 
-    public function store(string $key, string $data, int $ttl = 0): void
+    public function clear(): bool
     {
+        return true;
     }
 
-    public function retrieve(string $key): null
+    public function getMultiple(iterable $keys, mixed $default = null): iterable
     {
-        return null;
+        foreach ($keys as $key) {
+            yield $key => null;
+        }
     }
 
-    public function exists(string $key): bool
+    public function setMultiple(iterable $values, DateInterval|int|null $ttl = null): bool
     {
-        return false;
+        return true;
+    }
+
+    public function deleteMultiple(iterable $keys): bool
+    {
+        return true;
+    }
+
+    public function has(string $key): bool
+    {
+        return true;
     }
 
     public function delete(string $key): bool

@@ -35,7 +35,7 @@ class MyClass {
         #[PathParameter('resourceId')] int $resourceId, 
         #[PathParameter('subresourceId')] string $subresourceId
     ): ResponseInterface {
-        return (new ResponseBuilder())
+        return new ResponseBuilder()
             ->setData([
                 'resource' => $resourceId, 
                 'subresource' => $subresourceId

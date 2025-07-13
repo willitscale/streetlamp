@@ -24,7 +24,7 @@ Code:
     public function pathParameter(
         #[FileParameter('paramId')] int $paramId
     ): ResponseInterface {
-        return (new ResponseBuilder())
+        return new ResponseBuilder()
             ->setData($paramId)
             ->setHttpStatusCode(HttpStatusCode::HTTP_OK)
             ->build();

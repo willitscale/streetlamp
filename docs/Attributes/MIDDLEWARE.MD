@@ -27,9 +27,37 @@ class MyClass {
     #[Middleware(MyApp\XmlMapper::class)]
     public function middlewareExample(): ResponseInterface
     {
-        return (new ResponseBuilder())
+        return new ResponseBuilder()
             ->setHttpStatusCode(HttpStatusCode::HTTP_NO_CONTENT)
             ->build();
+    }
+}
+```
+
+Middleware Example:
+```php
+namespace MyApp;
+
+use Psr\Http\Server\MiddlewareInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Log\LoggerInterface;
+
+readonly class Logger implements MiddlewareInterface
+{
+    public function __construct(
+        private LoggerInterface $logger
+    ) {
+    }
+
+    public function process(
+        ServerRequestInterface $request, 
+        RequestHandlerInterface $handler
+    ): ResponseInterface {
+        $this->logger->info('Logging preflight event');
+        $response = $handler->handle($request);
+        $this->logger->info('Logging postflight event');
+        return $response;
     }
 }
 ```

@@ -8,8 +8,8 @@ use willitscale\Streetlamp\Commands\Init\Docker;
 
 class Init extends Command implements CommandInterface
 {
-    private const ERROR_MESSAGE = "Missing action for init command:";
-    private const AVAILABLE_COMMANDS = [
+    private const string ERROR_MESSAGE = "Missing action for init command:";
+    private const array AVAILABLE_COMMANDS = [
         'docker' => 'Scaffold a basic docker application.'
     ];
 

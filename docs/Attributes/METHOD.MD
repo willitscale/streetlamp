@@ -22,7 +22,7 @@ Code:
     #[Path('/method')]
     public function method(): ResponseInterface
     {
-        return (new ResponseBuilder())
+        return new ResponseBuilder()
             ->setHttpStatusCode(HttpStatusCode::HTTP_OK)
             ->build();
 }

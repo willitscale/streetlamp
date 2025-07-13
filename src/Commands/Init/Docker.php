@@ -11,8 +11,8 @@ use willitscale\Streetlamp\Commands\Init\Servers\Nginx;
 
 class Docker extends Command implements CommandInterface
 {
-    private const ERROR_MESSAGE = "Missing operation for docker action:";
-    private const AVAILABLE_COMMANDS = [
+    private const string ERROR_MESSAGE = "Missing operation for docker action:";
+    private const array AVAILABLE_COMMANDS = [
         'nginx' => 'Initialise a docker environment with Nginx.',
         'apache' => 'Initialise a docker environment with Apache.'
     ];
