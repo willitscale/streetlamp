@@ -10,6 +10,9 @@ use willitscale\Streetlamp\Attributes\Validators\ValidatorInterface;
 use willitscale\Streetlamp\Exceptions\InvalidParameterTypeException;
 use ReflectionClass;
 use ReflectionProperty;
+use ReflectionNamedType;
+use ReflectionIntersectionType;
+use ReflectionUnionType;
 
 #[Attribute(Attribute::TARGET_PROPERTY | Attribute::TARGET_PARAMETER)]
 readonly class JsonProperty implements JsonAttribute
@@ -48,14 +51,22 @@ readonly class JsonProperty implements JsonAttribute
             }
         }
 
-        if (!$property->getType()->isBuiltin()) {
-            $propertyReflectionClass = new ReflectionClass($property->getType()->getName());
-            $attributes = $propertyReflectionClass->getAttributes();
+        $types = match (get_class($property->getType())) {
+            ReflectionNamedType::class => [$property->getType()],
+            ReflectionIntersectionType::class,
+            ReflectionUnionType::class => $property->getType()->getTypes()
+        };
 
-            foreach ($attributes as $attribute) {
-                $attributeInstance = $attribute->newInstance();
-                if ($attributeInstance instanceof DataBindingObjectInterface) {
-                    $value = $attributeInstance->getObject($propertyReflectionClass, $value);
+        foreach ($types as $type) {
+            if (!$type->isBuiltin()) {
+                $propertyReflectionClass = new ReflectionClass($type->getName());
+                $attributes = $propertyReflectionClass->getAttributes();
+
+                foreach ($attributes as $attribute) {
+                    $attributeInstance = $attribute->newInstance();
+                    if ($attributeInstance instanceof DataBindingObjectInterface) {
+                        $value = $attributeInstance->getObject($propertyReflectionClass, $value);
+                    }
                 }
             }
         }

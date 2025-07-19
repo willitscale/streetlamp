@@ -50,6 +50,7 @@ readonly class Router
                     $route,
                     $this->routeBuilder,
                     $this->container,
+                    $this->logger,
                     $matches
                 );
 
