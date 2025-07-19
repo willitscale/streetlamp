@@ -18,6 +18,8 @@ use ReflectionType;
 #[Attribute(Attribute::TARGET_PROPERTY | Attribute::TARGET_PARAMETER)]
 readonly class JsonProperty implements JsonAttribute
 {
+    use JsonMatchesType;
+
     public function __construct(
         private bool $required = true,
         private ?string $alias = null
@@ -36,11 +38,7 @@ readonly class JsonProperty implements JsonAttribute
             );
         }
 
-        if (!isset($jsonValue->{$key})) {
-            return;
-        }
-
-        $value = $jsonValue->{$key};
+        $value = $jsonValue->{$key} ?? null;
 
         $attributes = $property->getAttributes();
 
@@ -82,7 +80,6 @@ readonly class JsonProperty implements JsonAttribute
         }
 
         if (!$typeMatches) {
-            dd($key, $value, gettype($value), get_class($value), array_map(fn($type)=>$type->getName(), $types));
             $className = get_class($instance);
             $valueType = gettype($value);
             $propertyName = $property->getType() instanceof ReflectionNamedType
@@ -101,16 +98,5 @@ readonly class JsonProperty implements JsonAttribute
     public function getAlias(): ?string
     {
         return $this->alias;
-    }
-
-    private function matchesType(ReflectionType $type, mixed $value): bool
-    {
-        return ('array' === $type->getName() && is_array($value)) ||
-            ('int' === $type->getName() && is_int($value)) ||
-            ('float' === $type->getName() && is_float($value)) ||
-            ('bool' === $type->getName() && is_bool($value)) ||
-            ('string' === $type->getName() && is_string($value)) ||
-            ('object' === gettype($value) &&
-                ($type->getName() === get_class($value) || $type->getName() === gettype($value)));
     }
 }

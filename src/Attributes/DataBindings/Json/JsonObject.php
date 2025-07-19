@@ -8,10 +8,15 @@ use Attribute;
 use willitscale\Streetlamp\Attributes\DataBindings\DataBindingObjectInterface;
 use ReflectionClass;
 use stdClass;
+use ReflectionNamedType;
+use ReflectionIntersectionType;
+use ReflectionUnionType;
+use ReflectionType;
 
 #[Attribute(Attribute::TARGET_CLASS)]
 class JsonObject implements DataBindingObjectInterface
 {
+    use JsonMatchesType;
     use JsonDataBinding;
 
     public function build(ReflectionClass $reflectionClass, string $data): object
@@ -46,18 +51,30 @@ class JsonObject implements DataBindingObjectInterface
 
             $value = $property->getValue($object);
 
-            if (!$property->getType()->isBuiltin()) {
-                $innerReflectionClass = new ReflectionClass($value);
-                $reflectionAttributes = $innerReflectionClass->getAttributes(JsonObject::class);
+            $types = match (get_class($property->getType())) {
+                ReflectionNamedType::class => [$property->getType()],
+                ReflectionIntersectionType::class,
+                ReflectionUnionType::class => $property->getType()->getTypes()
+            };
 
-                if (empty($reflectionAttributes)) {
+            foreach ($types as $type) {
+                if (!$this->matchesType($type, $value)) {
                     continue;
                 }
 
-                foreach ($reflectionAttributes as $attribute) {
-                    $attributeInstance = $attribute->newInstance();
-                    if ($attributeInstance instanceof DataBindingObjectInterface) {
-                        $value = $attributeInstance->getSerializable($innerReflectionClass, $value);
+                if (!$type->isBuiltin()) {
+                    $innerReflectionClass = new ReflectionClass($value);
+                    $reflectionAttributes = $innerReflectionClass->getAttributes(JsonObject::class);
+
+                    if (empty($reflectionAttributes)) {
+                        continue;
+                    }
+
+                    foreach ($reflectionAttributes as $attribute) {
+                        $attributeInstance = $attribute->newInstance();
+                        if ($attributeInstance instanceof DataBindingObjectInterface) {
+                            $value = $attributeInstance->getSerializable($innerReflectionClass, $value);
+                        }
                     }
                 }
             }
