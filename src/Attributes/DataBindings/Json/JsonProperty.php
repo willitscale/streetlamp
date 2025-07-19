@@ -82,6 +82,7 @@ readonly class JsonProperty implements JsonAttribute
         }
 
         if (!$typeMatches) {
+            dd($key, $value, gettype($value), get_class($value), array_map(fn($type)=>$type->getName(), $types));
             $className = get_class($instance);
             $valueType = gettype($value);
             $propertyName = $property->getType() instanceof ReflectionNamedType
@@ -109,6 +110,7 @@ readonly class JsonProperty implements JsonAttribute
             ('float' === $type->getName() && is_float($value)) ||
             ('bool' === $type->getName() && is_bool($value)) ||
             ('string' === $type->getName() && is_string($value)) ||
-            ('object' === gettype($value) && $type->getName() === get_class($value));
+            ('object' === gettype($value) &&
+                ($type->getName() === get_class($value) || $type->getName() === gettype($value)));
     }
 }
