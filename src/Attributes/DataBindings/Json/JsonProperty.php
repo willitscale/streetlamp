@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace willitscale\Streetlamp\Attributes\DataBindings\Json;
 
 use Attribute;
+use willitscale\Streetlamp\Exceptions\Validators\InvalidParameterFailedToPassFilterValidation;
 use willitscale\Streetlamp\Attributes\DataBindings\DataBindingObjectInterface;
 use willitscale\Streetlamp\Attributes\Validators\ValidatorInterface;
 use willitscale\Streetlamp\Exceptions\InvalidParameterTypeException;
@@ -13,7 +14,6 @@ use ReflectionProperty;
 use ReflectionNamedType;
 use ReflectionIntersectionType;
 use ReflectionUnionType;
-use ReflectionType;
 
 #[Attribute(Attribute::TARGET_PROPERTY | Attribute::TARGET_PARAMETER)]
 readonly class JsonProperty implements JsonAttribute
@@ -45,7 +45,12 @@ readonly class JsonProperty implements JsonAttribute
         foreach ($attributes as $attribute) {
             $attributeInstance = $attribute->newInstance();
             if ($attributeInstance instanceof ValidatorInterface) {
-                $attributeInstance->validate($value);
+                if (!$attributeInstance->validate($value)) {
+                    throw new InvalidParameterFailedToPassFilterValidation(
+                        "PR003",
+                        "Parameter {$key} failed to pass the filter validation"
+                    );
+                }
                 $value = $attributeInstance->sanitize($value);
             }
         }

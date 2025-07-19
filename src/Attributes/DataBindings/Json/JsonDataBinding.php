@@ -8,6 +8,7 @@ use ReflectionClass;
 use Throwable;
 use willitscale\Streetlamp\Exceptions\InvalidParameterTypeException;
 use willitscale\Streetlamp\Exceptions\Json\InvalidJsonObjectParameter;
+use willitscale\Streetlamp\Exceptions\Validators\InvalidParameterFailedToPassFilterValidation;
 
 trait JsonDataBinding
 {
@@ -31,6 +32,8 @@ trait JsonDataBinding
                 $jsonProperty = $jsonProperty[0]->newInstance();
                 $jsonProperty->buildProperty($instance, $property, $data);
             } catch (InvalidParameterTypeException $e) {
+                throw $e;
+            } catch (InvalidParameterFailedToPassFilterValidation $e) {
                 throw $e;
             } catch (Throwable $e) {
                 throw new InvalidJsonObjectParameter(

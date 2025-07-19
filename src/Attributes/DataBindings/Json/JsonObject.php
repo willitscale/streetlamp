@@ -11,7 +11,6 @@ use stdClass;
 use ReflectionNamedType;
 use ReflectionIntersectionType;
 use ReflectionUnionType;
-use ReflectionType;
 
 #[Attribute(Attribute::TARGET_CLASS)]
 class JsonObject implements DataBindingObjectInterface
