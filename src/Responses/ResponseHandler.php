@@ -10,6 +10,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Psr\Log\LoggerInterface;
 use Throwable;
 use willitscale\Streetlamp\Exceptions\InvalidRouteResponseException;
 use willitscale\Streetlamp\Models\Route;
@@ -22,6 +23,7 @@ readonly class ResponseHandler implements RequestHandlerInterface
         private Route $route,
         private RouteBuilder $routeBuilder,
         private Container $container,
+        private LoggerInterface $logger,
         private array $matches = [],
     ) {
     }
@@ -63,7 +65,7 @@ readonly class ResponseHandler implements RequestHandlerInterface
         try {
             return $this->restoreResponse($args);
         } catch (Throwable $e) {
-            // Should we log this?
+            $this->logger->warning('Response is not in cache: ' . $e->getMessage());
         }
 
         $requestArgument = [
@@ -95,7 +97,7 @@ readonly class ResponseHandler implements RequestHandlerInterface
         try {
             $this->storeResponse($args, $response);
         } catch (Throwable $e) {
-            // Should we log this?
+            $this->logger->error('Failed to cache response: ' . $e->getMessage());
         }
 
         return $response;
