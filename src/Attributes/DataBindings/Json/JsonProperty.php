@@ -13,6 +13,7 @@ use ReflectionProperty;
 use ReflectionNamedType;
 use ReflectionIntersectionType;
 use ReflectionUnionType;
+use ReflectionType;
 
 #[Attribute(Attribute::TARGET_PROPERTY | Attribute::TARGET_PARAMETER)]
 readonly class JsonProperty implements JsonAttribute
@@ -57,7 +58,13 @@ readonly class JsonProperty implements JsonAttribute
             ReflectionUnionType::class => $property->getType()->getTypes()
         };
 
+        $typeMatches = false;
+
         foreach ($types as $type) {
+            if (!$this->matchesType($type, $value)) {
+                continue;
+            }
+
             if (!$type->isBuiltin()) {
                 $propertyReflectionClass = new ReflectionClass($type->getName());
                 $attributes = $propertyReflectionClass->getAttributes();
@@ -69,6 +76,22 @@ readonly class JsonProperty implements JsonAttribute
                     }
                 }
             }
+
+            $typeMatches = true;
+            break;
+        }
+
+        if (!$typeMatches) {
+            $className = get_class($instance);
+            $valueType = gettype($value);
+            $propertyName = $property->getType() instanceof ReflectionNamedType
+                ? $property->getType()->getName()
+                : 'unknown type';
+            $message = "Parameter $key in $className is of type {$propertyName}, but value is of type {$valueType}.";
+            throw new InvalidParameterTypeException(
+                "JS002",
+                $message
+            );
         }
 
         $property->setValue($instance, $value);
@@ -77,5 +100,15 @@ readonly class JsonProperty implements JsonAttribute
     public function getAlias(): ?string
     {
         return $this->alias;
+    }
+
+    private function matchesType(ReflectionType $type, mixed $value): bool
+    {
+        return ('array' === $type->getName() && is_array($value)) ||
+            ('int' === $type->getName() && is_int($value)) ||
+            ('float' === $type->getName() && is_float($value)) ||
+            ('bool' === $type->getName() && is_bool($value)) ||
+            ('string' === $type->getName() && is_string($value)) ||
+            ('object' === gettype($value) && $type->getName() === get_class($value));
     }
 }
