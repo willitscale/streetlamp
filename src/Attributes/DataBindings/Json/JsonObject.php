@@ -30,25 +30,20 @@ class JsonObject implements DataBindingObjectInterface
 
         foreach ($reflectionClass->getProperties() as $property) {
             $name = $property->getName();
+            $value = $property->getValue($object);
             $propertyAttributes = $property->getAttributes();
-            $isJsonProperty = false;
 
             foreach ($propertyAttributes as $attribute) {
                 $attributeInstance = $attribute->newInstance();
-                if ($attributeInstance instanceof JsonIgnore) {
-                    $isJsonProperty = false;
-                    break;
+                if (
+                    $attributeInstance instanceof JsonIgnore &&
+                    (!$attributeInstance->isOnlyIgnoreIfNull()) || is_null($value)
+                ) {
+                    continue 2;
                 } elseif ($attributeInstance instanceof JsonAttribute) {
-                    $isJsonProperty = true;
                     $name = $attributeInstance->getAlias() ?? $name;
                 }
             }
-
-            if (!$isJsonProperty) {
-                continue;
-            }
-
-            $value = $property->getValue($object);
 
             $types = match (get_class($property->getType())) {
                 ReflectionNamedType::class => [$property->getType()],
@@ -61,7 +56,7 @@ class JsonObject implements DataBindingObjectInterface
                     continue;
                 }
 
-                if (!$type->isBuiltin()) {
+                if (!$type->isBuiltin() && !is_null($value)) {
                     $innerReflectionClass = new ReflectionClass($value);
                     $reflectionAttributes = $innerReflectionClass->getAttributes(JsonObject::class);
 
