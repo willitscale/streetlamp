@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace willitscale\Streetlamp\Models\ServerSideEvents;
+namespace willitscale\Streetlamp\Models\ServerSentEvents;
 
-class Event implements ServerSideEvent
+class Event implements ServerSentEvent
 {
     public function __construct(
         public string $event

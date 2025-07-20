@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace willitscale\Streetlamp\Models\ServerSideEvents;
+namespace willitscale\Streetlamp\Models\ServerSentEvents;
 
 use ReflectionClass;
 use willitscale\Streetlamp\Attributes\DataBindings\DataBindingObjectInterface;
 use willitscale\Streetlamp\Attributes\DataBindings\Json\JsonObject;
 
-class Data implements ServerSideEvent
+class Data implements ServerSentEvent
 {
     public function __construct(
         public string|object $data

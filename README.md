@@ -6,6 +6,7 @@
 [![GitHub last commit](https://img.shields.io/github/last-commit/willitscale/streetlamp)](https://github.com/willitscale/streetlamp/commits/main)
 
 ## Table of Contents
+
 - [1. Introduction](#1-introduction)
 - [2. Prerequisites](#2-prerequisites)
 - [3. Setup](#3-setup)
@@ -19,12 +20,15 @@
 ## 1. Introduction
 
 Streetlamp is a simple routing library that allows you to quickly prototype APIs.
-This library was built around the basic concepts of annotative routing, commonly found in Java libraries such as [JAX-RS](https://cxf.apache.org/docs/jax-rs.html) and [Spring](https://spring.io/).
-Although the way it works is inspired from the aforementioned Java libraries, it has a slightly unique implementation more fitting the PHP language.
+This library was built around the basic concepts of annotative routing, commonly found in Java libraries such
+as [JAX-RS](https://cxf.apache.org/docs/jax-rs.html) and [Spring](https://spring.io/).
+Although the way it works is inspired from the aforementioned Java libraries, it has a slightly unique implementation
+more fitting the PHP language.
 
 ## 2. Prerequisites
 
-To keep up with modern standards this library was built using PHP 8.4 and therefore will only run in said environment or greater. 
+To keep up with modern standards this library was built using PHP 8.4 and therefore will only run in said environment or
+greater.
 Due to the speed of which PHP is evolving, it is recommended to always use the latest stable version of PHP.
 Finally, this project requires composer and the [PSR-4 Autoload standard](https://www.php-fig.org/psr/psr-4/).
 
@@ -40,8 +44,10 @@ composer require willitscale/streetlamp
 
 ### 3.2. Application Wrapper
 
-To run your application through the Streetlamp wrapper all you need to do is instantiate the `Router` class and call `route`. 
-The `Router` will use a `RouteBuilder` to scan all of your namespaces in the `composer.json` (excluding test namespaces by default) and setup corresponding routes. 
+To run your application through the Streetlamp wrapper all you need to do is instantiate the `Router` class and call
+`route`.
+The `Router` will use a `RouteBuilder` to scan all of your namespaces in the `composer.json` (excluding test namespaces
+by default) and setup corresponding routes.
 
 Here's all the code you need to get going:
 
@@ -55,7 +61,8 @@ use willitscale\Streetlamp\Router;
 new Router()->route();
 ```
 
-This will use a simple out of the box configuration, if you require any customisation this can be achieved with the `RouterConfig`.
+This will use a simple out of the box configuration, if you require any customisation this can be achieved with the
+`RouterConfig`.
 There's a comprehensive guide on configuration in the [Configuration page](docs/CONFIGURATION.MD).
 
 ### 3.3 Creating a Controller
@@ -80,11 +87,13 @@ Only classes with the `RouteController` attribute will be scanned for routes.
 
 Each public method within a `RouteController` can be annotated as a route.
 There's three requirements to transform a method into a route:
+
 - add a HTTP method attribute to the method,
 - a path attribute to the method or class and
 - return the `ResponseBuilder` object.
 
-Let's say we want to create a route for the request `GET /hello HTTP/1.1`, we would need to attribute our route method with the `Get` and `Path` attributes.
+Let's say we want to create a route for the request `GET /hello HTTP/1.1`, we would need to attribute our route method
+with the `Get` and `Path` attributes.
 
 Here's what that would look like in code:
 
@@ -116,31 +125,34 @@ class MyRouteClass
 }
 ```
 
-You could also apply the `#[Path('/hello')]` attribute to the `RouteController` class itself. In this case, all routes defined within the controller will have that path prefixed automatically, so you do not need to apply a path to each method individually.
+You could also apply the `#[Path('/hello')]` attribute to the `RouteController` class itself. In this case, all routes
+defined within the controller will have that path prefixed automatically, so you do not need to apply a path to each
+method individually.
 
 ## 4. PSR Compliance
 
-| PSR Standard | Description                 | Streetlamp Compliance |
-|--------------|-----------------------------|-----------------------|
-| [PSR-1](https://www.php-fig.org/psr/psr-1/)        | Basic Coding Standard       | ✅                   |
-| [PSR-3](https://www.php-fig.org/psr/psr-3/)        | Logger Interface            | ✅                   |
-| [PSR-4](https://www.php-fig.org/psr/psr-4/)        | Autoloading Standard        | ✅                   |
-| [PSR-6](https://www.php-fig.org/psr/psr-6/)        | Caching Interface           | ❌                  |
-| [PSR-7](https://www.php-fig.org/psr/psr-7/)        | HTTP Message Interface      | ✅                   |
-| [PSR-11](https://www.php-fig.org/psr/psr-11/)      | Container Interface         | ❌                    |
-| [PSR-12](https://www.php-fig.org/psr/psr-12/)      | Extended Coding Style Guide | ✅                   |
-| [PSR-13](https://www.php-fig.org/psr/psr-13/)      | Hypermedia Links            | ❌                    |
-| [PSR-14](https://www.php-fig.org/psr/psr-14/)      | Event Dispatcher            | ❌                    |
-| [PSR-15](https://www.php-fig.org/psr/psr-15/)      | HTTP Handlers               | ✅                   |
-| [PSR-16](https://www.php-fig.org/psr/psr-16/)      | Simple Caching              | ✅                  |
-| [PSR-17](https://www.php-fig.org/psr/psr-17/)      | HTTP Factories              | ❌                    |
-| [PSR-18](https://www.php-fig.org/psr/psr-18/)      | HTTP Client                 | ❌                    |
-
+| PSR Standard                                  | Description                 | Streetlamp Compliance |
+|-----------------------------------------------|-----------------------------|-----------------------|
+| [PSR-1](https://www.php-fig.org/psr/psr-1/)   | Basic Coding Standard       | ✅                     |
+| [PSR-3](https://www.php-fig.org/psr/psr-3/)   | Logger Interface            | ✅                     |
+| [PSR-4](https://www.php-fig.org/psr/psr-4/)   | Autoloading Standard        | ✅                     |
+| [PSR-6](https://www.php-fig.org/psr/psr-6/)   | Caching Interface           | ❌                     |
+| [PSR-7](https://www.php-fig.org/psr/psr-7/)   | HTTP Message Interface      | ✅                     |
+| [PSR-11](https://www.php-fig.org/psr/psr-11/) | Container Interface         | ❌                     |
+| [PSR-12](https://www.php-fig.org/psr/psr-12/) | Extended Coding Style Guide | ✅                     |
+| [PSR-13](https://www.php-fig.org/psr/psr-13/) | Hypermedia Links            | ❌                     |
+| [PSR-14](https://www.php-fig.org/psr/psr-14/) | Event Dispatcher            | ❌                     |
+| [PSR-15](https://www.php-fig.org/psr/psr-15/) | HTTP Handlers               | ✅                     |
+| [PSR-16](https://www.php-fig.org/psr/psr-16/) | Simple Caching              | ✅                     |
+| [PSR-17](https://www.php-fig.org/psr/psr-17/) | HTTP Factories              | ❌                     |
+| [PSR-18](https://www.php-fig.org/psr/psr-18/) | HTTP Client                 | ❌                     |
 
 ## 5. Further Reading
+
 - [Routing Attributes](docs/ROUTING_ATTRIBUTES.MD)
 - [Input Attributes](docs/INPUT_ATTRIBUTES.MD)
 - [Data Mapping](docs/DATA_MAPPING.MD)
+- [Server Sent Events](docs/SERVER_SENT_EVENTS.MD)
 - [Validators](docs/VALIDATORS.MD)
 - [Caching](docs/CACHING.MD)
 - [Configuration](docs/CONFIGURATION.MD)

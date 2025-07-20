@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace willitscale\Streetlamp\Models\ServerSideEvents;
+namespace willitscale\Streetlamp\Models\ServerSentEvents;
 
-class Retry implements ServerSideEvent
+class Retry implements ServerSentEvent
 {
     public function __construct(
         public int $intervalInMilliseconds
