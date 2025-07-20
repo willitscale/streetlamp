@@ -20,9 +20,10 @@ class Route extends Context
         string|null $accepts = null,
         private array $parameters = [],
         array $middleware = [],
+        ?string $responseType = null,
         private CacheRule|null $cacheRule = null
     ) {
-        parent::__construct($class, $path, $accepts, $middleware);
+        parent::__construct($class, $path, $accepts, $middleware, $responseType);
     }
 
     public function getCacheRule(): ?CacheRule
