@@ -8,15 +8,16 @@ use DI\Container;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use willitscale\Streetlamp\Models\Route;
-use willitscale\Streetlamp\Models\ServerSideEvents\ServerSideEvent;
+use willitscale\Streetlamp\Models\ServerSentEvents\ServerSentEvent;
 use willitscale\Streetlamp\Requests\Stream;
 use willitscale\Streetlamp\Responses\Response;
 
-class ServerSideEvents implements ResponseTypeInterface
+class ServerSentEvents implements ResponseTypeInterface
 {
     public const int SECOND_IN_MICROSECONDS = 1000000;
 
     private int $eventDelayMicroseconds = 0;
+    private bool $connectionOpen = true;
 
     public function __construct(
         private readonly Container $container,
@@ -27,7 +28,7 @@ class ServerSideEvents implements ResponseTypeInterface
     {
         $requestArgument = [
             'request' => $request,
-            'serverSideEvents' => $this,
+            'serverSentEvents' => $this,
         ];
 
         $application = $this->container->make(
@@ -39,7 +40,7 @@ class ServerSideEvents implements ResponseTypeInterface
         header("Content-Type: text/event-stream");
         header("Cache-Control: no-cache");
 
-        while (true) {
+        while ($this->connectionOpen) {
             $this->container->call(
                 [
                     $application,
@@ -71,9 +72,9 @@ class ServerSideEvents implements ResponseTypeInterface
     public function dispatch(array $events): self
     {
         foreach ($events as $event) {
-            if (!$event instanceof ServerSideEvent) {
+            if (!$event instanceof ServerSentEvent) {
                 throw new \InvalidArgumentException(
-                    'All events must implement the ServerSideEvent interface.'
+                    'All events must implement the ServerSentEvent interface.'
                 );
             }
 
@@ -86,6 +87,12 @@ class ServerSideEvents implements ResponseTypeInterface
 
         flush();
 
+        return $this;
+    }
+
+    public function close(): self
+    {
+        $this->connectionOpen = false;
         return $this;
     }
 }
