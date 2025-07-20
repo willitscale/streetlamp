@@ -6,7 +6,7 @@ namespace willitscale\Streetlamp\Attributes\Validators;
 
 use Attribute;
 
-#[Attribute(Attribute::TARGET_PROPERTY | Attribute::TARGET_PARAMETER)]
+#[Attribute(Attribute::TARGET_PROPERTY | Attribute::TARGET_PARAMETER | Attribute::IS_REPEATABLE)]
 readonly class IntValidator implements ValidatorInterface
 {
     public function __construct(

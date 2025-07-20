@@ -24,6 +24,9 @@ readonly class Router
         private Container $container = new Container(),
         private LoggerInterface $logger = new NullLogger()
     ) {
+        $this->container->set(RouteBuilder::class, $routeBuilder);
+        $this->container->set(Container::class, $container);
+        $this->container->set(LoggerInterface::class, $logger);
     }
 
     public function route(): ResponseInterface
@@ -46,12 +49,12 @@ readonly class Router
                     continue;
                 }
 
-                $responseHandler = new ResponseHandler(
-                    $route,
-                    $this->routeBuilder,
-                    $this->container,
-                    $this->logger,
-                    $matches
+                $responseHandler = $this->container->make(
+                    ResponseHandler::class,
+                    [
+                        'route' => $route,
+                        'matches' => $matches
+                    ]
                 );
 
                 return $responseHandler->handle($request);

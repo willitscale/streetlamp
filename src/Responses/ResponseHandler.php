@@ -10,23 +10,18 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Psr\Log\LoggerInterface;
 use Throwable;
 use willitscale\Streetlamp\Exceptions\InvalidParameterTypeException;
-use willitscale\Streetlamp\Exceptions\InvalidRouteResponseException;
 use willitscale\Streetlamp\Exceptions\Json\InvalidJsonObjectParameter;
 use willitscale\Streetlamp\Exceptions\Validators\InvalidParameterFailedToPassFilterValidation;
 use willitscale\Streetlamp\Models\Route;
-use willitscale\Streetlamp\Requests\Stream;
-use willitscale\Streetlamp\RouteBuilder;
+use willitscale\Streetlamp\ResponseTypes\ResponseTypeInterface;
 
 readonly class ResponseHandler implements RequestHandlerInterface
 {
     public function __construct(
         private Route $route,
-        private RouteBuilder $routeBuilder,
         private Container $container,
-        private LoggerInterface $logger,
         private array $matches = [],
     ) {
     }
@@ -71,101 +66,16 @@ readonly class ResponseHandler implements RequestHandlerInterface
             return !is_null($value);
         });
 
-        try {
-            return $this->restoreResponse($args);
-        } catch (Throwable $e) {
-            $this->logger->warning('Response is not in cache: ' . $e->getMessage());
+        $response = $this->container->make($this->route->getResponseType());
+
+        if (!($response instanceof ResponseTypeInterface)) {
+            throw new Exception("Response Type must implement " . ResponseTypeInterface::class);
         }
 
-        $requestArgument = [
-            'request' => $request
-        ];
-
-        $application = $this->container->make(
-            $this->route->getClass(),
-            $requestArgument
+        return $response->execute(
+            $this->route,
+            $request,
+            $args
         );
-
-        $response = $this->container->call(
-            [
-                $application,
-                $this->route->getFunction()
-            ],
-            array_merge($requestArgument, $args)
-        );
-
-        if (!isset($response) || !($response instanceof ResponseInterface)) {
-            unset($response);
-            throw new InvalidRouteResponseException(
-                'R001',
-                'Call to ' . $this->route->getClass() . '::' .
-                $this->route->getFunction() . ' did not return a Response object.'
-            );
-        }
-
-        try {
-            $this->storeResponse($args, $response);
-        } catch (Throwable $e) {
-            $this->logger->error('Failed to cache response: ' . $e->getMessage());
-        }
-
-        return $response;
-    }
-
-    private function restoreResponse(array $args): ResponseInterface
-    {
-        $cacheRule = $this->route->getCacheRule();
-
-        if (is_null($cacheRule)) {
-            // TODO: this should be a custom exception
-            throw new Exception('No cache rule enabled');
-        }
-
-        $cacheHandler = $this->routeBuilder->getRouterConfig()->getCacheHandler();
-
-        $key = $cacheRule->getKey($this->route, $args);
-
-        if (!$cacheHandler->has($key)) {
-            // TODO: this should be a custom exception
-            throw new Exception('Cache key does not exist: ' . $key);
-        }
-
-        $data = $cacheHandler->get($key);
-
-        // Instance of check here
-        if (!isset($data['response']) || !($data['response'] instanceof ResponseInterface)) {
-            unset($data['response']);
-            throw new InvalidRouteResponseException(
-                'R004',
-                'Cached response for key ' . $key . ' is not a valid Response object.'
-            );
-        }
-
-        $stream = new Stream('php://temp', 'rw+');
-        $stream->write($data['contents']);
-
-        return $data['response']->withBody($stream);
-    }
-
-    private function storeResponse(array $args, ResponseInterface $response): void
-    {
-        $cacheRule = $this->route->getCacheRule();
-
-        if (is_null($cacheRule)) {
-            // TODO: this should be a custom exception
-            throw new Exception('No cache rule enabled');
-        }
-
-        $cacheHandler = $this->routeBuilder->getRouterConfig()->getCacheHandler();
-
-        $key = $cacheRule->getKey($this->route, $args);
-        $ttl = $cacheRule->getCacheTtl();
-
-        $data = [
-            'response' => $response,
-            'contents' => $response->getBody()->getContents(),
-        ];
-
-        $cacheHandler->set($key, $data, $ttl);
     }
 }
