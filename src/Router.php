@@ -13,12 +13,10 @@ use willitscale\Streetlamp\Exceptions\NoValidRouteException;
 use willitscale\Streetlamp\Exceptions\StreetLampRequestException;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
-use willitscale\Streetlamp\Models\ServerSentEvents\ServerSentEvent;
-use willitscale\Streetlamp\Models\ServerSentEvents\ServerSentEventsDispatcher;
 use willitscale\Streetlamp\Requests\Stream;
 use willitscale\Streetlamp\Responses\Response;
 use willitscale\Streetlamp\Responses\ResponseHandler;
-use willitscale\Streetlamp\Responses\ServerSentEvents;
+use willitscale\Streetlamp\Responses\StreamResponse;
 
 readonly class Router
 {
@@ -95,52 +93,19 @@ readonly class Router
         );
     }
 
-    public function renderRoute(): void
+    public function render(): void
     {
         $response = $this->route();
-        if ($response instanceof ServerSentEvents) {
-            $this->renderSseResponse();
-            return;
-        }
 
         http_response_code($response->getStatusCode());
         foreach ($response->getHeaders() as $name => $value) {
             header("{$name}: {$value}");
         }
-        echo $response->getBody();
-    }
 
-    public function renderSseResponse(): void
-    {
-        $response = $this->route();
-        $serverSentEventsDispatcher = $response->getCallback();
-
-        header("X-Accel-Buffering: no");
-        header("Content-Type: text/event-stream");
-        header("Cache-Control: no-cache");
-
-        while (true) {
-            $events = $serverSentEventsDispatcher->dispatch();
-            $events = is_array($events) ? $events : [$events];
-
-            foreach ($events as $event) {
-                if (!$event instanceof ServerSentEvent) {
-                    $this->logger->error('Invalid event type returned from callback: ' . gettype($event));
-                    continue;
-                }
-                echo $event->dispatch(), PHP_EOL, PHP_EOL;
-            }
-
-            if (connection_aborted()) {
-                break;
-            }
-
-            if (ob_get_contents()) {
-                ob_end_flush();
-            }
-
-            flush();
-            sleep(1);
+        if ($response instanceof StreamResponse) {
+            $response->start();
+        } else {
+            echo $response->getBody();
         }
     }
 }

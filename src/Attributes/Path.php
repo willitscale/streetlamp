@@ -9,7 +9,7 @@ use willitscale\Streetlamp\Models\Controller;
 use willitscale\Streetlamp\Models\Route;
 
 #[Attribute(Attribute::TARGET_CLASS | Attribute::TARGET_METHOD)]
-readonly class Path implements AttributeContract
+readonly class Path implements RouteContract
 {
     public function __construct(private string $path)
     {

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace willitscale\Streetlamp;
 
-use willitscale\Streetlamp\Attributes\AttributeContract;
+use willitscale\Streetlamp\Attributes\RouteContract;
 use willitscale\Streetlamp\Attributes\DataBindings\ArrayMapInterface;
 use willitscale\Streetlamp\Attributes\Parameter\Parameter;
 use willitscale\Streetlamp\Attributes\Validators\ValidatorInterface;
@@ -218,7 +218,7 @@ readonly class RouteBuilder
 
             foreach ($attributes as $attribute) {
                 $instance = $attribute->newInstance();
-                if ($instance instanceof AttributeContract) {
+                if ($instance instanceof RouteContract) {
                     $instance->applyToController($controller);
                 }
             }
@@ -267,7 +267,7 @@ readonly class RouteBuilder
 
         foreach ($attributes as $attribute) {
             $instance = $attribute->newInstance();
-            if ($instance instanceof AttributeContract) {
+            if ($instance instanceof RouteContract) {
                 $instance->applyToRoute($route);
             }
         }

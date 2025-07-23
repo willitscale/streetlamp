@@ -5,16 +5,16 @@ declare(strict_types=1);
 namespace willitscale\Streetlamp\Builders;
 
 use Psr\Http\Message\ResponseInterface;
+use ReflectionClass;
 use willitscale\Streetlamp\Attributes\DataBindings\DataBindingObjectInterface;
 use willitscale\Streetlamp\Attributes\DataBindings\Json\JsonObject;
 use willitscale\Streetlamp\Enums\HttpStatusCode;
 use willitscale\Streetlamp\Enums\MediaType;
 use willitscale\Streetlamp\Exceptions\InvalidResponseReturnedToClientException;
-use ReflectionClass;
-use willitscale\Streetlamp\Models\ServerSentEvents\ServerSentEventsDispatcher;
 use willitscale\Streetlamp\Requests\Stream;
 use willitscale\Streetlamp\Responses\Response;
 use willitscale\Streetlamp\Responses\ServerSentEvents;
+use willitscale\Streetlamp\Responses\ServerSentEventsDispatcher;
 
 class ResponseBuilder
 {

@@ -10,7 +10,7 @@ use willitscale\Streetlamp\Models\Controller;
 use willitscale\Streetlamp\Models\Route;
 
 #[Attribute(Attribute::TARGET_CLASS | Attribute::TARGET_METHOD)]
-readonly class Accepts implements AttributeContract
+readonly class Accepts implements RouteContract
 {
     public function __construct(private string|MediaType $mediaType)
     {

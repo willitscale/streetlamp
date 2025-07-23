@@ -3,14 +3,14 @@
 namespace willitscale\Streetlamp\Attributes\Cache;
 
 use Attribute;
-use willitscale\Streetlamp\Attributes\AttributeContract;
+use willitscale\Streetlamp\Attributes\RouteContract;
 use willitscale\Streetlamp\CacheRules\CacheRule;
 use willitscale\Streetlamp\Exceptions\Attributes\InvalidAttributeContextException;
 use willitscale\Streetlamp\Models\Controller;
 use willitscale\Streetlamp\Models\Route;
 
 #[Attribute(Attribute::TARGET_METHOD)]
-readonly class Cache implements AttributeContract
+readonly class Cache implements RouteContract
 {
     public function __construct(
         private CacheRule $cacheRule

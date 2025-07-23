@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace willitscale\Streetlamp\Attributes\Route;
 
 use Attribute;
-use willitscale\Streetlamp\Attributes\AttributeContract;
+use willitscale\Streetlamp\Attributes\RouteContract;
 use willitscale\Streetlamp\Enums\HttpMethod;
 use willitscale\Streetlamp\Exceptions\Attributes\InvalidAttributeContextException;
 use willitscale\Streetlamp\Models\Controller;
 use willitscale\Streetlamp\Models\Route;
 
 #[Attribute(Attribute::TARGET_METHOD)]
-readonly class Method implements AttributeContract
+readonly class Method implements RouteContract
 {
     public function __construct(private HttpMethod $method)
     {
