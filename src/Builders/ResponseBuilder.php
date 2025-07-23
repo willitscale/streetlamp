@@ -11,8 +11,10 @@ use willitscale\Streetlamp\Enums\HttpStatusCode;
 use willitscale\Streetlamp\Enums\MediaType;
 use willitscale\Streetlamp\Exceptions\InvalidResponseReturnedToClientException;
 use ReflectionClass;
+use willitscale\Streetlamp\Models\ServerSentEvents\ServerSentEventsDispatcher;
 use willitscale\Streetlamp\Requests\Stream;
 use willitscale\Streetlamp\Responses\Response;
+use willitscale\Streetlamp\Responses\ServerSentEvents;
 
 class ResponseBuilder
 {
@@ -71,19 +73,17 @@ class ResponseBuilder
         return $this->contentType;
     }
 
-    public function getData(): mixed
-    {
-        return $this->data;
-    }
-
     public function build(): ResponseInterface
     {
-        $isJson = false;
         $stream = new Stream('php://temp', 'rw+');
 
         if (!empty($this->contentType)) {
             $this->addHeader('Content-Type', $this->contentType->value ?? $this->contentType);
             $isJson = ($this->contentType === MediaType::APPLICATION_JSON->value);
+        }
+
+        if ($this->contentType === MediaType::TEXT_EVENT_STREAM->value) {
+            return $this->buildServerSentEventsResponse($stream);
         }
 
         if (isset($this->data)) {
@@ -103,7 +103,7 @@ class ResponseBuilder
                 $this->data = json_encode($this->data, JSON_THROW_ON_ERROR);
             }
 
-            $stream->write((string) $this->data);
+            $stream->write((string)$this->data);
 
             if (!is_string($this->data) && !is_int($this->data) && !is_float($this->data) && !is_bool($this->data)) {
                 throw new InvalidResponseReturnedToClientException(
@@ -119,6 +119,25 @@ class ResponseBuilder
             $this->headers,
             $_SERVER["SERVER_PROTOCOL"] ?? 'HTTP/1.1',
             $this->contentType instanceof MediaType ? $this->contentType->value : $this->contentType
+        );
+    }
+
+    private function buildServerSentEventsResponse(Stream $stream): ResponseInterface
+    {
+        if (!isset($this->data) || !$this->data instanceof ServerSentEventsDispatcher) {
+            throw new InvalidResponseReturnedToClientException(
+                "RB002",
+                "ServerSentEvents response requires a ServerSentEvents instance."
+            );
+        }
+
+        return new ServerSentEvents(
+            $stream,
+            $this->httpStatusCode->value,
+            $this->headers,
+            $_SERVER["SERVER_PROTOCOL"] ?? 'HTTP/1.1',
+            '',
+            $this->data
         );
     }
 }

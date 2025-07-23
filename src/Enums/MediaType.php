@@ -28,6 +28,7 @@ enum MediaType: string
     case TEXT_JS = 'text/javascript';
     case TEXT_PLAIN = 'text/plain';
     case TEXT_CSV = 'text/csv';
+    case TEXT_EVENT_STREAM = 'text/event-stream';
 
     case VIDEO_AVI = 'video/x-msvideo';
     case VIDEO_MP4 = 'video/mp4';
