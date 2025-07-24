@@ -7,11 +7,11 @@ namespace willitscale\StreetlampTest;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\StreamInterface;
 use Psr\SimpleCache\CacheInterface;
+use willitscale\Streetlamp\Builders\RouteBuilder;
 use willitscale\Streetlamp\Builders\RouterConfigBuilder;
 use willitscale\Streetlamp\CacheHandlers\NullCacheHandler;
 use willitscale\Streetlamp\Requests\ServerRequest;
 use willitscale\Streetlamp\Requests\Uri;
-use willitscale\Streetlamp\RouteBuilder;
 use willitscale\Streetlamp\Router;
 
 class RouteTestCase extends TestCase

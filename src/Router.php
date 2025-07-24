@@ -6,13 +6,14 @@ namespace willitscale\Streetlamp;
 
 use DI\Container;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 use Throwable;
+use willitscale\Streetlamp\Builders\RouteBuilder;
 use willitscale\Streetlamp\Enums\HttpStatusCode;
 use willitscale\Streetlamp\Exceptions\InvalidContentTypeException;
 use willitscale\Streetlamp\Exceptions\NoValidRouteException;
 use willitscale\Streetlamp\Exceptions\StreetLampRequestException;
-use Psr\Log\LoggerInterface;
-use Psr\Log\NullLogger;
 use willitscale\Streetlamp\Requests\Stream;
 use willitscale\Streetlamp\Responses\Response;
 use willitscale\Streetlamp\Responses\ResponseHandler;

@@ -21,33 +21,28 @@ class ResponseBuilder
     private HttpStatusCode $httpStatusCode;
     private MediaType|string $contentType = MediaType::TEXT_PLAIN;
     private mixed $data;
+    private ?ServerSentEventsDispatcher $stream;
     private array $headers = [];
 
-    /**
-     * @param mixed $data
-     * @return $this
-     */
-    public function setData(mixed $data): ResponseBuilder
+    public function setData(mixed $data): self
     {
         $this->data = $data;
         return $this;
     }
 
-    /**
-     * @param HttpStatusCode $httpStatusCode
-     * @return $this
-     */
-    public function setHttpStatusCode(HttpStatusCode $httpStatusCode): ResponseBuilder
+    public function setStream(ServerSentEventsDispatcher $stream): self
+    {
+        $this->stream = $stream;
+        return $this;
+    }
+
+    public function setHttpStatusCode(HttpStatusCode $httpStatusCode): self
     {
         $this->httpStatusCode = $httpStatusCode;
         return $this;
     }
 
-    /**
-     * @param MediaType|string $contentType
-     * @return $this
-     */
-    public function setContentType(MediaType|string $contentType): ResponseBuilder
+    public function setContentType(MediaType|string $contentType): self
     {
         if ($contentType instanceof MediaType) {
             $contentType = $contentType->value;
@@ -57,7 +52,7 @@ class ResponseBuilder
         return $this;
     }
 
-    public function addHeader(string $key, string $value): ResponseBuilder
+    public function addHeader(string $key, string $value): self
     {
         $this->headers[$key] = $value;
         return $this;
@@ -124,7 +119,7 @@ class ResponseBuilder
 
     private function buildServerSentEventsResponse(Stream $stream): ResponseInterface
     {
-        if (!isset($this->data) || !$this->data instanceof ServerSentEventsDispatcher) {
+        if (!isset($this->stream)) {
             throw new InvalidResponseReturnedToClientException(
                 "RB002",
                 "ServerSentEvents response requires a ServerSentEvents instance."
@@ -137,7 +132,7 @@ class ResponseBuilder
             $this->headers,
             $_SERVER["SERVER_PROTOCOL"] ?? 'HTTP/1.1',
             '',
-            $this->data
+            $this->stream
         );
     }
 }
