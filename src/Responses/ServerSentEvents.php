@@ -44,7 +44,6 @@ class ServerSentEvents extends Response implements StreamResponse
             }
 
             flush();
-            sleep(1);
         }
     }
 }

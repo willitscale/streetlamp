@@ -12,7 +12,8 @@ abstract class Context
         protected string $class,
         protected string|null $path = null,
         protected string|null $accepts = null,
-        protected array $middleware = []
+        protected array $middleware = [],
+        protected array $attributes = []
     ) {
     }
 
@@ -81,5 +82,32 @@ abstract class Context
     public function popMiddleware(): string
     {
         return array_shift($this->middleware);
+    }
+
+    public function addAttribute(string $name, mixed $value): self
+    {
+        $this->attributes[$name] = $value;
+        return $this;
+    }
+
+    public function getAttributes(): array
+    {
+        return $this->attributes;
+    }
+
+    public function setAttributes(array $attributes): self
+    {
+        $this->attributes = $attributes;
+        return $this;
+    }
+
+    public function getAttribute(string $name): mixed
+    {
+        return $this->attributes[$name] ?? null;
+    }
+
+    public function hasAttribute(string $name): bool
+    {
+        return isset($this->attributes[$name]);
     }
 }

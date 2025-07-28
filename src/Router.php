@@ -14,6 +14,8 @@ use willitscale\Streetlamp\Enums\HttpStatusCode;
 use willitscale\Streetlamp\Exceptions\InvalidContentTypeException;
 use willitscale\Streetlamp\Exceptions\NoValidRouteException;
 use willitscale\Streetlamp\Exceptions\StreetLampRequestException;
+use willitscale\Streetlamp\Models\Route;
+use willitscale\Streetlamp\Models\RouteState;
 use willitscale\Streetlamp\Requests\Stream;
 use willitscale\Streetlamp\Responses\Response;
 use willitscale\Streetlamp\Responses\ResponseHandler;
@@ -38,7 +40,9 @@ readonly class Router
         $stream = new Stream('php://temp', 'rw+');
 
         try {
-            foreach ($this->routeBuilder->getRoutes() as $route) {
+            $routeState = $this->routeBuilder->getRouteState();
+            $this->container->set(RouteState::class, $routeState);
+            foreach ($routeState?->getRoutes() ?? [] as $route) {
                 $matches = [];
 
                 if (!$route->matchesRoute($request, $matches)) {
@@ -50,6 +54,8 @@ readonly class Router
                 if (!$route->matchesContentType($request)) {
                     continue;
                 }
+
+                $this->container->set(Route::class, $route);
 
                 $responseHandler = $this->container->make(
                     ResponseHandler::class,

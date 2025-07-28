@@ -21,7 +21,7 @@ class ResponseBuilder
     private HttpStatusCode $httpStatusCode;
     private MediaType|string $contentType = MediaType::TEXT_PLAIN;
     private mixed $data;
-    private ?ServerSentEventsDispatcher $stream;
+    private ?ServerSentEventsDispatcher $streamDispatcher;
     private array $headers = [];
 
     public function setData(mixed $data): self
@@ -30,9 +30,9 @@ class ResponseBuilder
         return $this;
     }
 
-    public function setStream(ServerSentEventsDispatcher $stream): self
+    public function setStreamDispatcher(ServerSentEventsDispatcher $streamDispatcher): self
     {
-        $this->stream = $stream;
+        $this->streamDispatcher = $streamDispatcher;
         return $this;
     }
 
@@ -119,7 +119,7 @@ class ResponseBuilder
 
     private function buildServerSentEventsResponse(Stream $stream): ResponseInterface
     {
-        if (!isset($this->stream)) {
+        if (!isset($this->streamDispatcher)) {
             throw new InvalidResponseReturnedToClientException(
                 "RB002",
                 "ServerSentEvents response requires a ServerSentEvents instance."
@@ -132,7 +132,7 @@ class ResponseBuilder
             $this->headers,
             $_SERVER["SERVER_PROTOCOL"] ?? 'HTTP/1.1',
             '',
-            $this->stream
+            $this->streamDispatcher
         );
     }
 }

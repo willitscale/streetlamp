@@ -6,12 +6,12 @@ namespace willitscale\StreetlampTests\Attributes\Route;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
-use willitscale\Streetlamp\Attributes\Route\Method;
+use PHPUnit\Framework\TestCase;
+use willitscale\Streetlamp\Builders\Route\Method;
 use willitscale\Streetlamp\Enums\HttpMethod;
 use willitscale\Streetlamp\Exceptions\Attributes\InvalidAttributeContextException;
 use willitscale\Streetlamp\Models\Controller;
 use willitscale\Streetlamp\Models\Route;
-use PHPUnit\Framework\TestCase;
 
 class MethodTest extends TestCase
 {

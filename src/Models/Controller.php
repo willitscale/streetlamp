@@ -12,9 +12,10 @@ class Controller extends Context
         string|null $path = '',
         string|null $accepts = null,
         private bool $isController = false,
-        array $middleware = []
+        array $middleware = [],
+        array $attributes = []
     ) {
-        parent::__construct($class, $path, $accepts, $middleware);
+        parent::__construct($class, $path, $accepts, $middleware, $attributes);
     }
 
     /**

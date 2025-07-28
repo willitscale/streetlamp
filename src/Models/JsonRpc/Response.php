@@ -13,9 +13,9 @@ readonly class Response
 {
     public function __construct(
         #[JsonProperty] private string $jsonrpc,
-        #[JsonProperty] private string|int $id,
-        #[JsonProperty(false)] #[JsonIgnore(true)] private array|object|null $result,
-        #[JsonProperty(false)] #[JsonIgnore(true)] private ?Error $error,
+        #[JsonProperty] private string|int|null $id = null,
+        #[JsonProperty(false)] #[JsonIgnore(true)] private array|object|null $result = null,
+        #[JsonProperty(false)] #[JsonIgnore(true)] private ?Error $error = null,
     ) {
     }
 

@@ -8,4 +8,5 @@ interface ServerSentEventsDispatcher
 {
     public function dispatch(): array;
     public function isRunning(): bool;
+    public function delay();
 }

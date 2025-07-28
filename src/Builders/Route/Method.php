@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace willitscale\Streetlamp\Attributes\Route;
+namespace willitscale\Streetlamp\Builders\Route;
 
 use Attribute;
 use willitscale\Streetlamp\Attributes\RouteContract;

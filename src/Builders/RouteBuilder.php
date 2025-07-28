@@ -7,41 +7,37 @@ namespace willitscale\Streetlamp\Builders;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use ReflectionClass;
-use ReflectionMethod;
-use ReflectionParameter;
-use willitscale\Streetlamp\Attributes\DataBindings\ArrayMapInterface;
-use willitscale\Streetlamp\Attributes\Parameter\Parameter;
+use willitscale\Streetlamp\Attributes\AttributeClass;
 use willitscale\Streetlamp\Attributes\RouteContract;
-use willitscale\Streetlamp\Attributes\Validators\ValidatorInterface;
 use willitscale\Streetlamp\Exceptions\CacheFileDoesNotExistException;
 use willitscale\Streetlamp\Exceptions\CacheFileInvalidFormatException;
 use willitscale\Streetlamp\Exceptions\ComposerFileDoesNotExistException;
 use willitscale\Streetlamp\Exceptions\ComposerFileInvalidFormatException;
 use willitscale\Streetlamp\Exceptions\InvalidApplicationDirectoryException;
-use willitscale\Streetlamp\Exceptions\MethodParameterNotMappedException;
 use willitscale\Streetlamp\Exceptions\NoMethodRouteFoundException;
 use willitscale\Streetlamp\Exceptions\StreetLampException;
 use willitscale\Streetlamp\Models\Controller;
-use willitscale\Streetlamp\Models\Route;
 use willitscale\Streetlamp\Models\RouterConfig;
+use willitscale\Streetlamp\Models\RouteState;
+use willitscale\Streetlamp\Traits\BuildAttributes;
+use willitscale\Streetlamp\Traits\BuildMethodRoutes;
 
-readonly class RouteBuilder
+class RouteBuilder
 {
+    use BuildMethodRoutes;
+    use BuildAttributes;
+
     public const string ROUTER_DATA_KEY = 'router.data';
 
-    private RouterConfig|null $routerConfig;
+    private array $attributeClasses = [];
 
     public function __construct(
-        RouterConfig|null $routerConfig = null,
+        private ?RouterConfig $routerConfig = null,
         private LoggerInterface $logger = new NullLogger()
     ) {
-        if (!isset($routerConfig)) {
-            $this->routerConfig = new RouterConfigBuilder()
-                ->setConfigFile('router.conf.json')
-                ->build();
-        } else {
-            $this->routerConfig = $routerConfig;
-        }
+        $this->routerConfig = $routerConfig ?? new RouterConfigBuilder()
+            ->setConfigFile('router.conf.json')
+            ->build();
     }
 
     public function getRouterConfig(): RouterConfig
@@ -49,7 +45,7 @@ readonly class RouteBuilder
         return $this->routerConfig;
     }
 
-    public function getRoutes(): array
+    public function getRouteState(): RouteState
     {
         try {
             return $this->loadCachedConfig();
@@ -60,7 +56,7 @@ readonly class RouteBuilder
         return $this->loadConfig();
     }
 
-    private function loadCachedConfig(): array
+    private function loadCachedConfig(): RouteState
     {
         $routerCacheHandler = $this->routerConfig->getRouteCacheHandler();
 
@@ -70,7 +66,7 @@ readonly class RouteBuilder
 
         $routerFile = $routerCacheHandler->get(self::ROUTER_DATA_KEY);
 
-        if (!$routerFile) {
+        if (!$routerFile || !($routerFile instanceof RouteState)) {
             throw new CacheFileInvalidFormatException('Cannot load cached config');
         }
 
@@ -82,7 +78,7 @@ readonly class RouteBuilder
         return $this->routerConfig->getRouteCacheHandler()->clear(self::ROUTER_DATA_KEY);
     }
 
-    private function loadConfig(): array
+    private function loadConfig(): RouteState
     {
         $composerJsonFilePath = $this->routerConfig->getComposerFile();
 
@@ -112,27 +108,20 @@ readonly class RouteBuilder
             );
         }
 
-        $routes = [];
+        $routeState = new RouteState();
 
         foreach ($json['autoload']['psr-4'] as $namespace => $path) {
             if ($this->isInExcludedDirectory($path)) {
                 continue;
             }
-            $routes = array_merge(
-                $routes,
-                $this->buildRoutes(
-                    $this->routerConfig->getRootDirectory() . DIRECTORY_SEPARATOR . $path,
-                    $namespace
-                )
-            );
+            $root = $this->routerConfig->getRootDirectory() . DIRECTORY_SEPARATOR . $path;
+            $this->buildRoutes($routeState, $root, $namespace);
+            $this->buildAttributes($routeState, $root, $namespace);
         }
 
-        $this->routerConfig->getRouteCacheHandler()->set(
-            self::ROUTER_DATA_KEY,
-            $routes
-        );
+        $this->routerConfig->getRouteCacheHandler()->set(self::ROUTER_DATA_KEY, $routeState);
 
-        return $routes;
+        return $routeState;
     }
 
     private function isInExcludedDirectory(string $path): bool
@@ -175,12 +164,49 @@ readonly class RouteBuilder
         return $results;
     }
 
-    private function buildRoutes(string $root, string $namespace): array
+    private function buildRoutes(RouteState $routeState, string $root, string $namespace): void
     {
-        $structure = [];
-        $files = $this->getDirectoryContents($root);
+        foreach ($this->getClassesWithAttributes($root, $namespace) as $attributeClass) {
+            $controller = new Controller(
+                $attributeClass->getClass(),
+                $attributeClass->getNamespace()
+            );
 
-        $routes = [];
+            $this->logger->debug($attributeClass->getClass() . ' is being scanned ');
+
+            if (!empty($this->routerConfig->getGlobalMiddleware())) {
+                $controller->setMiddleware($this->routerConfig->getGlobalMiddleware());
+            }
+
+            foreach ($attributeClass->getAttributes() as $attribute) {
+                $instance = $attribute->newInstance(); // TODO: Bind this to the container?
+                if ($instance instanceof RouteContract) {
+                    $instance->applyToController($controller);
+                }
+            }
+
+            if (!$controller->isController()) {
+                continue;
+            }
+
+            foreach ($attributeClass->getReflection()->getMethods() as $method) {
+                try {
+                    $this->buildMethodRoutes($attributeClass, $routeState, $controller, $method);
+                } catch (NoMethodRouteFoundException $noMethodRouteFoundException) {
+                    $this->logger->debug($noMethodRouteFoundException->getMessage());
+                }
+            }
+        }
+    }
+
+    private function getClassesWithAttributes(string $root, string $namespace): array
+    {
+        if (!empty($this->attributeClasses[$root . $namespace])) {
+            return $this->attributeClasses[$root . $namespace];
+        }
+
+        $files = $this->getDirectoryContents($root);
+        $classes = [];
 
         foreach ($files as $file) {
             if (is_dir($file) || $this->isInExcludedDirectory($file)) {
@@ -207,122 +233,14 @@ readonly class RouteBuilder
                 continue;
             }
 
-            $controller = new Controller($class, $classNamespace);
-
-            $this->logger->debug($class . ' is being scanned ');
-
-            if (!empty($this->routerConfig->getGlobalMiddleware())) {
-                $controller->setMiddleware($this->routerConfig->getGlobalMiddleware());
-            }
-
-            foreach ($attributes as $attribute) {
-                $instance = $attribute->newInstance();
-                if ($instance instanceof RouteContract) {
-                    $instance->applyToController($controller);
-                }
-            }
-
-            if (!$controller->isController()) {
-                continue;
-            }
-
-            $methods = $reflectionClass->getMethods();
-            foreach ($methods as $method) {
-                try {
-                    $routes [] = $this->buildMethodRoutes($controller, $method);
-                } catch (NoMethodRouteFoundException $noMethodRouteFoundException) {
-                    $this->logger->debug($noMethodRouteFoundException->getMessage());
-                }
-            }
-        }
-        return $routes;
-    }
-
-    private function buildMethodRoutes(Controller $controller, ReflectionMethod $method): Route
-    {
-        if (0 === stripos('__', $method->getName())) {
-            throw new NoMethodRouteFoundException("Not applying routes to magic methods");
+            $classes [] = new AttributeClass(
+                $class,
+                $classNamespace,
+                $reflectionClass,
+                $attributes
+            );
         }
 
-        $attributes = $method->getAttributes();
-
-        if (empty($attributes)) {
-            throw new NoMethodRouteFoundException("No attributes defined");
-        }
-
-        $route = new Route(
-            $controller->getNamespace() . $controller->getClass(),
-            $method->getName(),
-            $controller->getPath()
-        );
-
-        if ($controller->getAccepts()) {
-            $route->setAccepts($controller->getAccepts());
-        }
-
-        if (!empty($controller->getMiddleware())) {
-            $route->setMiddleware($controller->getMiddleware());
-        }
-
-        foreach ($attributes as $attribute) {
-            $instance = $attribute->newInstance();
-            if ($instance instanceof RouteContract) {
-                $instance->applyToRoute($route);
-            }
-        }
-
-        $parameters = $method->getParameters();
-
-        foreach ($parameters as $parameter) {
-            try {
-                $this->buildMethodParameters($route, $parameter);
-            } catch (MethodParameterNotMappedException $e) {
-                $this->logger->debug($e->getMessage());
-            }
-        }
-
-        return $route;
-    }
-
-    private function buildMethodParameters(Route $route, ReflectionParameter $parameter): void
-    {
-        $attributes = $parameter->getAttributes();
-
-        if (empty($attributes)) {
-            throw new MethodParameterNotMappedException("No attributes against method parameter");
-        }
-
-        $validators = [];
-        $parameterInstance = null;
-        $arrayMapInterface = null;
-
-        foreach ($attributes as $attribute) {
-            $instance = $attribute->newInstance();
-            if ($instance instanceof Parameter) {
-                $instance->setType($parameter->getType()->getName());
-                $parameterInstance = $instance;
-            } elseif ($instance instanceof ValidatorInterface) {
-                $validators [] = $instance;
-            } elseif ($instance instanceof ArrayMapInterface) {
-                $arrayMapInterface = $instance;
-            }
-        }
-
-        foreach ($validators as $validator) {
-            $parameterInstance->addValidator($validator);
-        }
-
-        if (empty($parameterInstance)) {
-            throw new MethodParameterNotMappedException("No valid Parameter attribute against method parameter");
-        }
-
-        if (!empty($arrayMapInterface)) {
-            $parameterInstance->setArrayMap($arrayMapInterface);
-        }
-
-        $route->addParameter(
-            $parameter->getName(),
-            $parameterInstance
-        );
+        return $this->attributeClasses[$root . $namespace] = $classes;
     }
 }
