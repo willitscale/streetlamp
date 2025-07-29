@@ -7,17 +7,18 @@ namespace willitscale\StreetlampTest;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\StreamInterface;
 use Psr\SimpleCache\CacheInterface;
+use willitscale\Streetlamp\Builders\RouteBuilder;
 use willitscale\Streetlamp\Builders\RouterConfigBuilder;
 use willitscale\Streetlamp\CacheHandlers\NullCacheHandler;
+use willitscale\Streetlamp\Enums\HttpMethod;
 use willitscale\Streetlamp\Requests\ServerRequest;
 use willitscale\Streetlamp\Requests\Uri;
-use willitscale\Streetlamp\RouteBuilder;
 use willitscale\Streetlamp\Router;
 
 class RouteTestCase extends TestCase
 {
     public function setupRouter(
-        string $method,
+        string|HttpMethod $method,
         string $path,
         string $rootDirectory,
         string $composerFile,
@@ -38,7 +39,7 @@ class RouteTestCase extends TestCase
             ->setRethrowExceptions(true)
             ->setRouteCacheHandler($routeCacheHandler)
             ->setRequest(new ServerRequest(
-                $method,
+                $method->value ?? $method,
                 new Uri($path),
                 $body,
                 $headers,

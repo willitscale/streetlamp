@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace willitscale\Streetlamp\Attributes;
 
-use willitscale\Streetlamp\Models\Controller;
-use willitscale\Streetlamp\Models\Route;
+use willitscale\Streetlamp\Models\RouteState;
 
 interface AttributeContract
 {
-    public function applyToController(Controller $controller): void;
-
-    public function applyToRoute(Route $route): void;
+    public function bind(
+        RouteState $routeState,
+        AttributeClass $attributeClass,
+        ?string $method = null
+    ): void;
 }

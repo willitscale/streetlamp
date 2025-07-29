@@ -6,16 +6,20 @@ namespace willitscale\Streetlamp;
 
 use DI\Container;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 use Throwable;
+use willitscale\Streetlamp\Builders\RouteBuilder;
 use willitscale\Streetlamp\Enums\HttpStatusCode;
 use willitscale\Streetlamp\Exceptions\InvalidContentTypeException;
 use willitscale\Streetlamp\Exceptions\NoValidRouteException;
 use willitscale\Streetlamp\Exceptions\StreetLampRequestException;
-use Psr\Log\LoggerInterface;
-use Psr\Log\NullLogger;
+use willitscale\Streetlamp\Models\Route;
+use willitscale\Streetlamp\Models\RouteState;
 use willitscale\Streetlamp\Requests\Stream;
 use willitscale\Streetlamp\Responses\Response;
 use willitscale\Streetlamp\Responses\ResponseHandler;
+use willitscale\Streetlamp\Responses\StreamResponse;
 
 readonly class Router
 {
@@ -36,7 +40,9 @@ readonly class Router
         $stream = new Stream('php://temp', 'rw+');
 
         try {
-            foreach ($this->routeBuilder->getRoutes() as $route) {
+            $routeState = $this->routeBuilder->getRouteState();
+            $this->container->set(RouteState::class, $routeState);
+            foreach ($routeState?->getRoutes() ?? [] as $route) {
                 $matches = [];
 
                 if (!$route->matchesRoute($request, $matches)) {
@@ -48,6 +54,8 @@ readonly class Router
                 if (!$route->matchesContentType($request)) {
                     continue;
                 }
+
+                $this->container->set(Route::class, $route);
 
                 $responseHandler = $this->container->make(
                     ResponseHandler::class,
@@ -92,13 +100,19 @@ readonly class Router
         );
     }
 
-    public function renderRoute(): void
+    public function render(): void
     {
         $response = $this->route();
+
         http_response_code($response->getStatusCode());
         foreach ($response->getHeaders() as $name => $value) {
             header("{$name}: {$value}");
         }
-        echo $response->getBody();
+
+        if ($response instanceof StreamResponse) {
+            $response->start();
+        } else {
+            echo $response->getBody();
+        }
     }
 }

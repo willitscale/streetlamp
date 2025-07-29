@@ -9,7 +9,7 @@ use willitscale\Streetlamp\Models\Controller;
 use willitscale\Streetlamp\Models\Route;
 
 #[Attribute(Attribute::TARGET_CLASS | Attribute::TARGET_METHOD | Attribute::IS_REPEATABLE)]
-readonly class Middleware implements AttributeContract
+readonly class Middleware implements RouteContract
 {
     public function __construct(private string $middleware)
     {

@@ -102,13 +102,7 @@ Here's what that would look like in code:
 
 namespace Example;
 
-use Psr\Http\Message\ResponseInterface;
-use willitscale\Streetlamp\Attributes\Controller\RouteController;
-use willitscale\Streetlamp\Attributes\Path;
-use willitscale\Streetlamp\Attributes\Route\Method;
-use willitscale\Streetlamp\Builders\ResponseBuilder;
-use willitscale\Streetlamp\Enums\HttpMethod;
-use willitscale\Streetlamp\Enums\HttpStatusCode;
+use Psr\Http\Message\ResponseInterface;use willitscale\Streetlamp\Attributes\Controller\RouteController;use willitscale\Streetlamp\Attributes\Path;use willitscale\Streetlamp\Attributes\Route\Method;use willitscale\Streetlamp\Builders\ResponseBuilder;use willitscale\Streetlamp\Enums\HttpMethod;use willitscale\Streetlamp\Enums\HttpStatusCode;
 
 #[RouteController]
 class MyRouteClass
@@ -150,6 +144,7 @@ method individually.
 ## 5. Further Reading
 
 - [Routing Attributes](docs/ROUTING_ATTRIBUTES.MD)
+- [Custom Attributes](docs/CUSTOM_ATTRIBUTES.MD)
 - [Input Attributes](docs/INPUT_ATTRIBUTES.MD)
 - [Data Mapping](docs/DATA_MAPPING.MD)
 - [Server Sent Events](docs/SERVER_SENT_EVENTS.MD)

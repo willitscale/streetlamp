@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace willitscale\Streetlamp\Models;
 
 use willitscale\Streetlamp\Enums\MediaType;
-use willitscale\Streetlamp\ResponseTypes\HttpMessage;
 
 abstract class Context
 {
@@ -14,7 +13,7 @@ abstract class Context
         protected string|null $path = null,
         protected string|null $accepts = null,
         protected array $middleware = [],
-        private ?string $responseType = null
+        protected array $attributes = []
     ) {
     }
 
@@ -85,14 +84,30 @@ abstract class Context
         return array_shift($this->middleware);
     }
 
-    public function setResponseType(?string $responseType): self
+    public function addAttribute(string $name, mixed $value): self
     {
-        $this->responseType = $responseType;
+        $this->attributes[$name] = $value;
         return $this;
     }
 
-    public function getResponseType(): string
+    public function getAttributes(): array
     {
-        return $this->responseType ?? HttpMessage::class;
+        return $this->attributes;
+    }
+
+    public function setAttributes(array $attributes): self
+    {
+        $this->attributes = $attributes;
+        return $this;
+    }
+
+    public function getAttribute(string $name): mixed
+    {
+        return $this->attributes[$name] ?? null;
+    }
+
+    public function hasAttribute(string $name): bool
+    {
+        return isset($this->attributes[$name]);
     }
 }

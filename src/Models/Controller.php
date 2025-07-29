@@ -13,9 +13,9 @@ class Controller extends Context
         string|null $accepts = null,
         private bool $isController = false,
         array $middleware = [],
-        ?string $responseType = null
+        array $attributes = []
     ) {
-        parent::__construct($class, $path, $accepts, $middleware, $responseType);
+        parent::__construct($class, $path, $accepts, $middleware, $attributes);
     }
 
     /**

@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace willitscale\Streetlamp\Commands;
 
 use Exception;
+use willitscale\Streetlamp\Builders\RouteBuilder;
 use willitscale\Streetlamp\Builders\RouterConfigBuilder;
 use willitscale\Streetlamp\Requests\ServerRequest;
 use willitscale\Streetlamp\Requests\Uri;
-use willitscale\Streetlamp\RouteBuilder;
 
 abstract class Command
 {

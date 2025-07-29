@@ -28,7 +28,9 @@ class Lists extends Command implements CommandInterface
             $columnLengths[$i] = strlen($columnHeaders[$i]);
         }
 
-        foreach ($routeBuilder->getRoutes() as $route) {
+        $routeState = $routeBuilder->getRouteState();
+
+        foreach ($routeState->getRoutes() ?? [] as $route) {
             $columnLengths[0] = max(strlen($route->getMethod()), $columnLengths[0]);
             $columnLengths[1] = max(strlen($route->getPath()), $columnLengths[1]);
             $columnLengths[2] = max(strlen($route->getAccepts() ?? ''), $columnLengths[2]);
@@ -42,7 +44,7 @@ class Lists extends Command implements CommandInterface
         $this->printRow($columnHeaders, $columnLengths);
         $this->printTableBreak($totalLength);
 
-        foreach ($routeBuilder->getRoutes() as $route) {
+        foreach ($routeState->getRoutes() ?? [] as $route) {
             $row = [
                 $route->getMethod(),
                 $route->getPath(),
