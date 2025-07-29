@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace willitscale\StreetlampTests\Controllers;
 
 use PHPUnit\Framework\Attributes\Test;

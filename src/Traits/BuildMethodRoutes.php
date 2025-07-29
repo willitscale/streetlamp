@@ -1,10 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace willitscale\Streetlamp\Traits;
 
 use ReflectionMethod;
-use willitscale\Streetlamp\Attributes\AttributeClass;
-use willitscale\Streetlamp\Attributes\AttributeContract;
 use willitscale\Streetlamp\Attributes\RouteContract;
 use willitscale\Streetlamp\Exceptions\MethodParameterNotMappedException;
 use willitscale\Streetlamp\Exceptions\NoMethodRouteFoundException;

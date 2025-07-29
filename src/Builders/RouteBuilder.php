@@ -8,7 +8,6 @@ use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use ReflectionClass;
 use willitscale\Streetlamp\Attributes\AttributeClass;
-use willitscale\Streetlamp\Attributes\Controller\RouteController;
 use willitscale\Streetlamp\Attributes\RouteContract;
 use willitscale\Streetlamp\Exceptions\CacheFileDoesNotExistException;
 use willitscale\Streetlamp\Exceptions\CacheFileInvalidFormatException;

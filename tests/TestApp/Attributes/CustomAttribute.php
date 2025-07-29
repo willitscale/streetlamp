@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace willitscale\StreetlampTests\TestApp\Attributes;
 
 use Attribute;

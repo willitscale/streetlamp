@@ -7,7 +7,7 @@ namespace willitscale\StreetlampTests\Attributes\Route;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use willitscale\Streetlamp\Builders\Route\Method;
+use willitscale\Streetlamp\Attributes\Route\Method;
 use willitscale\Streetlamp\Enums\HttpMethod;
 use willitscale\Streetlamp\Exceptions\Attributes\InvalidAttributeContextException;
 use willitscale\Streetlamp\Models\Controller;

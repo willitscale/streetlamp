@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace willitscale\Streetlamp\Traits;
 
 use willitscale\Streetlamp\Attributes\AttributeClass;

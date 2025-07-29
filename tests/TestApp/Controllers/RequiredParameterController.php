@@ -8,8 +8,8 @@ use Psr\Http\Message\ResponseInterface;
 use willitscale\Streetlamp\Attributes\Controller\RouteController;
 use willitscale\Streetlamp\Attributes\Parameter\PostParameter;
 use willitscale\Streetlamp\Attributes\Path;
+use willitscale\Streetlamp\Attributes\Route\Method;
 use willitscale\Streetlamp\Builders\ResponseBuilder;
-use willitscale\Streetlamp\Builders\Route\Method;
 use willitscale\Streetlamp\Enums\HttpMethod;
 use willitscale\Streetlamp\Enums\HttpStatusCode;
 
