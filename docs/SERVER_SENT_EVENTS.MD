@@ -5,60 +5,54 @@ This is useful for applications that require live updates, such a Model Context 
 
 ## Response Type
 
-SSE responses are defined using the `ResponseType` attribute with the parameter of `ServerSideEvents`.
-This tells the framework to not treat the response as a regular HTTP message, but rather as a stream of events.
-Using an SSE response type will do most of the heavy lifting for you, such as setting the correct headers and managing the connection.
-It will also provide your route with access to the ServerSentEvents object, which you can use to send events to the client.
+SSE responses can be defined by ResponseBuilder, setting a content type value of `text/event-stream` or the constant enum `MediaType::TEXT_EVENT_STREAM` will result in an SSE response being returned.
+Along with the content type, you will also need to provide a `ServerSentEventsDispatcher` instance, which will handle the dispatching of events to the client.
 
 ## Example
 
 An example of a route that uses SSE to send events to a client:
 
 ```php
+#[RouteController]
+class MainController implements ServerSentEventsDispatcher
+{
     #[Method(HttpMethod::GET)]
     #[Path('/sse')]
-    #[ResponseType(ServerSentEvents::class)]
-    public function sse(
-        ServerSentEvents $serverSentEvents
-    ): void {
-        $serverSentEvents
-            ->setEventDelay(ServerSentEvents::SECOND_IN_MICROSECONDS)
-            ->dispatch([
-                new Id('123'),
-                new Event('ping'),
-                new Data(new TestModel("Test", "test@example.com", new AgeModel(12)))
-            ]);
+    public function sse(): ResponseInterface
+    {
+        return new ResponseBuilder()
+            ->setStreamDispatcher($this)
+            ->setHttpStatusCode(HttpStatusCode::HTTP_OK)
+            ->setContentType(MediaType::TEXT_EVENT_STREAM)
+            ->build();
     }
+
+    public function dispatch(): array
+    {
+        return [
+            new Id('123'),
+            new Event('ping'),
+            new Data(new TestModel("Test", "test@example.com", new AgeModel(12)))
+        ];
+    }
+
+    public function isRunning(): bool
+    {
+        return true;
+    }
+
+    public function delay(): void
+    {
+        sleep(1);
+    }
+}
 ```
 
-The route method will be called recursively at intervals defined by the `setEventDelay` method.
-You can use the `dispatch` method to send events to the client. The `dispatch` method takes an array of events, which can be any object that implements the `ServerSentEvent`.
-
-The `ServerSentEvents` has four core functions:
-
-### setEventDelay
-
-Sets the delay between events in microseconds.
-
-```php
-public function setEventDelay(int $microseconds): self
-```
-
-### dispatch
-
-Dispatches an array of `ServerSentEvent` objects to the client.
-
-```php
-public function dispatch(array $events): self
-```
-
-### close
-
-Closes the connection to the client.
-
-```php
-public function close(): self
-```
+In the above example, we use the controller as the dispatcher, but this isn't necessary, you can implement the `ServerSentEventsDispatcher` interface in any class and pass it to the `ResponseBuilder` using the `setStreamDispatcher` method.
+When implementing the `ServerSentEventsDispatcher` interface, you must implement the following methods:
+- `dispatch()`: This method should return an array of `ServerSentEvent` objects that will be sent to the client.
+- `isRunning()`: This method should return a boolean indicating whether the dispatcher is still running. If it returns false, the connection will be closed.
+- `delay()`: This method should be used to delay the next event dispatch. This is useful for controlling the frequency of events sent to the client, but not required and can be blank.
 
 ## Sever Sent Event Types
 

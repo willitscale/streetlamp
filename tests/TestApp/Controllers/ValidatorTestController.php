@@ -33,7 +33,6 @@ class ValidatorTestController
             ->build();
     }
 
-
     #[Method(HttpMethod::POST)]
     #[Path('/validator/validation')]
     public function validateSingleInput(

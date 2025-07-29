@@ -8,6 +8,7 @@ use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use ReflectionClass;
 use willitscale\Streetlamp\Attributes\AttributeClass;
+use willitscale\Streetlamp\Attributes\Controller\RouteController;
 use willitscale\Streetlamp\Attributes\RouteContract;
 use willitscale\Streetlamp\Exceptions\CacheFileDoesNotExistException;
 use willitscale\Streetlamp\Exceptions\CacheFileInvalidFormatException;
@@ -179,7 +180,7 @@ class RouteBuilder
             }
 
             foreach ($attributeClass->getAttributes() as $attribute) {
-                $instance = $attribute->newInstance(); // TODO: Bind this to the container?
+                $instance = $attribute->newInstance();
                 if ($instance instanceof RouteContract) {
                     $instance->applyToController($controller);
                 }
@@ -191,7 +192,7 @@ class RouteBuilder
 
             foreach ($attributeClass->getReflection()->getMethods() as $method) {
                 try {
-                    $this->buildMethodRoutes($attributeClass, $routeState, $controller, $method);
+                    $this->buildMethodRoutes($routeState, $controller, $method);
                 } catch (NoMethodRouteFoundException $noMethodRouteFoundException) {
                     $this->logger->debug($noMethodRouteFoundException->getMessage());
                 }
@@ -228,8 +229,13 @@ class RouteBuilder
 
             $reflectionClass = new ReflectionClass($classNamespace . $class);
             $attributes = $reflectionClass->getAttributes();
+            $methodAttributes = [];
 
-            if (empty($attributes)) {
+            foreach ($reflectionClass->getMethods() as $method) {
+                $methodAttributes = array_merge($methodAttributes, $method->getAttributes());
+            }
+
+            if (empty($attributes) && empty($methodAttributes)) {
                 continue;
             }
 

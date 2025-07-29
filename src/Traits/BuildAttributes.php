@@ -2,14 +2,14 @@
 
 namespace willitscale\Streetlamp\Traits;
 
+use willitscale\Streetlamp\Attributes\AttributeClass;
 use willitscale\Streetlamp\Attributes\AttributeContract;
 use willitscale\Streetlamp\Models\RouteState;
 
 trait BuildAttributes
 {
-    public function buildAttributes(RouteState $routeState, string $root, string $namespace): array
+    public function buildAttributes(RouteState $routeState, string $root, string $namespace): void
     {
-        $attributes = [];
         foreach ($this->getClassesWithAttributes($root, $namespace) as $attributeClass) {
             foreach ($attributeClass->getAttributes() as $attribute) {
                 $instance = $attribute->newInstance();
@@ -17,7 +17,19 @@ trait BuildAttributes
                     $instance->bind($routeState, $attributeClass);
                 }
             }
+            $this->buildMethodAttributes($routeState, $attributeClass);
         }
-        return $attributes;
+    }
+
+    public function buildMethodAttributes(RouteState $routeState, AttributeClass $attributeClass): void
+    {
+        foreach ($attributeClass->getReflection()->getMethods() as $method) {
+            foreach ($method->getAttributes() as $attribute) {
+                $instance = $attribute->newInstance();
+                if ($instance instanceof AttributeContract) {
+                    $instance->bind($routeState, $attributeClass, $method->getName());
+                }
+            }
+        }
     }
 }

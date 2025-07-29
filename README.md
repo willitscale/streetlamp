@@ -144,6 +144,7 @@ method individually.
 ## 5. Further Reading
 
 - [Routing Attributes](docs/ROUTING_ATTRIBUTES.MD)
+- [Custom Attributes](docs/CUSTOM_ATTRIBUTES.MD)
 - [Input Attributes](docs/INPUT_ATTRIBUTES.MD)
 - [Data Mapping](docs/DATA_MAPPING.MD)
 - [Server Sent Events](docs/SERVER_SENT_EVENTS.MD)

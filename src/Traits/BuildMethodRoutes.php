@@ -17,7 +17,6 @@ trait BuildMethodRoutes
     use BuildMethodParameters;
 
     private function buildMethodRoutes(
-        AttributeClass $attributeClass,
         RouteState $routeState,
         Controller $controller,
         ReflectionMethod $method
@@ -50,8 +49,6 @@ trait BuildMethodRoutes
             $instance = $attribute->newInstance();
             if ($instance instanceof RouteContract) {
                 $instance->applyToRoute($route);
-            } elseif ($instance instanceof AttributeContract) {
-                $instance->bind($routeState, $attributeClass, $method->getName());
             }
         }
 

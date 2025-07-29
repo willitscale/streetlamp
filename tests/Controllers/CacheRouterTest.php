@@ -6,6 +6,7 @@ namespace willitscale\StreetlampTests\Controllers;
 
 use PHPUnit\Framework\Attributes\Test;
 use willitscale\Streetlamp\CacheHandlers\FileCacheHandler;
+use willitscale\Streetlamp\Enums\HttpMethod;
 use willitscale\Streetlamp\Enums\MediaType;
 
 class CacheRouterTest extends ControllerTestCase
@@ -19,7 +20,7 @@ class CacheRouterTest extends ControllerTestCase
         $cacheHandler = new FileCacheHandler();
 
         $router = $this->setupRouter(
-            'GET',
+            HttpMethod::GET,
             '/cache/' . $expectedCacheValue,
             $this->getTestRoot(),
             $this->getComposerTestFile(),
