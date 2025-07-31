@@ -44,6 +44,7 @@ class ServerSentEvents extends Response implements StreamResponse
             }
 
             flush();
+            $this->dispatcher->delay();
         }
     }
 }
