@@ -47,6 +47,10 @@ class ServerRequest implements ServerRequestInterface
         $this->uploadedFiles = $uploadedFiles ?? $_FILES;
         $this->parsedBody = $parsedBody ?? $_POST;
         $this->attributes = $attributes;
+
+        foreach ($this->headers as $name => $values) {
+            $this->headers[strtolower($name)] = $values;
+        }
     }
 
     public function extractHeadersFromServer(): array
@@ -54,10 +58,7 @@ class ServerRequest implements ServerRequestInterface
         $headers = [];
         foreach ($_SERVER as $name => $value) {
             if (0 === stripos($name, 'HTTP_')) {
-                // The only issue with this is that if a header contains underscores, they will be
-                // replaced with dashes and lowercase first letter will be replaced with uppercase.
-                $key = ucwords(str_replace('_', ' ', strtolower(substr($name, 5))));
-                $key = str_replace(' ', '-', $key);
+                $key = substr($name, 5);
                 $headers[$key] = [$value];
             }
         }
@@ -149,6 +150,8 @@ class ServerRequest implements ServerRequestInterface
 
     public function getHeaderLine($name): string
     {
+        $name = strtolower($name);
+
         if (empty($this->headers[$name])) {
             return '';
         }
