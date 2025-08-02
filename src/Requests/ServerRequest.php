@@ -58,7 +58,7 @@ class ServerRequest implements ServerRequestInterface
         $headers = [];
         foreach ($_SERVER as $name => $value) {
             if (0 === stripos($name, 'HTTP_')) {
-                $key = strtolower(substr($name, 5));
+                $key = str_replace('_', ' ', strtolower(substr($name, 5)));
                 $headers[$key] = [$value];
             }
         }
