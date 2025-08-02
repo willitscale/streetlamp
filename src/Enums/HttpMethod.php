@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace willitscale\Streetlamp\Enums;
 
-enum HttpMethod: string
+#[\Attribute] enum HttpMethod: string
 {
     case GET = 'GET';
     case HEAD = 'HEAD';
