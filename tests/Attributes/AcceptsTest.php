@@ -21,7 +21,7 @@ class AcceptsTest extends TestCase
         $acceptsAnnotation = new Accepts($expected);
         $route = new Route('Test', 'test');
         $acceptsAnnotation->applyToRoute($route);
-        $this->assertEquals($expected, $route->getAccepts());
+        $this->assertEquals([$expected], $route->getAccepts());
     }
 
     #[Test]
@@ -32,7 +32,25 @@ class AcceptsTest extends TestCase
         $acceptsAnnotation = new Accepts($expected);
         $controller = new Controller('Test', 'Test');
         $acceptsAnnotation->applyToController($controller);
-        $this->assertEquals($expected, $controller->getAccepts());
+        $this->assertEquals([$expected], $controller->getAccepts());
+    }
+
+    #[Test]
+    public function itShouldAddMultipleAcceptsToRoute(): void
+    {
+        $acceptsAnnotation1 = new Accepts('text/event-stream');
+        $acceptsAnnotation2 = new Accepts('application/json');
+        $route = new Route('Test', 'test');
+
+        $acceptsAnnotation1->applyToRoute($route);
+        $acceptsAnnotation2->applyToRoute($route);
+
+        $this->assertEmpty(
+            array_diff(
+                ['application/json', 'text/event-stream'],
+                $route->getAccepts()
+            )
+        );
     }
 
     public static function validAcceptAnnotations(): array

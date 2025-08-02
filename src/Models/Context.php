@@ -11,7 +11,7 @@ abstract class Context
     public function __construct(
         protected string $class,
         protected string|null $path = null,
-        protected string|null $accepts = null,
+        protected array $accepts = [],
         protected array $middleware = [],
         protected array $attributes = []
     ) {
@@ -50,14 +50,23 @@ abstract class Context
         return $this;
     }
 
-    public function getAccepts(): ?string
+    public function getAccepts(): array
     {
         return $this->accepts;
     }
 
-    public function setAccepts(string|MediaType $accepts): self
+    public function addAccepts(string|MediaType $accepts): self
     {
-        $this->accepts = ($accepts instanceof MediaType) ? $accepts->value : $accepts;
+        $this->accepts [] = ($accepts instanceof MediaType) ? $accepts->value : $accepts;
+        return $this;
+    }
+
+    public function setAccepts(array $accepts): self
+    {
+        $this->accepts = array_map(
+            fn($accept) => ($accept instanceof MediaType) ? $accept->value : $accept,
+            $accepts
+        );
         return $this;
     }
 

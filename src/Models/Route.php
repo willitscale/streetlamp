@@ -15,9 +15,9 @@ class Route extends Context
     public function __construct(
         string $class,
         private string $function,
-        string|null $path = null,
+        ?string $path = null,
         private HttpMethod|null $method = null,
-        string|null $accepts = null,
+        array $accepts = [],
         private array $parameters = [],
         array $middleware = [],
         array $attributes = [],
@@ -95,6 +95,8 @@ class Route extends Context
 
     public function matchesContentType(ServerRequestInterface $request): bool
     {
-        return !isset($this->accepts) || $request->getHeaderLine('Content-Type') === $this->accepts;
+        $requestedAccepts = explode(',', $request->getHeaderLine('Content-Type'));
+        $requestedAccepts = array_map('trim', $requestedAccepts);
+        return empty(array_diff($this->accepts, $requestedAccepts));
     }
 }

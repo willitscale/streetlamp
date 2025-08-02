@@ -9,7 +9,7 @@ use willitscale\Streetlamp\Enums\MediaType;
 use willitscale\Streetlamp\Models\Controller;
 use willitscale\Streetlamp\Models\Route;
 
-#[Attribute(Attribute::TARGET_CLASS | Attribute::TARGET_METHOD)]
+#[Attribute(Attribute::TARGET_CLASS | Attribute::TARGET_METHOD | Attribute::IS_REPEATABLE)]
 readonly class Accepts implements RouteContract
 {
     public function __construct(private string|MediaType $mediaType)
@@ -18,12 +18,12 @@ readonly class Accepts implements RouteContract
 
     public function applyToController(Controller $controller): void
     {
-        $controller->setAccepts($this->getMediaType());
+        $controller->addAccepts($this->getMediaType());
     }
 
     public function applyToRoute(Route $route): void
     {
-        $route->setAccepts($this->getMediaType());
+        $route->addAccepts($this->getMediaType());
     }
 
     public function getMediaType(): string

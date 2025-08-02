@@ -1,6 +1,6 @@
 # Accepts
 
-Specify the accepted media type for the route.
+Specify one or more accepted media type for the route.
 Only requests with the corresponding `Content-Type` will match the attributed route which can either be applied to:
 - `Class` - applies this accepted media type to all routes contained within, but can be overridden at route level
 - `Method` - applies this accepted media type to the route associated to the method
@@ -16,6 +16,7 @@ Only requests with the corresponding `Content-Type` will match the attributed ro
 
 - `Attribute::TARGET_CLASS`
 - `Attribute::TARGET_METHOD`
+- `Attribute::IS_REPEATABLE`
 
 ## Example
 
