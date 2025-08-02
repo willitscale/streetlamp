@@ -25,7 +25,6 @@ class CacheRule
 
     public function getKey(Route $route, array $args = []): string
     {
-        $accepts = is_array($route->getAccepts()) ? implode(',', $route->getAccepts()) : $route->getAccepts();
-        return hash('sha384', $route->getPath() . "__" . $route->getMethod() . "__" . $accepts);
+        return hash('sha384', $route->getPath() . "__" . $route->getMethod() . "__" . $route->getAccepts());
     }
 }

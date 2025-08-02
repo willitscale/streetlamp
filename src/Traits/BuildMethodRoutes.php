@@ -37,7 +37,7 @@ trait BuildMethodRoutes
             $controller->getPath()
         );
 
-        if (!empty($controller->getAccepts())) {
+        if ($controller->getAccepts()) {
             $route->setAccepts($controller->getAccepts());
         }
 

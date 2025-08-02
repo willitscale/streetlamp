@@ -9,8 +9,8 @@ class Controller extends Context
     public function __construct(
         string $class,
         private string $namespace,
-        ?string $path = '',
-        array $accepts = [],
+        string|null $path = '',
+        string|null $accepts = null,
         private bool $isController = false,
         array $middleware = [],
         array $attributes = []
