@@ -30,7 +30,7 @@ readonly class JsonProperty implements JsonAttribute
     {
         $key = (empty($this->alias)) ? $property->getName() : $this->alias;
 
-        if ($this->required && empty($jsonValue->{$key})) {
+        if ($this->required && !isset($jsonValue->{$key})) {
             $className = get_class($instance);
             throw new InvalidParameterTypeException(
                 "JS001",
