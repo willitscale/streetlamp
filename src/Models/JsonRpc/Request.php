@@ -14,7 +14,7 @@ readonly class Request
     public function __construct(
         #[JsonProperty] #[RegExpValidator("/2\.0/")] private string $jsonrpc,
         #[JsonProperty] private string|null $method,
-        #[JsonProperty] private string|int|null $id = null,
+        #[JsonProperty(false)] private string|int|null $id = null,
         #[JsonProperty(false)] private array|object|null $params = null
     ) {
     }
