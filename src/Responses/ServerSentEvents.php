@@ -27,6 +27,7 @@ class ServerSentEvents extends Response implements StreamResponse
 
     public function start(): void
     {
+        set_time_limit(0);
         while ($this->dispatcher->isRunning()) {
             foreach ($this->dispatcher->dispatch() as $event) {
                 if (!$event instanceof ServerSentEvent) {
