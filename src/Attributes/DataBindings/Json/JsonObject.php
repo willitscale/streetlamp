@@ -56,7 +56,7 @@ class JsonObject implements DataBindingObjectInterface
                     continue;
                 }
 
-                if (!$type->isBuiltin() && !is_null($value)) {
+                if (is_object($value) && 'stdClass' !== get_class($value)) {
                     $innerReflectionClass = new ReflectionClass($value);
                     $reflectionAttributes = $innerReflectionClass->getAttributes(JsonObject::class);
 
